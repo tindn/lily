@@ -1,5 +1,3 @@
-import React from 'react';
-import { ThemeProvider } from 'react-native-elements';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import customTheme from '../customTheme.json';
 import Money from './money';
@@ -20,8 +18,4 @@ const TabNavigator = createBottomTabNavigator(
 
 const App = createAppContainer(TabNavigator);
 
-export default () => (
-  <ThemeProvider theme={customTheme}>
-    <App />
-  </ThemeProvider>
-);
+export default App;

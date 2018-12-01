@@ -1,20 +1,15 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
 import Screen from '../screen';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 function Settings() {
-  return (
-    <Screen style={{ flex: 1, justifyContent: 'center' }}>
-      <Button title="hey" />
-    </Screen>
-  );
+  return <Screen style={{ flex: 1, justifyContent: 'center' }} />;
 }
 
 Settings.navigationOptions = ({ navigation }) => ({
-  tabBarIcon: ({ focused, horizontal, tintColor }) => {
+  tabBarIcon: ({ horizontal, tintColor }) => {
     return (
-      <Icon name="settings" size={horizontal ? 20 : 25} color={tintColor} />
+      <Icon name="setting" size={horizontal ? 20 : 25} color={tintColor} />
     );
   }
 });

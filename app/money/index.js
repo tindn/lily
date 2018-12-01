@@ -1,11 +1,21 @@
 import React from 'react';
-import { Button, Icon } from 'react-native-elements';
+import { ScrollView, TextInput, View, Button } from 'react-native';
 import Screen from '../screen';
-
+import Icon from 'react-native-vector-icons/AntDesign';
 function Money() {
   return (
     <Screen>
-      <Button title="hey" />
+      <ScrollView>
+        <View>
+          <View style={{ flexDirection: 'row' }}>
+            <TextInput placeholder="Nov 20, 2018" keyboardType="number-pad" />
+            <TextInput placeholder="00.00" keyboardType="number-pad" />
+          </View>
+          <View>
+            <TextInput placeholder="Memo" />
+          </View>
+        </View>
+      </ScrollView>
     </Screen>
   );
 }
@@ -13,7 +23,7 @@ function Money() {
 Money.navigationOptions = ({ navigation }) => ({
   tabBarIcon: ({ focused, horizontal, tintColor }) => {
     return (
-      <Icon name="timeline" size={horizontal ? 20 : 25} color={tintColor} />
+      <Icon name="barschart" size={horizontal ? 20 : 25} color={tintColor} />
     );
   }
 });
