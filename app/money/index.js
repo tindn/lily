@@ -1,20 +1,18 @@
 import React from 'react';
-import { ScrollView, TextInput, View, Button } from 'react-native';
-import Screen from '../screen';
+import { ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Screen from '../screen';
+import TransactionForm from './transactionForm';
+import TransactionList from './transactionList';
+import SpendTracking from './spendTracking';
+
 function Money() {
   return (
     <Screen>
       <ScrollView>
-        <View>
-          <View style={{ flexDirection: 'row' }}>
-            <TextInput placeholder="Nov 20, 2018" keyboardType="number-pad" />
-            <TextInput placeholder="00.00" keyboardType="number-pad" />
-          </View>
-          <View>
-            <TextInput placeholder="Memo" />
-          </View>
-        </View>
+        <TransactionForm />
+        <SpendTracking />
+        <TransactionList />
       </ScrollView>
     </Screen>
   );
