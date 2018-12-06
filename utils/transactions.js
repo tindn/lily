@@ -1,8 +1,7 @@
 import firebase from 'firebase';
 
 export function fetchTransactions(args) {
-  const db = firebase.firestore();
-  let query = db.collection('transactions');
+  let query = getTransactionsCollection();
   args.forEach(arg => {
     const operator = arg[0];
     const params = arg.slice(1);
@@ -30,4 +29,14 @@ export function getTotalAmount(transactions) {
     acc = acc + curr.amount;
     return acc;
   }, 0);
+}
+
+export function addTransaction(transaction) {
+  getTransactionsCollection().add({
+    date: transaction.date,
+    memo: transaction.memo,
+    amount: parseFloat(transaction.amount.substring(2)),
+    entryType: transaction.isCredit ? 'credit' : 'debit',
+    _addedOn: firebase.firestore.FieldValue.serverTimestamp()
+  });
 }

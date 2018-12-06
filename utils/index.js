@@ -2,12 +2,14 @@ import { toDateString } from './date';
 import {
   fetchTransactions,
   getTransactionsCollection,
-  getTotalAmount
+  getTotalAmount,
+  addTransaction
 } from './transactions';
 
 export {
   fetchTransactions,
   toDateString,
   getTransactionsCollection,
-  getTotalAmount
+  getTotalAmount,
+  addTransaction
 };

@@ -1,18 +1,17 @@
 import React from 'react';
 import {
-  View,
-  TextInput,
+  DatePickerIOS,
+  Modal,
   StyleSheet,
   Switch,
   Text,
-  DatePickerIOS,
-  Modal,
-  TouchableOpacity
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
-import firebase from 'firebase';
-import Button from '../button';
-import { toDateString } from '../../utils';
 import theme from '../../theme';
+import { addTransaction, toDateString } from '../../utils';
+import Button from '../button';
 
 const amountRegex = /^\$\s[0]*([1-9]*)\.*(\d*)$/;
 const smallFontSize = 20;
@@ -27,10 +26,6 @@ const defaultState = {
 };
 class TransactionForm extends React.Component {
   state = { ...defaultState };
-
-  componentDidMount() {
-    this.db = firebase.firestore();
-  }
 
   onChangeText = text => {
     // need to determine recent changes (.ie backspace vs. number)
@@ -200,19 +195,13 @@ class TransactionForm extends React.Component {
             disabled={this.state.amount === '$ 00.00' || this.state.memo === ''}
             label="Add"
             onPress={() => {
-              this.db
-                .collection('transactions')
-                .add({
-                  date: this.state.date,
-                  memo: this.state.memo,
-                  amount: parseFloat(this.state.amount.substring(2)),
-                  entryType: this.state.isCredit ? 'credit' : 'debit',
-                  _addedOn: firebase.firestore.FieldValue.serverTimestamp()
-                })
-                .then(docRef => this.setState({ ...defaultState }))
-                .catch(function(error) {
-                  console.log('Error adding document: ', error);
-                });
+              addTransaction({
+                date: this.state.date,
+                memo: this.state.memo,
+                amount: this.state.amount,
+                isCredit: this.state.isCredit
+              });
+              this.setState({ ...defaultState });
             }}
             style={[sharedStyles.button]}
           />
