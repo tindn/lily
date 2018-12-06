@@ -9,7 +9,11 @@ import Screen from '../screen';
 import SpendTracking from './spendTracking';
 import TransactionForm from './transactionForm';
 import TransactionList from './transactionList';
-import { getTransactionsCollection, fetchTransactions } from '../../utils';
+import {
+  getTransactionsCollection,
+  fetchTransactions,
+  getTotalAmount
+} from '../../utils';
 import theme from '../../theme';
 
 class Expenses extends React.Component {
@@ -19,13 +23,33 @@ class Expenses extends React.Component {
   state = {
     refreshing: false,
     tenDaysTransactions: [],
-    fetchingTenDaysTransactions: false
+    fetchingTenDaysTransactions: false,
+    spendingThisWeek: null,
+    spendingThisMonth: null
   };
 
   componentDidMount() {
-    getTransactionsCollection().onSnapshot(this.getTenDaysTransactions);
+    getTransactionsCollection().onSnapshot(this.fetchData);
     this.fetchData();
   }
+
+  fetchData = () => {
+    this.setState({ refreshing: true });
+    Promise.all([this.getTenDaysTransactions(), this.getSpendings()])
+      .then(([transactions, [thisWeek, thisMonth]]) => {
+        this.setState({
+          tenDaysTransactions: transactions,
+          spendingThisWeek: thisWeek.toFixed(2),
+          spendingThisMonth: thisMonth.toFixed(2),
+          fetchingTenDaysTransactions: false,
+          refreshing: false
+        });
+      })
+      .catch(() => ({
+        fetchingTenDaysTransactions: false,
+        refreshing: false
+      }));
+  };
 
   getTenDaysTransactions = () => {
     this.setState({ fetchingTenDaysTransactions: true });
@@ -41,15 +65,21 @@ class Expenses extends React.Component {
     ]);
   };
 
-  fetchData = () => {
-    this.setState({ refreshing: true });
-    this.getTenDaysTransactions().then(transactions => {
-      this.setState({
-        tenDaysTransactions: transactions,
-        fetchingTenDaysTransactions: false,
-        refreshing: false
-      });
-    });
+  getSpendings = () => {
+    const today = new Date();
+    const weekStartOffset = (today.getDay() - 1) * 86400000;
+    const startOfWeek = new Date(Date.now() - weekStartOffset);
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    return Promise.all([
+      fetchTransactions([
+        ['where', 'date', '>=', startOfWeek],
+        ['where', 'entryType', '==', 'debit']
+      ]).then(getTotalAmount),
+      fetchTransactions([
+        ['where', 'date', '>=', startOfMonth],
+        ['where', 'entryType', '==', 'debit']
+      ]).then(getTotalAmount)
+    ]);
   };
 
   render() {
@@ -66,7 +96,10 @@ class Expenses extends React.Component {
           }
         >
           <TransactionForm />
-          <SpendTracking />
+          <SpendTracking
+            spendingThisWeek={this.state.spendingThisWeek}
+            spendingThisMonth={this.state.spendingThisMonth}
+          />
           <TouchableOpacity
             onPress={() => {}}
             style={{
