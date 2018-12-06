@@ -1,4 +1,13 @@
 import { toDateString } from './date';
-import { fetchTransactions, getTransactionsCollection } from './transactions';
+import {
+  fetchTransactions,
+  getTransactionsCollection,
+  getTotalAmount
+} from './transactions';
 
-export { fetchTransactions, toDateString, getTransactionsCollection };
+export {
+  fetchTransactions,
+  toDateString,
+  getTransactionsCollection,
+  getTotalAmount
+};

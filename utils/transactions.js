@@ -24,3 +24,10 @@ export function fetchTransactions(args) {
 export function getTransactionsCollection() {
   return firebase.firestore().collection('transactions');
 }
+
+export function getTotalAmount(transactions) {
+  return transactions.reduce((acc, curr) => {
+    acc = acc + curr.amount;
+    return acc;
+  }, 0);
+}

@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Switch, Text } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Switch,
+  Text,
+  DatePickerIOS,
+  Modal,
+  TouchableOpacity
+} from 'react-native';
 import firebase from 'firebase';
 import Button from '../button';
 import { toDateString } from '../../utils';
@@ -10,10 +19,11 @@ const smallFontSize = 20;
 const largeFontSize = 26;
 const inputBorderColor = theme.colors.lighterGray;
 const defaultState = {
-  date: toDateString(new Date()),
+  date: new Date(),
   memo: '',
   amount: '$ 00.00',
-  isCredit: false
+  isCredit: false,
+  dateModalVisible: false
 };
 class TransactionForm extends React.Component {
   state = { ...defaultState };
@@ -72,17 +82,61 @@ class TransactionForm extends React.Component {
             borderTopRightRadius: 10
           }}
         >
-          <TextInput
-            style={{
-              flex: 9,
-              fontSize: smallFontSize,
-              color: theme.colors.darkGray,
-              fontWeight: '500'
-            }}
-            value={this.state.date}
-            onChangeText={text => this.setState({ date: text })}
-            keyboardType="decimal-pad"
-          />
+          <View>
+            <TouchableOpacity
+              onPress={() => this.setState({ dateModalVisible: true })}
+            >
+              <Text
+                style={{
+                  flex: 9,
+                  fontSize: smallFontSize,
+                  color: theme.colors.darkGray,
+                  fontWeight: '500'
+                }}
+                onChangeText={text => this.setState({ date: text })}
+                keyboardType="decimal-pad"
+              >
+                {toDateString(this.state.date)}
+              </Text>
+            </TouchableOpacity>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={this.state.dateModalVisible}
+            >
+              <View
+                style={{
+                  backgroundColor: '#fff',
+                  top: 10,
+                  padding: 20,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.23,
+                  shadowRadius: 2.62,
+                  elevation: 4
+                }}
+              >
+                <DatePickerIOS
+                  mode="date"
+                  date={this.state.date}
+                  onDateChange={date => this.setState({ date })}
+                />
+                <Button
+                  onPress={() => {
+                    this.setState({ dateModalVisible: false });
+                  }}
+                  label="Done"
+                  color={theme.colors.primary}
+                  style={{
+                    width: 100,
+                    alignSelf: 'center',
+                    padding: 5
+                  }}
+                  textStyle={{ textAlign: 'center' }}
+                />
+              </View>
+            </Modal>
+          </View>
           <View style={{ flex: 10, flexDirection: 'row' }}>
             <TextInput
               value={this.state.amount}
@@ -142,13 +196,14 @@ class TransactionForm extends React.Component {
             color={theme.colors.darkGray}
           />
           <Button
+            color={theme.colors.primary}
             disabled={this.state.amount === '$ 00.00' || this.state.memo === ''}
             label="Add"
             onPress={() => {
               this.db
                 .collection('transactions')
                 .add({
-                  date: new Date(this.state.date),
+                  date: this.state.date,
                   memo: this.state.memo,
                   amount: parseFloat(this.state.amount.substring(2)),
                   entryType: this.state.isCredit ? 'credit' : 'debit',

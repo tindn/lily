@@ -1,7 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { fetchTransactions, getTransactionsCollection } from '../../utils';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import theme from '../../theme';
+import {
+  fetchTransactions,
+  getTransactionsCollection,
+  getTotalAmount
+} from '../../utils';
 
 class SpendTracking extends React.Component {
   state = {
@@ -23,33 +27,23 @@ class SpendTracking extends React.Component {
       ['where', 'date', '>=', startOfWeek],
       ['where', 'entryType', '==', 'debit']
     ])
-      .then(weekTransactions => {
+      .then(getTotalAmount)
+      .then(total => {
         this.setState({
-          spendingLastWeek: weekTransactions
-            .reduce((acc, curr) => {
-              acc = acc + curr.amount;
-              return acc;
-            }, 0)
-
-            .toFixed(2)
+          spendingLastWeek: total.toFixed(2)
         });
-      })
-      .catch(e => console.log(e));
+      });
 
     fetchTransactions([
       ['where', 'date', '>=', startOfMonth],
       ['where', 'entryType', '==', 'debit']
-    ]).then(monthTransactions => {
-      this.setState({
-        spendingThisMonth: monthTransactions
-          .reduce((acc, curr) => {
-            acc = acc + curr.amount;
-            return acc;
-          }, 0)
-
-          .toFixed(2)
+    ])
+      .then(getTotalAmount)
+      .then(total => {
+        this.setState({
+          spendingThisMonth: total.toFixed(2)
+        });
       });
-    });
   };
 
   render() {
@@ -80,11 +74,13 @@ class SpendTracking extends React.Component {
           }}
         >
           <Text style={sharedStyles.spendAmount}>
-            $ {this.state.spendingLastWeek || 'N/A'} last week
+            $ {this.state.spendingLastWeek || 'N/A'} this week
           </Text>
-          <Text style={sharedStyles.spendAmount}>
-            $ {this.state.spendingThisMonth || 'N/A'} this month
-          </Text>
+          <TouchableOpacity onPress={this.updateSpendings}>
+            <Text style={sharedStyles.spendAmount}>
+              $ {this.state.spendingThisMonth || 'N/A'} this month
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
