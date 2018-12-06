@@ -1,21 +1,19 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Screen from '../screen';
-import TransactionForm from './transactionForm';
-import TransactionList from './transactionList';
-import SpendTracking from './spendTracking';
+import { createStackNavigator } from 'react-navigation';
+import Expenses from './expenses';
 
-function Money() {
-  return (
-    <Screen>
-      <ScrollView>
-        <TransactionForm />
-        <SpendTracking />
-        <TransactionList />
-      </ScrollView>
-    </Screen>
-  );
+const MoneyStack = createStackNavigator(
+  {
+    Expenses
+  }
+);
+
+class Money extends React.Component {
+  static router = MoneyStack.router;
+  render() {
+    return <MoneyStack navigation={this.props.navigation} />;
+  }
 }
 
 Money.navigationOptions = ({ navigation }) => ({
