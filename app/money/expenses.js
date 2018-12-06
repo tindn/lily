@@ -1,20 +1,22 @@
 import React from 'react';
 import {
+  LayoutAnimation,
   RefreshControl,
   ScrollView,
+  Text,
   TouchableOpacity,
-  Text
+  View
 } from 'react-native';
+import theme from '../../theme';
+import {
+  fetchTransactions,
+  getTotalAmount,
+  getTransactionsCollection
+} from '../../utils';
 import Screen from '../screen';
 import SpendTracking from './spendTracking';
 import TransactionForm from './transactionForm';
 import TransactionList from './transactionList';
-import {
-  getTransactionsCollection,
-  fetchTransactions,
-  getTotalAmount
-} from '../../utils';
-import theme from '../../theme';
 
 class Expenses extends React.Component {
   static navigationOptions = {
@@ -25,7 +27,8 @@ class Expenses extends React.Component {
     tenDaysTransactions: [],
     fetchingTenDaysTransactions: false,
     spendingThisWeek: null,
-    spendingThisMonth: null
+    spendingThisMonth: null,
+    transactionListExpanded: false
   };
 
   componentDidMount() {
@@ -101,7 +104,12 @@ class Expenses extends React.Component {
             spendingThisMonth={this.state.spendingThisMonth}
           />
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => {
+              LayoutAnimation.easeInEaseOut();
+              this.setState({
+                transactionListExpanded: !this.state.transactionListExpanded
+              });
+            }}
             style={{
               padding: 7,
               backgroundColor: theme.colors.lighterGray,
@@ -116,8 +124,13 @@ class Expenses extends React.Component {
             <Text style={{ textAlign: 'center' }}>past 10 days</Text>
           </TouchableOpacity>
           <TransactionList
-            data={this.state.tenDaysTransactions}
+            data={
+              this.state.transactionListExpanded
+                ? this.state.tenDaysTransactions
+                : []
+            }
             refreshing={this.state.fetchingTenDaysTransactions}
+            emptyText="Press above to expand."
           />
         </ScrollView>
       </Screen>

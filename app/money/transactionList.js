@@ -13,7 +13,7 @@ function TransactionList(props) {
       keyExtractor={item => item.id}
       ListEmptyComponent={
         <View style={styles.emptyComponent}>
-          <Text>No transactions found.</Text>
+          <Text>{props.emptyText || 'No transactions found.'}</Text>
         </View>
       }
       renderItem={({ item, index }) => {

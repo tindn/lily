@@ -14,11 +14,9 @@ function SpendTracking(props) {
         <Text style={sharedStyles.spendAmount}>
           $ {spendingThisWeek || 'N/A'} this week
         </Text>
-        <TouchableOpacity onPress={this.updateSpendings}>
-          <Text style={sharedStyles.spendAmount}>
-            $ {spendingThisMonth || 'N/A'} this month
-          </Text>
-        </TouchableOpacity>
+        <Text style={sharedStyles.spendAmount}>
+          $ {spendingThisMonth || 'N/A'} this month
+        </Text>
       </View>
     </View>
   );
