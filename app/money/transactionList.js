@@ -12,13 +12,7 @@ function TransactionList(props) {
       data={data}
       keyExtractor={item => item.id}
       ListEmptyComponent={
-        <View
-          style={{
-            backgroundColor: '#fff',
-            padding: 20,
-            alignItems: 'center'
-          }}
-        >
+        <View style={styles.emptyComponent}>
           <Text>No transactions found.</Text>
         </View>
       }
@@ -52,6 +46,11 @@ function TransactionList(props) {
 }
 
 const styles = StyleSheet.create({
+  emptyComponent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    alignItems: 'center'
+  },
   transactionItem: {
     backgroundColor: '#fff',
     borderBottomColor: theme.colors.lighterGray,

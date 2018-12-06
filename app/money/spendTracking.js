@@ -8,28 +8,9 @@ function SpendTracking(props) {
     return null;
   }
   return (
-    <View
-      style={{
-        marginTop: 20,
-        marginLeft: 8,
-        marginRight: 8
-      }}
-    >
-      <Text
-        style={{
-          fontWeight: '600',
-          color: '#bbb',
-          marginBottom: 8
-        }}
-      >
-        Spent
-      </Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between'
-        }}
-      >
+    <View style={sharedStyles.container}>
+      <Text style={sharedStyles.title}>Spent</Text>
+      <View style={sharedStyles.row}>
         <Text style={sharedStyles.spendAmount}>
           $ {spendingThisWeek || 'N/A'} this week
         </Text>
@@ -44,6 +25,20 @@ function SpendTracking(props) {
 }
 
 const sharedStyles = StyleSheet.create({
+  container: {
+    marginTop: 20,
+    marginLeft: 8,
+    marginRight: 8
+  },
+  title: {
+    fontWeight: '600',
+    color: '#bbb',
+    marginBottom: 8
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   spendAmount: {
     fontWeight: '600',
     color: theme.colors.darkGray,
