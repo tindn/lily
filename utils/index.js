@@ -1,4 +1,4 @@
-import { toDateString } from './date';
+import { toSimpleDateString, toWeekDayDateString } from './date';
 import {
   fetchTransactions,
   getTransactionsCollection,
@@ -8,7 +8,8 @@ import {
 
 export {
   fetchTransactions,
-  toDateString,
+  toSimpleDateString,
+  toWeekDayDateString,
   getTransactionsCollection,
   getTotalAmount,
   addTransaction

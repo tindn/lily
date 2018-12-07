@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import theme from '../../theme';
-import { toDateString } from '../../utils';
+import { toWeekDayDateString } from '../../utils';
 
 function TransactionList(props) {
   const { data, refreshing } = props;
@@ -22,7 +22,7 @@ function TransactionList(props) {
         const color =
           item.entryType === 'debit' ? theme.colors.red : theme.colors.green;
         if (item.date.toDate) {
-          dateDisplay = toDateString(item.date);
+          dateDisplay = toWeekDayDateString(item.date);
         }
         return (
           <View

@@ -11,7 +11,7 @@ import {
   View
 } from 'react-native';
 import theme from '../../theme';
-import { addTransaction, toDateString } from '../../utils';
+import { addTransaction, toSimpleDateString } from '../../utils';
 import Button from '../button';
 import MoneyInput from '../moneyInput';
 
@@ -52,7 +52,7 @@ class TransactionForm extends React.Component {
                 onChangeText={text => this.setState({ date: text })}
                 keyboardType="decimal-pad"
               >
-                {toDateString(this.state.date)}
+                {toSimpleDateString(this.state.date)}
               </Text>
             </TouchableOpacity>
             <Modal
