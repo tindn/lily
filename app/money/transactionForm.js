@@ -130,7 +130,7 @@ class TransactionForm extends React.Component {
                 addTransaction({
                   date: this.state.date,
                   memo: this.state.memo,
-                  amount: this.state.amount,
+                  amount: parseFloat(this.state.amount),
                   isCredit: this.state.isCredit
                 });
                 LayoutAnimation.easeInEaseOut();

@@ -1,57 +1,61 @@
 import React from 'react';
-import { TextInput, StyleSheet } from 'react-native';
-
-const amountRegex = /^\$\s[0]*([1-9]*)\.*(\d*)$/;
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
 class MoneyInput extends React.PureComponent {
   state = {
-    amount: '$ 00.00'
+    amount: ''
   };
 
   onChangeText = text => {
-    // need to determine recent changes (.ie backspace vs. number)
-    // unable to use onKeyPress because of RN bug
-    const matches = amountRegex.exec(text);
-    if (!matches) {
-      return;
+    if (text.length < 4) {
+      text = text.padStart(4, '0');
     }
-
-    let leftPart, rightPart;
-    if (text.length > this.state.amount.length) {
-      leftPart = matches[1].concat(matches[2].substring(0, 1));
-      leftPart = leftPart.padStart(2, '0');
-      rightPart = matches[2].substring(1);
-    }
-
-    if (text.length < this.state.amount.length) {
-      leftPart = matches[1].substring(0, matches[1].length - 1);
-      leftPart = leftPart.padStart(2, '0');
-      rightPart = matches[1].slice(-1).concat(matches[2]);
-      rightPart = rightPart.padStart(2, '0');
-    }
-
-    const newAmount = leftPart + '.' + rightPart;
-    this.setState({ amount: '$ ' + newAmount });
+    let arr = text.split('');
+    // adding decimal delimiter (.)
+    arr.splice(arr.length - 2, 0, '.');
     if (this.props.onChange) {
-      this.props.onChange(parseFloat(newAmount));
+      this.props.onChange(arr.join(''));
     }
+
+    // adding thousand (,) separator.
+    // this doesn't add the million (or more) separator,
+    // as it's unlikely for expenses to be that high.
+    if (arr.length > 6) {
+      arr.splice(arr.length - 6, 0, ',');
+    }
+    this.setState({ amount: arr.join('') });
   };
 
   render() {
     return (
-      <TextInput
-        style={styles.input}
-        value={this.state.amount}
-        keyboardType="number-pad"
-        onChangeText={this.onChangeText}
-        onFocus={this.props.onFocus}
-      />
+      <View style={{ flex: 1 }}>
+        <TextInput
+          ref={input => (this.textInput = input)}
+          style={{ display: 'none' }}
+          keyboardType="number-pad"
+          onChangeText={this.onChangeText}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            this.textInput && this.textInput.focus();
+            this.props.onFocus && this.props.onFocus();
+          }}
+        >
+          <Text style={styles.display}>$ {this.state.amount || '00.00'}</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  input: {
+  display: {
     flex: 1,
     fontSize: 26,
     textAlign: 'right',
