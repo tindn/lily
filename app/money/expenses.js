@@ -4,8 +4,7 @@ import {
   RefreshControl,
   ScrollView,
   Text,
-  TouchableOpacity,
-  View
+  TouchableOpacity
 } from 'react-native';
 import theme from '../../theme';
 import {

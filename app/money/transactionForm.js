@@ -13,48 +13,25 @@ import {
 import theme from '../../theme';
 import { addTransaction, toDateString } from '../../utils';
 import Button from '../button';
+import MoneyInput from '../moneyInput';
 
-const amountRegex = /^\$\s[0]*([1-9]*)\.*(\d*)$/;
 const smallFontSize = 20;
-const largeFontSize = 26;
 const inputBorderColor = theme.colors.lighterGray;
 
-function getDefaultState() {
+function getDefaultState(moneyInputKey) {
   return {
     date: new Date(),
     memo: '',
-    amount: '$ 00.00',
+    amount: 0,
     isCredit: false,
     dateModalVisible: false,
-    isExpanded: false
+    isExpanded: false,
+    moneyInputKey: moneyInputKey || 0
   };
 }
 
 class TransactionForm extends React.Component {
   state = getDefaultState();
-
-  onChangeText = text => {
-    // need to determine recent changes (.ie backspace vs. number)
-    // unable to use onKeyPress because of RN bug
-    const matches = amountRegex.exec(text);
-    if (text.length > this.state.amount.length) {
-      if (matches) {
-        let leftPart = matches[1].concat(matches[2].substring(0, 1));
-        leftPart = leftPart.padStart(2, '0');
-        let rightPart = matches[2].substring(1);
-        this.setState({ amount: '$ ' + leftPart + '.' + rightPart });
-      }
-    }
-    if (text.length < this.state.amount.length) {
-      if (matches) {
-        let leftPart = matches[1].substring(0, matches[1].length - 1);
-        leftPart = leftPart.padStart(2, '0');
-        let rightPart = matches[1].slice(-1).concat(matches[2]);
-        rightPart = rightPart.padStart(2, '0');
-        this.setState({ amount: '$ ' + leftPart + '.' + rightPart });
-      }
-    }
-  };
 
   render() {
     return (
@@ -106,17 +83,15 @@ class TransactionForm extends React.Component {
             </Modal>
           </View>
           <View style={{ flex: 10, flexDirection: 'row' }}>
-            <TextInput
-              style={sharedStyles.amountInput}
-              value={this.state.amount}
-              keyboardType="number-pad"
-              onChangeText={this.onChangeText}
+            <MoneyInput
               onFocus={() => {
                 if (!this.state.isExpanded) {
                   LayoutAnimation.easeInEaseOut();
                   this.setState({ isExpanded: true });
                 }
               }}
+              onChange={amount => this.setState({ amount })}
+              key={this.state.moneyInputKey}
             />
           </View>
         </TouchableOpacity>
@@ -140,7 +115,7 @@ class TransactionForm extends React.Component {
               label="Cancel"
               onPress={() => {
                 LayoutAnimation.easeInEaseOut();
-                this.setState(getDefaultState());
+                this.setState(getDefaultState(this.state.moneyInputKey + 1));
               }}
               style={[sharedStyles.button]}
               color={theme.colors.darkGray}
@@ -159,7 +134,7 @@ class TransactionForm extends React.Component {
                   isCredit: this.state.isCredit
                 });
                 LayoutAnimation.easeInEaseOut();
-                this.setState(getDefaultState());
+                this.setState(getDefaultState(this.state.moneyInputKey + 1));
               }}
               style={[sharedStyles.button]}
             />
@@ -190,7 +165,8 @@ const sharedStyles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#fff',
     borderTopLeftRadius: 10,
-    borderTopRightRadius: 10
+    borderTopRightRadius: 10,
+    alignItems: 'center'
   },
   dateText: {
     flex: 9,
@@ -210,7 +186,7 @@ const sharedStyles = StyleSheet.create({
   },
   amountInput: {
     flex: 1,
-    fontSize: largeFontSize,
+    fontSize: 26,
     textAlign: 'right',
     fontWeight: '500'
   },

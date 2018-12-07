@@ -35,7 +35,7 @@ export function addTransaction(transaction) {
   getTransactionsCollection().add({
     date: transaction.date,
     memo: transaction.memo,
-    amount: parseFloat(transaction.amount.substring(2)),
+    amount: transaction.amount,
     entryType: transaction.isCredit ? 'credit' : 'debit',
     _addedOn: firebase.firestore.FieldValue.serverTimestamp()
   });
