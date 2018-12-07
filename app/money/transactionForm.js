@@ -1,8 +1,6 @@
 import React from 'react';
 import {
-  DatePickerIOS,
   LayoutAnimation,
-  Modal,
   StyleSheet,
   Switch,
   Text,
@@ -11,20 +9,19 @@ import {
   View
 } from 'react-native';
 import theme from '../../theme';
-import { addTransaction, toSimpleDateString } from '../../utils';
+import { addTransaction } from '../../utils';
 import Button from '../button';
+import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
 
 const smallFontSize = 20;
-const inputBorderColor = theme.colors.lighterGray;
 
 function getDefaultState(moneyInputKey) {
   return {
     date: new Date(),
     memo: '',
-    amount: 0,
+    amount: '',
     isCredit: false,
-    dateModalVisible: false,
     isExpanded: false,
     moneyInputKey: moneyInputKey || 0
   };
@@ -43,57 +40,23 @@ class TransactionForm extends React.Component {
           }}
           style={sharedStyles.firstRow}
         >
-          <View>
-            <TouchableOpacity
-              onPress={() => this.setState({ dateModalVisible: true })}
-            >
-              <Text
-                style={sharedStyles.dateText}
-                onChangeText={text => this.setState({ date: text })}
-                keyboardType="decimal-pad"
-              >
-                {toSimpleDateString(this.state.date)}
-              </Text>
-            </TouchableOpacity>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={this.state.dateModalVisible}
-            >
-              <View style={sharedStyles.datePickerModal}>
-                <DatePickerIOS
-                  mode="date"
-                  date={this.state.date}
-                  onDateChange={date => this.setState({ date })}
-                />
-                <Button
-                  onPress={() => {
-                    this.setState({ dateModalVisible: false });
-                  }}
-                  label="Done"
-                  color={theme.colors.primary}
-                  style={{
-                    width: 100,
-                    alignSelf: 'center',
-                    padding: 5
-                  }}
-                  textStyle={{ textAlign: 'center' }}
-                />
-              </View>
-            </Modal>
-          </View>
-          <View style={{ flex: 10, flexDirection: 'row' }}>
-            <MoneyInput
-              onFocus={() => {
-                if (!this.state.isExpanded) {
-                  LayoutAnimation.easeInEaseOut();
-                  this.setState({ isExpanded: true });
-                }
-              }}
-              onChange={amount => this.setState({ amount })}
-              key={this.state.moneyInputKey}
-            />
-          </View>
+          <DateInput
+            onChange={date => this.setState({ date })}
+            date={this.state.date}
+            style={{ flex: 9 }}
+          />
+          <MoneyInput
+            style={{ flex: 10 }}
+            onFocus={() => {
+              if (!this.state.isExpanded) {
+                LayoutAnimation.easeInEaseOut();
+                this.setState({ isExpanded: true });
+              }
+            }}
+            onChange={amount => this.setState({ amount })}
+            key={this.state.moneyInputKey}
+            amount={this.state.amount}
+          />
         </TouchableOpacity>
         {this.state.isExpanded && [
           <TextInput
@@ -123,7 +86,9 @@ class TransactionForm extends React.Component {
             <Button
               color={theme.colors.primary}
               disabled={
-                this.state.amount === '$ 00.00' || this.state.memo === ''
+                !this.state.amount ||
+                this.state.amount === '00.00' ||
+                this.state.memo === ''
               }
               label="Add"
               onPress={() => {
@@ -160,7 +125,7 @@ const sharedStyles = StyleSheet.create({
   },
   firstRow: {
     flexDirection: 'row',
-    borderBottomColor: inputBorderColor,
+    borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
     padding: 12,
     backgroundColor: '#fff',
@@ -168,22 +133,7 @@ const sharedStyles = StyleSheet.create({
     borderTopRightRadius: 10,
     alignItems: 'center'
   },
-  dateText: {
-    flex: 9,
-    fontSize: smallFontSize,
-    color: theme.colors.darkGray,
-    fontWeight: '500'
-  },
-  datePickerModal: {
-    backgroundColor: '#fff',
-    top: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4
-  },
+
   amountInput: {
     flex: 1,
     fontSize: 26,
@@ -196,7 +146,7 @@ const sharedStyles = StyleSheet.create({
     fontSize: smallFontSize,
     fontWeight: '500',
     padding: 12,
-    borderBottomColor: inputBorderColor,
+    borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
     backgroundColor: '#fff',
     color: theme.colors.darkerGray

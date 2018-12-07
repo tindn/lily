@@ -21,6 +21,7 @@ class Expenses extends React.Component {
   static navigationOptions = {
     header: null
   };
+
   state = {
     refreshing: false,
     tenDaysTransactions: [],
@@ -130,6 +131,7 @@ class Expenses extends React.Component {
             }
             refreshing={this.state.fetchingTenDaysTransactions}
             emptyText="Press above to expand."
+            navigation={this.props.navigation}
           />
         </ScrollView>
       </Screen>

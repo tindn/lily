@@ -1,10 +1,16 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity
+} from 'react-native';
 import theme from '../../theme';
 import { toWeekDayDateString } from '../../utils';
 
 function TransactionList(props) {
-  const { data, refreshing } = props;
+  const { data, refreshing, navigation } = props;
   return (
     <FlatList
       refreshing={refreshing}
@@ -18,18 +24,20 @@ function TransactionList(props) {
       }
       renderItem={({ item, index }) => {
         const borderBottomWidth = index === data.length - 1 ? 0 : 1;
-        let dateDisplay = item.date;
-        const color =
-          item.entryType === 'debit' ? theme.colors.red : theme.colors.green;
-        if (item.date.toDate) {
-          dateDisplay = toWeekDayDateString(item.date);
-        }
+        let dateDisplay = toWeekDayDateString(item.date);
+        const color = item.isCredit ? theme.colors.green : theme.colors.red;
         return (
-          <View
+          <TouchableOpacity
             style={[
               styles.transactionItem,
               { borderBottomWidth: borderBottomWidth }
             ]}
+            onPress={() => {
+              navigation.navigate('TransactionDetails', {
+                title: item.memo,
+                transaction: item
+              });
+            }}
           >
             <View>
               <Text style={styles.transactionItemMemo}>{item.memo}</Text>
@@ -38,7 +46,7 @@ function TransactionList(props) {
             <Text style={[styles.transactionItemAmount, { color }]}>
               $ {item.amount.toFixed(2)}
             </Text>
-          </View>
+          </TouchableOpacity>
         );
       }}
     />

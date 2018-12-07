@@ -3,7 +3,9 @@ import {
   fetchTransactions,
   getTransactionsCollection,
   getTotalAmount,
-  addTransaction
+  addTransaction,
+  updateTransaction,
+  deleteTransaction
 } from './transactions';
 
 export {
@@ -12,5 +14,7 @@ export {
   toWeekDayDateString,
   getTransactionsCollection,
   getTotalAmount,
-  addTransaction
+  addTransaction,
+  updateTransaction,
+  deleteTransaction
 };

@@ -2,12 +2,12 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { createStackNavigator } from 'react-navigation';
 import Expenses from './expenses';
+import TransactionDetails from './transactionDetails';
 
-const MoneyStack = createStackNavigator(
-  {
-    Expenses
-  }
-);
+const MoneyStack = createStackNavigator({
+  Expenses,
+  TransactionDetails
+});
 
 class Money extends React.Component {
   static router = MoneyStack.router;

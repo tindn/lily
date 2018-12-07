@@ -14,6 +14,8 @@ export function fetchTransactions(args) {
       // doc.data() is never undefined for query doc snapshots
       let transaction = doc.data();
       transaction.id = doc.id;
+      transaction.date = transaction.date.toDate();
+      transaction.isCredit = transaction.entryType === 'credit';
       transactions.push(transaction);
     });
     return transactions;
@@ -32,11 +34,26 @@ export function getTotalAmount(transactions) {
 }
 
 export function addTransaction(transaction) {
-  getTransactionsCollection().add({
+  return getTransactionsCollection().add({
     date: transaction.date,
     memo: transaction.memo,
     amount: transaction.amount,
     entryType: transaction.isCredit ? 'credit' : 'debit',
     _addedOn: firebase.firestore.FieldValue.serverTimestamp()
   });
+}
+
+export function updateTransaction(transaction) {
+  const { id, ...updates } = transaction;
+  updates.entryType = updates.isCredit ? 'credit' : 'debit';
+  updates._updatedOn = firebase.firestore.FieldValue.serverTimestamp();
+  return getTransactionsCollection()
+    .doc(id)
+    .update(updates);
+}
+
+export function deleteTransaction(transactionId) {
+  return getTransactionsCollection()
+    .doc(transactionId)
+    .delete();
 }
