@@ -59,13 +59,13 @@ function SpendTracking(props) {
           <View
             style={{
               flex: Math.floor(spendingThisMonth),
-              backgroundColor: theme.colors.primary,
+              backgroundColor: theme.colors.darkerGray,
             }}
           />
           <View
             style={{
               flex: Math.floor(diff),
-              backgroundColor: theme.colors.darkerGray,
+              backgroundColor: theme.colors.primary,
             }}
           />
         </View>

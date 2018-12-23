@@ -11,6 +11,7 @@ import {
   fetchTransactions,
   getTotalAmount,
   getTransactionsCollection,
+  formatAmountToDisplay,
 } from '../../utils';
 import Screen from '../screen';
 import SpendTracking from './spendTracking';
@@ -24,11 +25,11 @@ class Expenses extends React.Component {
 
   state = {
     refreshing: false,
-    fetchingTenDaysTransactions: false,
-    tenDaysTransactions: [],
+    weekTransactions: [],
     spendingThisMonth: undefined,
-    transactionListExpanded: false,
+    spendingThisWeek: undefined,
     earningThisMonth: undefined,
+    transactionListExpanded: false,
   };
 
   componentDidMount() {
@@ -37,19 +38,22 @@ class Expenses extends React.Component {
   }
 
   fetchData = () => {
-    this.setState({ refreshing: true, fetchingTenDaysTransactions: true });
+    this.setState({ refreshing: true });
     this.getMonthTransactions().then(transactions => {
-      let tenDaysAgo = new Date(Date.now() - 864000000);
-      const tenDaysTransactions = transactions
-        .filter(t => t.date >= tenDaysAgo)
+      const weekStartOffset = (new Date().getDay() - 1) * 86400000;
+      const startOfWeek = new Date(Date.now() - weekStartOffset);
+      const weekTransactions = transactions
+        .filter(t => t.date >= startOfWeek)
         .sort((a, b) => b.date - a.date);
       const spendings = transactions.filter(t => t.entryType === 'debit');
       const earnings = transactions.filter(t => t.entryType === 'credit');
       this.setState({
-        tenDaysTransactions: tenDaysTransactions,
+        weekTransactions: weekTransactions,
         spendingThisMonth: getTotalAmount(spendings),
         earningThisMonth: getTotalAmount(earnings),
-        fetchingTenDaysTransactions: false,
+        spendingThisWeek: getTotalAmount(
+          weekTransactions.filter(t => t.entryType === 'debit')
+        ),
         refreshing: false,
       });
     });
@@ -97,16 +101,16 @@ class Expenses extends React.Component {
               marginTop: 20,
             }}
           >
-            <Text style={{ textAlign: 'center' }}>past 10 days</Text>
+            <Text style={{ textAlign: 'center' }}>past week</Text>
           </TouchableOpacity>
           <TransactionList
             data={
               this.state.transactionListExpanded
-                ? this.state.tenDaysTransactions
+                ? this.state.weekTransactions
                 : []
             }
-            refreshing={this.state.fetchingTenDaysTransactions}
-            emptyText="Press above to expand."
+            refreshing={this.state.refreshing}
+            emptyText={formatAmountToDisplay(this.state.spendingThisWeek)}
             navigation={this.props.navigation}
           />
         </ScrollView>
