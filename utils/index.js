@@ -5,8 +5,9 @@ import {
   getTotalAmount,
   addTransaction,
   updateTransaction,
-  deleteTransaction
+  deleteTransaction,
 } from './transactions';
+import { formatAmountToDisplay } from './money';
 
 export {
   fetchTransactions,
@@ -16,5 +17,6 @@ export {
   getTotalAmount,
   addTransaction,
   updateTransaction,
-  deleteTransaction
+  deleteTransaction,
+  formatAmountToDisplay,
 };

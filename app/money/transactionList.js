@@ -4,10 +4,10 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import theme from '../../theme';
-import { toWeekDayDateString } from '../../utils';
+import { toWeekDayDateString, formatAmountToDisplay } from '../../utils';
 
 function TransactionList(props) {
   const { data, refreshing, navigation } = props;
@@ -30,12 +30,12 @@ function TransactionList(props) {
           <TouchableOpacity
             style={[
               styles.transactionItem,
-              { borderBottomWidth: borderBottomWidth }
+              { borderBottomWidth: borderBottomWidth },
             ]}
             onPress={() => {
               navigation.navigate('TransactionDetails', {
                 title: item.memo,
-                transaction: item
+                transaction: item,
               });
             }}
           >
@@ -44,7 +44,7 @@ function TransactionList(props) {
               <Text style={styles.transactionItemDate}>{dateDisplay}</Text>
             </View>
             <Text style={[styles.transactionItemAmount, { color }]}>
-              $ {item.amount.toFixed(2)}
+              {formatAmountToDisplay(item.amount)}
             </Text>
           </TouchableOpacity>
         );
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   emptyComponent: {
     backgroundColor: '#fff',
     padding: 20,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   transactionItem: {
     backgroundColor: '#fff',
@@ -69,19 +69,19 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   transactionItemMemo: {
     fontSize: 18,
-    marginBottom: 8
+    marginBottom: 8,
   },
   transactionItemDate: {
-    color: theme.colors.darkGray
+    color: theme.colors.darkGray,
   },
   transactionItemAmount: {
     fontSize: 20,
-    fontWeight: '500'
-  }
+    fontWeight: '500',
+  },
 });
 
 export default React.memo(TransactionList);
