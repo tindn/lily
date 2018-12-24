@@ -134,9 +134,9 @@ class Expenses extends React.Component {
             bottom: 10,
             alignSelf: 'center',
             backgroundColor: theme.colors.primary,
-            borderRadius: 25,
-            width: 50,
-            height: 50,
+            borderRadius: 30,
+            width: 60,
+            height: 60,
             justifyContent: 'center',
             alignItems: 'center',
             shadowColor: '#000',
@@ -146,7 +146,9 @@ class Expenses extends React.Component {
             elevation: 4,
           }}
         >
-          <Text style={{ color: theme.colors.secondary }}>Add</Text>
+          <Text style={{ color: theme.colors.secondary, fontSize: 16 }}>
+            Add
+          </Text>
         </TouchableOpacity>
       </Screen>
     );
