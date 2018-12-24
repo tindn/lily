@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import config from '../config.json';
-import theme from '../theme.json';
+import theme from '../theme';
 import Money from './money';
 import Settings from './settings';
 import { AsyncStorage } from 'react-native';
@@ -18,18 +18,18 @@ firebase
   });
 
 firebase.firestore().settings({
-  timestampsInSnapshots: true
+  timestampsInSnapshots: true,
 });
 const TabNavigator = createBottomTabNavigator(
   {
     Money,
-    Settings
+    Settings,
   },
   {
     tabBarOptions: {
       activeTintColor: theme.colors.primary,
-      inactiveTintColor: 'gray'
-    }
+      inactiveTintColor: 'gray',
+    },
   }
 );
 

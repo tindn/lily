@@ -5,9 +5,9 @@ import { formatAmountToDisplay } from '../../utils';
 
 function SpendTracking(props) {
   const { spendingThisMonth, earningThisMonth } = props;
-  if (earningThisMonth === undefined && spendingThisMonth === undefined) {
-    return null;
-  }
+  // if (earningThisMonth === undefined && spendingThisMonth === undefined) {
+  //   return null;
+  // }
   let diff = undefined;
   if (earningThisMonth !== undefined && spendingThisMonth !== undefined) {
     diff = earningThisMonth - spendingThisMonth;
@@ -18,9 +18,11 @@ function SpendTracking(props) {
       <View style={sharedStyles.row}>
         <View>
           <Text style={sharedStyles.title}>Spent</Text>
-          <Text style={sharedStyles.spendAmount}>
-            {formatAmountToDisplay(spendingThisMonth)}
-          </Text>
+          {spendingThisMonth && (
+            <Text style={sharedStyles.spendAmount}>
+              {formatAmountToDisplay(spendingThisMonth)}
+            </Text>
+          )}
         </View>
         <View>
           <Text style={[sharedStyles.title, { textAlign: 'center' }]}>
@@ -44,9 +46,11 @@ function SpendTracking(props) {
           <Text style={[sharedStyles.title, { textAlign: 'right' }]}>
             Earned
           </Text>
-          <Text style={[sharedStyles.spendAmount, { textAlign: 'right' }]}>
-            {formatAmountToDisplay(earningThisMonth)}
-          </Text>
+          {earningThisMonth && (
+            <Text style={[sharedStyles.spendAmount, { textAlign: 'right' }]}>
+              {formatAmountToDisplay(earningThisMonth)}
+            </Text>
+          )}
         </View>
       </View>
       {diff > 0 && (
@@ -76,9 +80,9 @@ function SpendTracking(props) {
 
 const sharedStyles = StyleSheet.create({
   container: {
-    marginTop: 20,
     marginLeft: 8,
     marginRight: 8,
+    marginBottom: 10,
   },
   title: {
     fontWeight: '600',

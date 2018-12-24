@@ -6,7 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import theme from '../../theme';
 import { addTransaction } from '../../utils';
@@ -22,8 +22,7 @@ function getDefaultState(moneyInputKey) {
     memo: '',
     amount: '',
     isCredit: false,
-    isExpanded: false,
-    moneyInputKey: moneyInputKey || 0
+    moneyInputKey: moneyInputKey || 0,
   };
 }
 
@@ -33,32 +32,20 @@ class TransactionForm extends React.Component {
   render() {
     return (
       <View style={sharedStyles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            LayoutAnimation.easeInEaseOut();
-            this.setState({ isExpanded: true });
-          }}
-          style={sharedStyles.firstRow}
-        >
-          <DateInput
-            onChange={date => this.setState({ date })}
-            date={this.state.date}
-            style={{ flex: 9 }}
-          />
-          <MoneyInput
-            style={{ flex: 10 }}
-            onFocus={() => {
-              if (!this.state.isExpanded) {
-                LayoutAnimation.easeInEaseOut();
-                this.setState({ isExpanded: true });
-              }
-            }}
-            onChange={amount => this.setState({ amount })}
-            key={this.state.moneyInputKey}
-            amount={this.state.amount}
-          />
-        </TouchableOpacity>
-        {this.state.isExpanded && [
+        {this.props.isExpanded && [
+          <View key="firstRow" style={sharedStyles.firstRow}>
+            <DateInput
+              onChange={date => this.setState({ date })}
+              date={this.state.date}
+              style={{ flex: 9 }}
+            />
+            <MoneyInput
+              style={{ flex: 10 }}
+              onChange={amount => this.setState({ amount })}
+              key={this.state.moneyInputKey}
+              amount={this.state.amount}
+            />
+          </View>,
           <TextInput
             key="memoInput"
             style={sharedStyles.memoInput}
@@ -79,6 +66,7 @@ class TransactionForm extends React.Component {
               onPress={() => {
                 LayoutAnimation.easeInEaseOut();
                 this.setState(getDefaultState(this.state.moneyInputKey + 1));
+                this.props.collapse && this.props.collapse();
               }}
               style={[sharedStyles.button]}
               color={theme.colors.darkGray}
@@ -96,14 +84,15 @@ class TransactionForm extends React.Component {
                   date: this.state.date,
                   memo: this.state.memo,
                   amount: parseFloat(this.state.amount),
-                  isCredit: this.state.isCredit
+                  isCredit: this.state.isCredit,
                 });
                 LayoutAnimation.easeInEaseOut();
                 this.setState(getDefaultState(this.state.moneyInputKey + 1));
+                this.props.collapse && this.props.collapse();
               }}
               style={[sharedStyles.button]}
             />
-          </View>
+          </View>,
         ]}
       </View>
     );
@@ -119,9 +108,8 @@ const sharedStyles = StyleSheet.create({
     elevation: 4,
     marginLeft: 5,
     marginRight: 5,
-    marginTop: 5,
     backgroundColor: theme.colors.backgroundColor,
-    borderRadius: 10
+    borderRadius: 10,
   },
   firstRow: {
     flexDirection: 'row',
@@ -131,14 +119,14 @@ const sharedStyles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   amountInput: {
     flex: 1,
     fontSize: 26,
     textAlign: 'right',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   memoInput: {
     flex: 1,
@@ -149,26 +137,26 @@ const sharedStyles = StyleSheet.create({
     borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
     backgroundColor: '#fff',
-    color: theme.colors.darkerGray
+    color: theme.colors.darkerGray,
   },
   isCreditSwitch: {
     backgroundColor: '#fff',
     padding: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
     padding: 12,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   button: {
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 7,
-    paddingBottom: 7
-  }
+    paddingBottom: 7,
+  },
 });
 
 export default TransactionForm;

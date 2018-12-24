@@ -30,6 +30,7 @@ class Expenses extends React.Component {
     spendingThisWeek: undefined,
     earningThisMonth: undefined,
     transactionListExpanded: false,
+    transactionFormExpanded: false,
   };
 
   componentDidMount() {
@@ -40,7 +41,8 @@ class Expenses extends React.Component {
   fetchData = () => {
     this.setState({ refreshing: true });
     this.getMonthTransactions().then(transactions => {
-      const weekStartOffset = (new Date().getDay() - 1) * 86400000;
+      const dayOfWeek = new Date().getDay();
+      const weekStartOffset = (dayOfWeek ? dayOfWeek - 1 : 6) * 86400000;
       const startOfWeek = new Date(Date.now() - weekStartOffset);
       const weekTransactions = transactions
         .filter(t => t.date >= startOfWeek)
@@ -78,10 +80,15 @@ class Expenses extends React.Component {
             />
           }
         >
-          <TransactionForm />
           <SpendTracking
             spendingThisMonth={this.state.spendingThisMonth}
             earningThisMonth={this.state.earningThisMonth}
+          />
+          <TransactionForm
+            isExpanded={this.state.transactionFormExpanded}
+            collapse={() => {
+              this.setState({ transactionFormExpanded: false });
+            }}
           />
           <TouchableOpacity
             onPress={() => {
@@ -98,10 +105,10 @@ class Expenses extends React.Component {
               alignSelf: 'center',
               top: 7,
               zIndex: 1,
-              marginTop: 20,
+              marginTop: 10,
             }}
           >
-            <Text style={{ textAlign: 'center' }}>past week</Text>
+            <Text style={{ textAlign: 'center' }}>this week</Text>
           </TouchableOpacity>
           <TransactionList
             data={
@@ -114,6 +121,33 @@ class Expenses extends React.Component {
             navigation={this.props.navigation}
           />
         </ScrollView>
+        <TouchableOpacity
+          onPress={() => {
+            if (!this.state.transactionFormExpanded) {
+              this.setState({
+                transactionFormExpanded: true,
+              });
+            }
+          }}
+          style={{
+            position: 'absolute',
+            bottom: 10,
+            alignSelf: 'center',
+            backgroundColor: theme.colors.primary,
+            borderRadius: 25,
+            width: 50,
+            height: 50,
+            justifyContent: 'center',
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.23,
+            shadowRadius: 2.62,
+            elevation: 4,
+          }}
+        >
+          <Text style={{ color: theme.colors.secondary }}>Add</Text>
+        </TouchableOpacity>
       </Screen>
     );
   }

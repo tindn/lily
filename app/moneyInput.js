@@ -4,7 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { formatAmountToDisplay } from '../utils';
 
@@ -29,6 +29,7 @@ class MoneyInput extends React.PureComponent {
           style={{ display: 'none' }}
           keyboardType="number-pad"
           onChangeText={this.onChangeText}
+          autoFocus={true}
         />
         <TouchableOpacity
           onPress={() => {
@@ -50,8 +51,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 26,
     textAlign: 'right',
-    fontWeight: '500'
-  }
+    fontWeight: '500',
+  },
 });
 
 export default MoneyInput;
