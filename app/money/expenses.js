@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  LayoutAnimation,
   RefreshControl,
   ScrollView,
   Text,
@@ -17,6 +16,7 @@ import Screen from '../screen';
 import SpendTracking from './spendTracking';
 import TransactionForm from './transactionForm';
 import TransactionList from './transactionList';
+import Button from '../button';
 
 class Expenses extends React.Component {
   static navigationOptions = {
@@ -25,12 +25,11 @@ class Expenses extends React.Component {
 
   state = {
     refreshing: false,
-    weekTransactions: [],
     spendingThisMonth: undefined,
-    spendingThisWeek: undefined,
     earningThisMonth: undefined,
     transactionListExpanded: false,
     transactionFormExpanded: false,
+    monthTransactions: undefined,
   };
 
   componentDidMount() {
@@ -40,25 +39,23 @@ class Expenses extends React.Component {
 
   fetchData = () => {
     this.setState({ refreshing: true });
-    this.getMonthTransactions().then(transactions => {
-      const dayOfWeek = new Date().getDay();
-      const weekStartOffset = (dayOfWeek ? dayOfWeek - 1 : 6) * 86400000;
-      const startOfWeek = new Date(Date.now() - weekStartOffset);
-      const weekTransactions = transactions
-        .filter(t => t.date >= startOfWeek)
-        .sort((a, b) => b.date - a.date);
-      const spendings = transactions.filter(t => t.entryType === 'debit');
-      const earnings = transactions.filter(t => t.entryType === 'credit');
-      this.setState({
-        weekTransactions: weekTransactions,
-        spendingThisMonth: getTotalAmount(spendings),
-        earningThisMonth: getTotalAmount(earnings),
-        spendingThisWeek: getTotalAmount(
-          weekTransactions.filter(t => t.entryType === 'debit')
-        ),
-        refreshing: false,
+    this.getMonthTransactions()
+      .then(transactions => {
+        const spendings = transactions.filter(t => t.entryType === 'debit');
+        const earnings = transactions.filter(t => t.entryType === 'credit');
+        transactions.sort((a, b) => b.date - a.date);
+        this.setState({
+          spendingThisMonth: getTotalAmount(spendings),
+          earningThisMonth: getTotalAmount(earnings),
+          refreshing: false,
+          monthTransactions: transactions,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          refreshing: false,
+        });
       });
-    });
   };
 
   getMonthTransactions() {
@@ -83,6 +80,7 @@ class Expenses extends React.Component {
           <SpendTracking
             spendingThisMonth={this.state.spendingThisMonth}
             earningThisMonth={this.state.earningThisMonth}
+            navigation={this.props.navigation}
           />
           <TransactionForm
             isExpanded={this.state.transactionFormExpanded}
@@ -90,36 +88,24 @@ class Expenses extends React.Component {
               this.setState({ transactionFormExpanded: false });
             }}
           />
-          <TouchableOpacity
-            onPress={() => {
-              LayoutAnimation.easeInEaseOut();
-              this.setState({
-                transactionListExpanded: !this.state.transactionListExpanded,
-              });
-            }}
-            style={{
-              padding: 7,
-              backgroundColor: theme.colors.lighterGray,
-              borderRadius: 5,
-              width: 100,
-              alignSelf: 'center',
-              top: 7,
-              zIndex: 1,
-              marginTop: 10,
-            }}
-          >
-            <Text style={{ textAlign: 'center' }}>this week</Text>
-          </TouchableOpacity>
-          <TransactionList
-            data={
-              this.state.transactionListExpanded
-                ? this.state.weekTransactions
-                : []
-            }
-            refreshing={this.state.refreshing}
-            emptyText={formatAmountToDisplay(this.state.spendingThisWeek)}
-            navigation={this.props.navigation}
-          />
+          {this.state.monthTransactions && (
+            <Button
+              onPress={() => {
+                this.props.navigation.navigate('MonthTransactions', {
+                  data: this.state.monthTransactions,
+                });
+              }}
+              label="View Month"
+              style={{
+                width: 250,
+                alignSelf: 'center',
+                padding: 7,
+                marginTop: 10,
+              }}
+              color={theme.colors.primary}
+              textStyle={{ textAlign: 'center' }}
+            />
+          )}
         </ScrollView>
         <TouchableOpacity
           onPress={() => {

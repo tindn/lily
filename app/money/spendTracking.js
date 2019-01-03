@@ -5,9 +5,6 @@ import { formatAmountToDisplay } from '../../utils';
 
 function SpendTracking(props) {
   const { spendingThisMonth, earningThisMonth } = props;
-  // if (earningThisMonth === undefined && spendingThisMonth === undefined) {
-  //   return null;
-  // }
   let diff = undefined;
   if (earningThisMonth !== undefined && spendingThisMonth !== undefined) {
     diff = earningThisMonth - spendingThisMonth;
@@ -18,7 +15,7 @@ function SpendTracking(props) {
       <View style={sharedStyles.row}>
         <View>
           <Text style={sharedStyles.title}>Spent</Text>
-          {spendingThisMonth && (
+          {spendingThisMonth !== undefined && (
             <Text style={sharedStyles.spendAmount}>
               {formatAmountToDisplay(spendingThisMonth)}
             </Text>
@@ -46,7 +43,7 @@ function SpendTracking(props) {
           <Text style={[sharedStyles.title, { textAlign: 'right' }]}>
             Earned
           </Text>
-          {earningThisMonth && (
+          {earningThisMonth !== undefined && (
             <Text style={[sharedStyles.spendAmount, { textAlign: 'right' }]}>
               {formatAmountToDisplay(earningThisMonth)}
             </Text>

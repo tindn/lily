@@ -3,10 +3,12 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { createStackNavigator } from 'react-navigation';
 import Expenses from './expenses';
 import TransactionDetails from './transactionDetails';
+import MonthTransactions from './monthTransactions';
 
 const MoneyStack = createStackNavigator({
   Expenses,
-  TransactionDetails
+  TransactionDetails,
+  MonthTransactions,
 });
 
 class Money extends React.Component {
@@ -21,7 +23,7 @@ Money.navigationOptions = ({ navigation }) => ({
     return (
       <Icon name="barschart" size={horizontal ? 20 : 25} color={tintColor} />
     );
-  }
+  },
 });
 
 export default Money;
