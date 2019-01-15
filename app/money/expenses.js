@@ -2,6 +2,7 @@ import React from 'react';
 import {
   RefreshControl,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
 } from 'react-native';
@@ -94,16 +95,20 @@ class Expenses extends React.Component {
                 });
               }}
               label="View Month"
-              style={{
-                width: 250,
-                alignSelf: 'center',
-                padding: 7,
-                marginTop: 10,
-              }}
+              style={sharedStyles.mainButton}
               color={theme.colors.primary}
               textStyle={{ textAlign: 'center' }}
             />
           )}
+          <Button
+            onPress={() => {
+              this.props.navigation.navigate('MonthlyAnalytics');
+            }}
+            label="View Analytics"
+            style={sharedStyles.mainButton}
+            color={theme.colors.primary}
+            textStyle={{ textAlign: 'center' }}
+          />
         </ScrollView>
         <TouchableOpacity
           onPress={() => {
@@ -138,5 +143,19 @@ class Expenses extends React.Component {
     );
   }
 }
+
+const sharedStyles = StyleSheet.create({
+  mainButton: {
+    width: '100%',
+    alignSelf: 'center',
+    padding: 20,
+    marginTop: 20,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderRadius: 0,
+  },
+});
 
 export default Expenses;

@@ -4,11 +4,13 @@ import { createStackNavigator } from 'react-navigation';
 import Expenses from './expenses';
 import TransactionDetails from './transactionDetails';
 import MonthTransactions from './monthTransactions';
+import MonthlyAnalytics from './monthlyAnalytics';
 
 const MoneyStack = createStackNavigator({
   Expenses,
   TransactionDetails,
   MonthTransactions,
+  MonthlyAnalytics,
 });
 
 class Money extends React.Component {
