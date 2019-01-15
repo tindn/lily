@@ -17,7 +17,7 @@ import SpendTracking from './spendTracking';
 import TransactionForm from './transactionForm';
 import Button from '../button';
 
-class Expenses extends React.Component {
+class Home extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -158,4 +158,4 @@ const sharedStyles = StyleSheet.create({
   },
 });
 
-export default Expenses;
+export default Home;

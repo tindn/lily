@@ -1,13 +1,13 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { createStackNavigator } from 'react-navigation';
-import Expenses from './expenses';
+import Home from './home';
 import TransactionDetails from './transactionDetails';
 import MonthTransactions from './monthTransactions';
 import MonthlyAnalytics from './monthlyAnalytics';
 
 const MoneyStack = createStackNavigator({
-  Expenses,
+  Home,
   TransactionDetails,
   MonthTransactions,
   MonthlyAnalytics,
