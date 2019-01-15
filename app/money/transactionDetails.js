@@ -7,7 +7,7 @@ import {
   Switch,
   Text,
   TextInput,
-  View
+  View,
 } from 'react-native';
 import theme from '../../theme';
 import { updateTransaction, deleteTransaction } from '../../utils';
@@ -18,7 +18,7 @@ import Screen from '../screen';
 class TransactionDetails extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam('title', 'Transaction Details')
+      title: navigation.getParam('title', 'Transaction Details'),
     };
   };
 
@@ -33,7 +33,13 @@ class TransactionDetails extends React.Component {
     return transaction;
   }
 
-  state = {};
+  state = {
+    amount: undefined,
+    date: undefined,
+    entryType: '',
+    memo: '',
+    vendor: '',
+  };
 
   render() {
     return (
@@ -53,10 +59,20 @@ class TransactionDetails extends React.Component {
             style={sharedStyles.inputRow}
           />
           <TextInput
+            key="vendorInput"
+            style={[
+              { textAlign: 'right', fontSize: 20, fontWeight: '500' },
+              sharedStyles.inputRow,
+            ]}
+            value={this.state.vendor}
+            placeholder="vendor"
+            onChangeText={text => this.setState({ vendor: text })}
+          />
+          <TextInput
             key="memoInput"
             style={[
               { textAlign: 'right', fontSize: 20, fontWeight: '500' },
-              sharedStyles.inputRow
+              sharedStyles.inputRow,
             ]}
             value={this.state.memo}
             placeholder="memo"
@@ -68,16 +84,15 @@ class TransactionDetails extends React.Component {
               {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
               },
-              sharedStyles.inputRow
+              sharedStyles.inputRow,
             ]}
           >
             <Text style={{ color: theme.colors.darkGray }}>Income</Text>
             <Switch
               value={this.state.isCredit}
               onValueChange={val => {
-                console.log(val);
                 this.setState({ isCredit: val });
               }}
             />
@@ -91,7 +106,8 @@ class TransactionDetails extends React.Component {
                   date: this.state.date,
                   memo: this.state.memo,
                   amount: parseFloat(this.state.amount),
-                  isCredit: this.state.isCredit
+                  vendor: this.state.vendor,
+                  isCredit: this.state.isCredit,
                 });
                 this.props.navigation.pop();
               }}
@@ -107,7 +123,7 @@ class TransactionDetails extends React.Component {
                   [
                     {
                       text: 'Cancel',
-                      onPress: () => console.log('Cancel Pressed')
+                      onPress: () => console.log('Cancel Pressed'),
                     },
                     {
                       text: 'Delete',
@@ -115,8 +131,8 @@ class TransactionDetails extends React.Component {
                         deleteTransaction(this.state.id);
                         this.props.navigation.pop();
                       },
-                      style: 'destructive'
-                    }
+                      style: 'destructive',
+                    },
                   ]
                 );
               }}
@@ -134,8 +150,8 @@ const sharedStyles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#fff',
     borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1
-  }
+    borderBottomWidth: 1,
+  },
 });
 
 export default TransactionDetails;

@@ -23,6 +23,7 @@ function getDefaultState(moneyInputKey) {
     amount: '',
     isCredit: false,
     moneyInputKey: moneyInputKey || 0,
+    vendor: '',
   };
 }
 
@@ -33,7 +34,14 @@ class TransactionForm extends React.Component {
     return (
       <View style={sharedStyles.container}>
         {this.props.isExpanded && [
-          <View key="firstRow" style={sharedStyles.firstRow}>
+          <View
+            key="firstRow"
+            style={[
+              sharedStyles.row,
+              sharedStyles.borderBottom,
+              sharedStyles.firstRow,
+            ]}
+          >
             <DateInput
               onChange={date => this.setState({ date })}
               date={this.state.date}
@@ -46,14 +54,33 @@ class TransactionForm extends React.Component {
               amount={this.state.amount}
             />
           </View>,
-          <TextInput
-            key="memoInput"
-            style={sharedStyles.memoInput}
-            value={this.state.memo}
-            placeholder="memo"
-            onChangeText={text => this.setState({ memo: text })}
-          />,
-          <View key="creditSwitch" style={sharedStyles.isCreditSwitch}>
+          <View
+            key="secondRow"
+            style={[
+              sharedStyles.row,
+              sharedStyles.borderBottom,
+              sharedStyles.secondRow,
+            ]}
+          >
+            <TextInput
+              key="vendorInput"
+              style={sharedStyles.vendorInput}
+              value={this.state.vendor}
+              placeholder="vendor"
+              onChangeText={text => this.setState({ vendor: text })}
+            />
+            <TextInput
+              key="memoInput"
+              style={sharedStyles.memoInput}
+              value={this.state.memo}
+              placeholder="memo"
+              onChangeText={text => this.setState({ memo: text })}
+            />
+          </View>,
+          <View
+            key="creditSwitch"
+            style={[sharedStyles.row, sharedStyles.isCreditSwitch]}
+          >
             <Text style={{ color: theme.colors.darkGray }}>Income</Text>
             <Switch
               value={this.state.isCredit}
@@ -76,7 +103,7 @@ class TransactionForm extends React.Component {
               disabled={
                 !this.state.amount ||
                 this.state.amount === '00.00' ||
-                this.state.memo === ''
+                (this.state.memo === '' && this.state.vendor === '')
               }
               label="Add"
               onPress={() => {
@@ -85,6 +112,7 @@ class TransactionForm extends React.Component {
                   memo: this.state.memo,
                   amount: parseFloat(this.state.amount),
                   isCredit: this.state.isCredit,
+                  vendor: this.state.vendor,
                 });
                 LayoutAnimation.easeInEaseOut();
                 this.setState(getDefaultState(this.state.moneyInputKey + 1));
@@ -113,35 +141,35 @@ const sharedStyles = StyleSheet.create({
   },
   firstRow: {
     flexDirection: 'row',
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
-    padding: 12,
-    backgroundColor: '#fff',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     alignItems: 'center',
   },
-
   amountInput: {
     flex: 1,
     fontSize: 26,
     textAlign: 'right',
     fontWeight: '500',
   },
+  secondRow: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  vendorInput: {
+    flex: 1,
+    textAlign: 'left',
+    fontSize: smallFontSize,
+    fontWeight: '500',
+    color: theme.colors.darkerGray,
+  },
   memoInput: {
     flex: 1,
     textAlign: 'right',
     fontSize: smallFontSize,
     fontWeight: '500',
-    padding: 12,
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
-    backgroundColor: '#fff',
     color: theme.colors.darkerGray,
   },
   isCreditSwitch: {
-    backgroundColor: '#fff',
-    padding: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -156,6 +184,15 @@ const sharedStyles = StyleSheet.create({
     paddingRight: 20,
     paddingTop: 7,
     paddingBottom: 7,
+  },
+  row: {
+    padding: 12,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+  },
+  borderBottom: {
+    borderBottomColor: theme.colors.lighterGray,
+    borderBottomWidth: 1,
   },
 });
 

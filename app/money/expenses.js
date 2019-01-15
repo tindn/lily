@@ -10,12 +10,10 @@ import {
   fetchTransactions,
   getTotalAmount,
   getTransactionsCollection,
-  formatAmountToDisplay,
 } from '../../utils';
 import Screen from '../screen';
 import SpendTracking from './spendTracking';
 import TransactionForm from './transactionForm';
-import TransactionList from './transactionList';
 import Button from '../button';
 
 class Expenses extends React.Component {
