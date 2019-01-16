@@ -6,61 +6,77 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import { connect } from 'react-redux';
 import theme from '../../theme';
 import {
-  fetchTransactions,
   getTotalAmount,
-  getTransactionsCollection,
+  getTransactionsFromSnapshot,
+  getTransactionsQuery,
 } from '../../utils';
+import Button from '../button';
 import Screen from '../screen';
 import SpendTracking from './spendTracking';
 import TransactionForm from './transactionForm';
-import Button from '../button';
 
-class Home extends React.Component {
+class Home extends React.PureComponent {
   static navigationOptions = {
     header: null,
   };
 
-  state = {
-    refreshing: false,
-    spendingThisMonth: undefined,
-    earningThisMonth: undefined,
-    transactionListExpanded: false,
-    transactionFormExpanded: false,
-    monthTransactions: undefined,
-  };
+  static getDerivedStateFromProps(props) {
+    if (!props.monthTransactions || !props.monthTransactions.length) {
+      return null;
+    }
+    const spendings = props.monthTransactions.filter(
+      t => t.entryType === 'debit'
+    );
+    const earnings = props.monthTransactions.filter(
+      t => t.entryType === 'credit'
+    );
+    props.monthTransactions.sort((a, b) => b.date - a.date);
+    return {
+      spendingThisMonth: getTotalAmount(spendings),
+      earningThisMonth: getTotalAmount(earnings),
+      monthTransactions: props.monthTransactions,
+    };
+  }
 
-  componentDidMount() {
-    getTransactionsCollection().onSnapshot(this.fetchData);
-    this.fetchData();
+  constructor(props) {
+    super(props);
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    this.monthTransactionsQuery = getTransactionsQuery([
+      ['where', 'date', '>=', startOfMonth],
+    ]);
+    this.state = {
+      refreshing: false,
+      spendingThisMonth: undefined,
+      earningThisMonth: undefined,
+      transactionListExpanded: false,
+      transactionFormExpanded: false,
+    };
   }
 
   fetchData = () => {
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     this.setState({ refreshing: true });
-    this.getMonthTransactions()
-      .then(transactions => {
-        const spendings = transactions.filter(t => t.entryType === 'debit');
-        const earnings = transactions.filter(t => t.entryType === 'credit');
-        transactions.sort((a, b) => b.date - a.date);
-        this.setState({
-          spendingThisMonth: getTotalAmount(spendings),
-          earningThisMonth: getTotalAmount(earnings),
-          refreshing: false,
-          monthTransactions: transactions,
-        });
-      })
-      .catch(() => {
+    this.monthTransactionsQuery
+      .get()
+      .then(getTransactionsFromSnapshot)
+      .then(this.props.updateMonthTransactions)
+      .finally(() => {
         this.setState({
           refreshing: false,
         });
       });
   };
 
-  getMonthTransactions() {
-    const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    return fetchTransactions([['where', 'date', '>=', startOfMonth]]);
+  componentDidMount() {
+    this.monthTransactionsQuery.onSnapshot(snapshot => {
+      const transactions = getTransactionsFromSnapshot(snapshot);
+      this.props.updateMonthTransactions(transactions);
+    });
   }
 
   render() {
@@ -87,24 +103,20 @@ class Home extends React.Component {
               this.setState({ transactionFormExpanded: false });
             }}
           />
-          {this.state.monthTransactions && (
-            <Button
-              onPress={() => {
-                this.props.navigation.navigate('MonthTransactions', {
-                  data: this.state.monthTransactions,
-                });
-              }}
-              label="View Month"
-              style={sharedStyles.mainButton}
-              color={theme.colors.primary}
-              textStyle={{ textAlign: 'center' }}
-            />
-          )}
+          <Button
+            onPress={() => {
+              this.props.navigation.navigate('MonthTransactions');
+            }}
+            label="Transactions This Month"
+            style={sharedStyles.mainButton}
+            color={theme.colors.primary}
+            textStyle={{ textAlign: 'center' }}
+          />
           <Button
             onPress={() => {
               this.props.navigation.navigate('MonthlyAnalytics');
             }}
-            label="View Analytics"
+            label="Monthly Analytics"
             style={sharedStyles.mainButton}
             color={theme.colors.primary}
             textStyle={{ textAlign: 'center' }}
@@ -158,4 +170,21 @@ const sharedStyles = StyleSheet.create({
   },
 });
 
-export default Home;
+function mapStateToProps(state) {
+  return {
+    monthTransactions: state.monthTransactions,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    updateMonthTransactions(transactions) {
+      dispatch({ type: 'UPDATE_MONTH_TRANSACTIONS', transactions });
+    },
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

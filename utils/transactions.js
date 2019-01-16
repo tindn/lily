@@ -1,25 +1,26 @@
 import firebase from 'firebase';
 
-export function fetchTransactions(args) {
+export function getTransactionsQuery(args) {
   let query = getTransactionsCollection();
   args.forEach(arg => {
     const operator = arg[0];
     const params = arg.slice(1);
     query = query[operator].apply(query, params);
   });
+  return query;
+}
 
-  return query.get().then(querySnapshot => {
-    let transactions = [];
-    querySnapshot.forEach(function(doc) {
-      // doc.data() is never undefined for query doc snapshots
-      let transaction = doc.data();
-      transaction.id = doc.id;
-      transaction.date = transaction.date.toDate();
-      transaction.isCredit = transaction.entryType === 'credit';
-      transactions.push(transaction);
-    });
-    return transactions;
+export function getTransactionsFromSnapshot(snapshot) {
+  let transactions = [];
+  snapshot.forEach(function(doc) {
+    // doc.data() is never undefined for query doc snapshots
+    let transaction = doc.data();
+    transaction.id = doc.id;
+    transaction.date = transaction.date.toDate();
+    transaction.isCredit = transaction.entryType === 'credit';
+    transactions.push(transaction);
   });
+  return transactions;
 }
 
 export function getTransactionsCollection() {
@@ -39,7 +40,8 @@ export function addTransaction(transaction) {
     memo: transaction.memo,
     amount: transaction.amount,
     entryType: transaction.isCredit ? 'credit' : 'debit',
-    _addedOn: firebase.firestore.FieldValue.serverTimestamp()
+    _addedOn: firebase.firestore.FieldValue.serverTimestamp(),
+    vendor: transaction.vendor,
   });
 }
 

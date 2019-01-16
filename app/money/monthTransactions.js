@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
 import theme from '../../theme';
 import { formatAmountToDisplay, toWeekDayDateString } from '../../utils';
 import Screen from '../screen';
 
 function MonthTransactions(props) {
-  const data = props.navigation.state.params.data;
+  const { data } = props;
   return (
     <Screen>
       <FlatList
@@ -40,7 +41,9 @@ function MonthTransactions(props) {
               }}
             >
               <View>
-                <Text style={styles.transactionItemMemo}>{item.memo}</Text>
+                <Text style={styles.transactionItemMemo}>
+                  {item.memo || item.vendor}
+                </Text>
                 <Text style={styles.transactionItemDate}>{dateDisplay}</Text>
               </View>
               <Text style={[styles.transactionItemAmount, { color }]}>
@@ -54,7 +57,13 @@ function MonthTransactions(props) {
   );
 }
 
-export default React.memo(MonthTransactions);
+function mapStateToProps(state) {
+  return {
+    data: state.monthTransactions,
+  };
+}
+
+export default connect(mapStateToProps)(React.memo(MonthTransactions));
 
 const styles = StyleSheet.create({
   emptyComponent: {

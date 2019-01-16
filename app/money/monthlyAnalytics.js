@@ -1,40 +1,90 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import theme from '../../theme';
-import { formatAmountToDisplay, toWeekDayDateString } from '../../utils';
+import {
+  formatAmountToDisplay,
+  getMonthlyAnalyticsFromSnapshot,
+  getMonthlyAnalyticsQuery,
+} from '../../utils';
 import Screen from '../screen';
 
-function MonthlyAnalytics(props) {
-  const data = [];
-  return (
-    <Screen>
-      <FlatList
-        data={data}
-        keyExtractor={item => item.id}
-        ListEmptyComponent={
-          <View style={styles.emptyComponent}>
-            <Text>{props.emptyText || 'No data.'}</Text>
-          </View>
-        }
-        renderItem={({ item, index }) => {
-          const borderBottomWidth = index === data.length - 1 ? 0 : 1;
-          let dateDisplay = toWeekDayDateString(item.date);
-          const color = item.isCredit ? theme.colors.green : theme.colors.red;
-          return (
-            <View style={[styles.transactionItem, { borderBottomWidth }]}>
-              <View>
-                <Text style={styles.transactionItemMemo}>{item.memo}</Text>
-                <Text style={styles.transactionItemDate}>{dateDisplay}</Text>
-              </View>
-              <Text style={[styles.transactionItemAmount, { color }]}>
-                {formatAmountToDisplay(item.amount)}
-              </Text>
+class MonthlyAnalytics extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.monthlyAnalyticsQuery = getMonthlyAnalyticsQuery([]);
+    this.state = {
+      data: [],
+      isRefreshing: true,
+    };
+  }
+
+  fetchData = () => {
+    this.setState({ refreshing: true });
+    this.monthlyAnalyticsQuery
+      .get()
+      .then(getMonthlyAnalyticsFromSnapshot)
+      .then(data => {
+        data.sort((a, b) => b.startDate - a.startDate);
+        this.setState({ data });
+      })
+      .finally(() => {
+        this.setState({
+          refreshing: false,
+        });
+      });
+  };
+
+  componentDidMount() {
+    this.monthlyAnalyticsQuery.onSnapshot(snapshot => {
+      const data = getMonthlyAnalyticsFromSnapshot(snapshot);
+      data.sort((a, b) => b.startDate - a.startDate);
+      this.setState({ data });
+    });
+  }
+
+  render() {
+    return (
+      <Screen>
+        <FlatList
+          data={this.state.data}
+          keyExtractor={item => item.id}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.fetchData}
+            />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyComponent}>
+              <Text>No data.</Text>
             </View>
-          );
-        }}
-      />
-    </Screen>
-  );
+          }
+          renderItem={({ item, index }) => {
+            const borderBottomWidth =
+              index === this.state.data.length - 1 ? 0 : 1;
+            const diff = item.earned - item.spent;
+            const color = diff >= 0 ? theme.colors.green : theme.colors.red;
+            return (
+              <View style={[styles.listItem, { borderBottomWidth }]}>
+                <View>
+                  <Text style={styles.transactionItemMemo}>{item.id}</Text>
+                  <Text style={{ color: theme.colors.green }}>
+                    {` ${formatAmountToDisplay(item.earned)}`}
+                  </Text>
+                  <Text style={{ color: theme.colors.red }}>
+                    {`${formatAmountToDisplay(-item.spent, true)}`}
+                  </Text>
+                </View>
+                <Text style={[styles.transactionItemAmount, { color }]}>
+                  {formatAmountToDisplay(diff, true)}
+                </Text>
+              </View>
+            );
+          }}
+        />
+      </Screen>
+    );
+  }
 }
 
 export default React.memo(MonthlyAnalytics);
@@ -45,7 +95,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
   },
-  transactionItem: {
+  listItem: {
     backgroundColor: '#fff',
     borderBottomColor: theme.colors.lighterGray,
     flex: 1,
