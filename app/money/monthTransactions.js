@@ -88,7 +88,7 @@ class MonthTransactions extends React.PureComponent {
                   { borderBottomWidth: borderBottomWidth },
                 ]}
                 onPress={() => {
-                  props.navigation.navigate('TransactionDetails', {
+                  this.props.navigation.navigate('TransactionDetails', {
                     title: item.memo,
                     transaction: item,
                   });
