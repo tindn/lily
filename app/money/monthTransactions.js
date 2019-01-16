@@ -17,7 +17,15 @@ import {
 } from '../../utils';
 import Screen from '../screen';
 
-class MonthTransactions extends React.Component {
+class MonthTransactions extends React.PureComponent {
+  static getDerivedStateFromProps(props) {
+    if (props.data && props.data.length) {
+      props.data.sort((a, b) => b.date - a.date);
+      return { data: props.data };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
     const today = new Date();
@@ -27,6 +35,7 @@ class MonthTransactions extends React.Component {
     ]);
     this.state = {
       refreshing: false,
+      data: [],
     };
   }
 
@@ -51,7 +60,7 @@ class MonthTransactions extends React.Component {
   };
 
   render() {
-    const { data } = this.props;
+    const { data } = this.state;
     return (
       <Screen>
         <FlatList
