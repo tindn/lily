@@ -8,11 +8,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
-import {
-  getTotalAmount,
-  getTransactionsFromSnapshot,
-  getTransactionsQuery,
-} from '../../utils';
+import { getMonthlyAnalyticsCollection } from '../../utils';
 import Button from '../button';
 import Screen from '../screen';
 import SpendTracking from './spendTracking';
@@ -24,47 +20,48 @@ class Home extends React.PureComponent {
   };
 
   static getDerivedStateFromProps(props) {
-    if (!props.monthTransactions || !props.monthTransactions.length) {
-      return null;
-    }
-    const spendings = props.monthTransactions.filter(
-      t => t.entryType === 'debit'
-    );
-    const earnings = props.monthTransactions.filter(
-      t => t.entryType === 'credit'
-    );
-    props.monthTransactions.sort((a, b) => b.date - a.date);
-    return {
-      spendingThisMonth: getTotalAmount(spendings),
-      earningThisMonth: getTotalAmount(earnings),
-      monthTransactions: props.monthTransactions,
-    };
-  }
+    if (props.monthlyAnalytics) {
+      const currentMonthAnalyticsId = new Date().toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+      });
 
-  constructor(props) {
-    super(props);
-    const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    this.monthTransactionsQuery = getTransactionsQuery([
-      ['where', 'date', '>=', startOfMonth],
-    ]);
-    this.state = {
-      refreshing: false,
-      spendingThisMonth: undefined,
-      earningThisMonth: undefined,
-      transactionListExpanded: false,
-      transactionFormExpanded: false,
-    };
+      const currentMonthAnalytics =
+        props.monthlyAnalytics[currentMonthAnalyticsId];
+      if (currentMonthAnalytics) {
+        return {
+          spendingThisMonth: currentMonthAnalytics.spent,
+          earningThisMonth: currentMonthAnalytics.earned,
+        };
+      }
+    }
+    return null;
   }
+  state = {
+    refreshing: false,
+    spendingThisMonth: undefined,
+    earningThisMonth: undefined,
+    transactionListExpanded: false,
+    transactionFormExpanded: false,
+  };
+
+  currentMonthAnalyticsId = new Date().toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+  });
 
   fetchData = () => {
-    const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     this.setState({ refreshing: true });
-    this.monthTransactionsQuery
+    getMonthlyAnalyticsCollection()
+      .doc(this.currentMonthAnalyticsId)
       .get()
-      .then(getTransactionsFromSnapshot)
-      .then(this.props.updateMonthTransactions)
+      .then(doc => {
+        if (doc.exists) {
+          const analytics = doc.data();
+          analytics.id = doc.id;
+          this.props.updateMonthlyAnalytics(analytics);
+        }
+      })
       .finally(() => {
         this.setState({
           refreshing: false,
@@ -73,10 +70,15 @@ class Home extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.monthTransactionsQuery.onSnapshot(snapshot => {
-      const transactions = getTransactionsFromSnapshot(snapshot);
-      this.props.updateMonthTransactions(transactions);
-    });
+    getMonthlyAnalyticsCollection()
+      .doc(this.currentMonthAnalyticsId)
+      .onSnapshot(doc => {
+        if (doc.exists) {
+          const analytics = doc.data();
+          analytics.id = doc.id;
+          this.props.updateMonthlyAnalytics(analytics);
+        }
+      });
   }
 
   render() {
@@ -172,14 +174,19 @@ const sharedStyles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    monthTransactions: state.monthTransactions,
+    monthlyAnalytics: state.monthlyAnalytics,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    updateMonthTransactions(transactions) {
-      dispatch({ type: 'UPDATE_MONTH_TRANSACTIONS', transactions });
+    updateMonthlyAnalytics(analytics) {
+      dispatch({
+        type: 'UPDATE_MONTHLY_ANALYTICS',
+        payload: {
+          [analytics.id]: analytics,
+        },
+      });
     },
   };
 }

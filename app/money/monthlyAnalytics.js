@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux';
 import theme from '../../theme';
 import {
   formatAmountToDisplay,
@@ -9,6 +10,15 @@ import {
 import Screen from '../screen';
 
 class MonthlyAnalytics extends React.PureComponent {
+  static getDerivedStateFromProps(props) {
+    if (props.monthlyAnalytics) {
+      const data = Object.values(props.monthlyAnalytics);
+      data.sort((a, b) => b.startDate - a.startDate);
+      return { data };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
     this.monthlyAnalyticsQuery = getMonthlyAnalyticsQuery([]);
@@ -23,10 +33,7 @@ class MonthlyAnalytics extends React.PureComponent {
     this.monthlyAnalyticsQuery
       .get()
       .then(getMonthlyAnalyticsFromSnapshot)
-      .then(data => {
-        data.sort((a, b) => b.startDate - a.startDate);
-        this.setState({ data });
-      })
+      .then(this.props.updateMonthlyAnalytics)
       .finally(() => {
         this.setState({
           refreshing: false,
@@ -37,8 +44,7 @@ class MonthlyAnalytics extends React.PureComponent {
   componentDidMount() {
     this.monthlyAnalyticsQuery.onSnapshot(snapshot => {
       const data = getMonthlyAnalyticsFromSnapshot(snapshot);
-      data.sort((a, b) => b.startDate - a.startDate);
-      this.setState({ data });
+      this.props.updateMonthlyAnalytics(data);
     });
   }
 
@@ -67,7 +73,7 @@ class MonthlyAnalytics extends React.PureComponent {
             return (
               <View style={[styles.listItem, { borderBottomWidth }]}>
                 <View>
-                  <Text style={styles.transactionItemMemo}>{item.id}</Text>
+                  <Text style={styles.month}>{item.id}</Text>
                   <Text style={{ color: theme.colors.green }}>
                     {` ${formatAmountToDisplay(item.earned)}`}
                   </Text>
@@ -75,7 +81,7 @@ class MonthlyAnalytics extends React.PureComponent {
                     {`${formatAmountToDisplay(-item.spent, true)}`}
                   </Text>
                 </View>
-                <Text style={[styles.transactionItemAmount, { color }]}>
+                <Text style={[styles.amount, { color }]}>
                   {formatAmountToDisplay(diff, true)}
                 </Text>
               </View>
@@ -87,7 +93,27 @@ class MonthlyAnalytics extends React.PureComponent {
   }
 }
 
-export default React.memo(MonthlyAnalytics);
+function mapStateToProps(state) {
+  return {
+    monthlyAnalytics: state.monthlyAnalytics,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    updateMonthlyAnalytics(analytics) {
+      dispatch({
+        type: 'UPDATE_MONTHLY_ANALYTICS',
+        payload: analytics,
+      });
+    },
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MonthlyAnalytics);
 
 const styles = StyleSheet.create({
   emptyComponent: {
@@ -107,14 +133,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  transactionItemMemo: {
+  month: {
     fontSize: 18,
     marginBottom: 8,
   },
-  transactionItemDate: {
-    color: theme.colors.darkGray,
-  },
-  transactionItemAmount: {
+  amount: {
     fontSize: 20,
     fontWeight: '500',
   },

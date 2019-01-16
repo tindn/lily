@@ -7,7 +7,7 @@ import reducers from './reducers';
 const persistConfig = {
   key: 'money',
   storage,
-  whitelist: [],
+  whitelist: ['monthlyAnalytics'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

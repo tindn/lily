@@ -11,12 +11,12 @@ export function getMonthlyAnalyticsQuery(args) {
 }
 
 export function getMonthlyAnalyticsFromSnapshot(snapshot) {
-  let data = [];
+  let data = {};
   snapshot.forEach(function(doc) {
     let month = doc.data();
     month.id = doc.id;
     month.startDate = month.startDate.toDate();
-    data.push(month);
+    data[doc.id] = month;
   });
   return data;
 }
