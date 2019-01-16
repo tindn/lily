@@ -15,7 +15,9 @@ const MoneyStack = createStackNavigator({
   MonthTransactions: {
     screen: MonthTransactions,
     navigationOptions: {
-      title: 'Transactions',
+      title: new Date().toLocaleDateString('en-US', {
+        month: 'long',
+      }),
     },
   },
   MonthlyAnalytics: {

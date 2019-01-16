@@ -13,7 +13,6 @@ export function getTransactionsQuery(args) {
 export function getTransactionsFromSnapshot(snapshot) {
   let transactions = [];
   snapshot.forEach(function(doc) {
-    // doc.data() is never undefined for query doc snapshots
     let transaction = doc.data();
     transaction.id = doc.id;
     transaction.date = transaction.date.toDate();
