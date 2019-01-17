@@ -2,15 +2,16 @@ import React from 'react';
 import {
   RefreshControl,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
 import { getMonthlyAnalyticsCollection } from '../../utils';
-import Button from '../button';
+import Pill from '../pill';
 import Screen from '../screen';
+import FinanceOverview from './financeOverview';
 import SpendTracking from './spendTracking';
 import TransactionForm from './transactionForm';
 
@@ -105,24 +106,35 @@ class Home extends React.PureComponent {
               this.setState({ transactionFormExpanded: false });
             }}
           />
-          <Button
-            onPress={() => {
-              this.props.navigation.navigate('MonthTransactions');
+          <View
+            style={{
+              marginTop: 20,
+              paddingHorizontal: 50,
             }}
-            label="Transactions This Month"
-            style={sharedStyles.mainButton}
-            color={theme.colors.primary}
-            textStyle={{ textAlign: 'center' }}
-          />
-          <Button
-            onPress={() => {
-              this.props.navigation.navigate('MonthlyAnalytics');
-            }}
-            label="Monthly Analytics"
-            style={sharedStyles.mainButton}
-            color={theme.colors.primary}
-            textStyle={{ textAlign: 'center' }}
-          />
+          >
+            <Pill
+              onPress={() => {
+                this.props.navigation.navigate('MonthTransactions');
+              }}
+              label="Transactions This Month"
+              style={{ padding: 12, marginBottom: 20 }}
+              color={theme.colors.secondary}
+              backgroundColor={theme.colors.primary}
+              textStyle={{ textAlign: 'center' }}
+            />
+            <Pill
+              onPress={() => {
+                this.props.navigation.navigate('MonthlyAnalytics');
+              }}
+              label="Monthly Analytics"
+              style={{ padding: 12 }}
+              color={theme.colors.secondary}
+              backgroundColor={theme.colors.primary}
+              textStyle={{ textAlign: 'center' }}
+            />
+          </View>
+
+          <FinanceOverview />
         </ScrollView>
         <TouchableOpacity
           onPress={() => {
@@ -157,20 +169,6 @@ class Home extends React.PureComponent {
     );
   }
 }
-
-const sharedStyles = StyleSheet.create({
-  mainButton: {
-    width: '100%',
-    alignSelf: 'center',
-    padding: 20,
-    marginTop: 20,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderRadius: 0,
-  },
-});
 
 function mapStateToProps(state) {
   return {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 
-const Button = props => {
+const OutlineButton = props => {
   let color = props.color || '#007aff';
   let backgroundColor = '#fff';
 
@@ -18,18 +18,18 @@ const Button = props => {
           backgroundColor,
           borderRadius: 5,
           borderWidth: 1,
-          borderColor: color
+          borderColor: color,
           // opacity: props.disabled ? 0.2 : 1
         },
-        props.style
+        props.style,
       ]}
     >
       <Text
         style={[
           {
-            color
+            color,
           },
-          props.textStyle
+          props.textStyle,
         ]}
       >
         {props.label}
@@ -37,4 +37,4 @@ const Button = props => {
     </TouchableOpacity>
   );
 };
-export default Button;
+export default OutlineButton;

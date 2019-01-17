@@ -54,19 +54,24 @@ function SpendTracking(props) {
         <View
           style={[
             sharedStyles.row,
-            { borderRadius: 5, overflow: 'hidden', height: 25, marginTop: 10 },
+            {
+              borderRadius: 5,
+              overflow: 'hidden',
+              height: 25,
+              marginTop: 10,
+            },
           ]}
         >
           <View
             style={{
               flex: Math.floor(spendingThisMonth),
-              backgroundColor: theme.colors.darkerGray,
+              backgroundColor: theme.colors.red,
             }}
           />
           <View
             style={{
               flex: Math.floor(diff),
-              backgroundColor: theme.colors.primary,
+              backgroundColor: theme.colors.green,
             }}
           />
         </View>

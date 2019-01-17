@@ -5,15 +5,15 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import theme from '../theme';
 import { toSimpleDateString } from '../utils';
-import Button from './button';
+import OutlineButton from './outlineButton';
 
 class DateInput extends React.PureComponent {
   state = {
-    dateModalVisible: false
+    dateModalVisible: false,
   };
 
   toggleModal = () =>
@@ -44,14 +44,14 @@ class DateInput extends React.PureComponent {
               date={this.props.date}
               onDateChange={this.props.onChange}
             />
-            <Button
+            <OutlineButton
               onPress={this.toggleModal}
               label="Done"
               color={theme.colors.primary}
               style={{
                 width: 100,
                 alignSelf: 'center',
-                padding: 5
+                padding: 5,
               }}
               textStyle={{ textAlign: 'center' }}
             />
@@ -66,7 +66,7 @@ const sharedStyles = StyleSheet.create({
   dateText: {
     fontSize: 20,
     color: theme.colors.darkGray,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   datePickerModal: {
     backgroundColor: '#fff',
@@ -76,8 +76,8 @@ const sharedStyles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-    elevation: 4
-  }
+    elevation: 4,
+  },
 });
 
 export default DateInput;

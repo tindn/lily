@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import theme from '../../theme';
 import { addTransaction } from '../../utils';
-import Button from '../button';
+import OutlineButton from '../outlineButton';
 import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
 
@@ -88,7 +88,7 @@ class TransactionForm extends React.Component {
             />
           </View>,
           <View key="buttons" style={sharedStyles.buttonContainer}>
-            <Button
+            <OutlineButton
               label="Cancel"
               onPress={() => {
                 LayoutAnimation.easeInEaseOut();
@@ -98,7 +98,7 @@ class TransactionForm extends React.Component {
               style={[sharedStyles.button]}
               color={theme.colors.darkGray}
             />
-            <Button
+            <OutlineButton
               color={theme.colors.primary}
               disabled={
                 !this.state.amount ||
