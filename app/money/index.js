@@ -8,6 +8,8 @@ import MonthlyAnalytics from './monthlyAnalytics';
 import MonthTransactions from './monthTransactions';
 import { store, persistor } from './store';
 import TransactionDetails from './transactionDetails';
+import Accounts from './accounts';
+import account from './account';
 
 const MoneyStack = createStackNavigator({
   Home,
@@ -24,6 +26,18 @@ const MoneyStack = createStackNavigator({
     screen: MonthlyAnalytics,
     navigationOptions: {
       title: 'Monthly Analytics',
+    },
+  },
+  Accounts: {
+    screen: Accounts,
+    navigationOptions: {
+      title: 'Accounts',
+    },
+  },
+  Account: {
+    screen: account,
+    navigationOptions: {
+      title: 'Account',
     },
   },
 });

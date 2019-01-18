@@ -65,13 +65,11 @@ class MonthlyAnalytics extends React.PureComponent {
               <Text>No data.</Text>
             </View>
           }
-          renderItem={({ item, index }) => {
-            const borderBottomWidth =
-              index === this.state.data.length - 1 ? 0 : 1;
+          renderItem={({ item }) => {
             const diff = item.earned - item.spent;
             const color = diff >= 0 ? theme.colors.green : theme.colors.red;
             return (
-              <View style={[styles.listItem, { borderBottomWidth }]}>
+              <View style={styles.listItem}>
                 <View>
                   <Text style={styles.month}>{item.id}</Text>
                   <Text style={{ color: theme.colors.green }}>
@@ -122,8 +120,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listItem: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.backgroundColor,
     borderBottomColor: theme.colors.lighterGray,
+    borderBottomWidth: 1,
     flex: 1,
     paddingTop: 8,
     paddingBottom: 8,

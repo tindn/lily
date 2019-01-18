@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import theme from '../../theme';
 import MoneyDisplay from '../moneyDisplay';
 
-class FinanceOverview extends React.Component {
+class FinanceOverview extends React.PureComponent {
   static getDerivedStateFromProps(props) {
     if (props.accounts) {
       const accounts = Object.values(props.accounts);

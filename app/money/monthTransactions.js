@@ -20,7 +20,6 @@ import Screen from '../screen';
 class MonthTransactions extends React.PureComponent {
   static getDerivedStateFromProps(props) {
     if (props.data && props.data.length) {
-      props.data.sort((a, b) => b.date - a.date);
       return { data: props.data };
     }
     return null;
@@ -32,6 +31,7 @@ class MonthTransactions extends React.PureComponent {
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     this.monthTransactionsQuery = getTransactionsQuery([
       ['where', 'date', '>=', startOfMonth],
+      ['orderBy', 'date', 'desc'],
     ]);
     this.state = {
       refreshing: false,
@@ -77,16 +77,12 @@ class MonthTransactions extends React.PureComponent {
               <Text>No transactions found.</Text>
             </View>
           }
-          renderItem={({ item, index }) => {
-            const borderBottomWidth = index === data.length - 1 ? 0 : 1;
+          renderItem={({ item }) => {
             let dateDisplay = toWeekDayDateString(item.date);
             const color = item.isCredit ? theme.colors.green : theme.colors.red;
             return (
               <TouchableOpacity
-                style={[
-                  styles.transactionItem,
-                  { borderBottomWidth: borderBottomWidth },
-                ]}
+                style={styles.transactionItem}
                 onPress={() => {
                   this.props.navigation.navigate('TransactionDetails', {
                     title: item.memo,
@@ -138,8 +134,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   transactionItem: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.backgroundColor,
     borderBottomColor: theme.colors.lighterGray,
+    borderBottomWidth: 1,
     flex: 1,
     paddingTop: 8,
     paddingBottom: 8,

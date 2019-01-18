@@ -133,8 +133,11 @@ class Home extends React.PureComponent {
               textStyle={{ textAlign: 'center' }}
             />
           </View>
-
-          <FinanceOverview />
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Accounts')}
+          >
+            <FinanceOverview />
+          </TouchableOpacity>
         </ScrollView>
         <TouchableOpacity
           onPress={() => {
