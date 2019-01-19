@@ -12,6 +12,7 @@ const MiscStack = createStackNavigator({
 
 class Misc extends React.Component {
   static router = MiscStack.router;
+
   render() {
     return (
       <Provider store={store}>
