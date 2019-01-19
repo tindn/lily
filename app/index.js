@@ -3,6 +3,7 @@ import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import config from '../config.json';
 import theme from '../theme';
 import Money from './money';
+import Misc from './misc';
 import Settings from './settings';
 import { AsyncStorage } from 'react-native';
 require('firebase/firestore');
@@ -23,6 +24,7 @@ firebase.firestore().settings({
 const TabNavigator = createBottomTabNavigator(
   {
     Money,
+    Misc,
     Settings,
   },
   {
