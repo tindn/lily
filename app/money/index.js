@@ -9,7 +9,7 @@ import MonthTransactions from './monthTransactions';
 import { store, persistor } from './store';
 import TransactionDetails from './transactionDetails';
 import Accounts from './accounts';
-import account from './account';
+import AccountDetails from './accountDetails';
 
 const MoneyStack = createStackNavigator({
   Home,
@@ -34,12 +34,7 @@ const MoneyStack = createStackNavigator({
       title: 'Accounts',
     },
   },
-  Account: {
-    screen: account,
-    navigationOptions: {
-      title: 'Account',
-    },
-  },
+  AccountDetails,
 });
 
 class Money extends React.Component {

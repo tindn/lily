@@ -77,8 +77,8 @@ class Accounts extends React.Component {
               LayoutAnimation.easeInEaseOut();
             }}
             style={{
-              paddingTop: 20,
-              paddingBottom: 20,
+              paddingTop: 25,
+              paddingBottom: 5,
             }}
           >
             <LineItem
@@ -113,7 +113,7 @@ class Accounts extends React.Component {
               this.setState({ showLiabilities: !this.state.showLiabilities });
               LayoutAnimation.easeInEaseOut();
             }}
-            style={{ marginTop: 20, paddingTop: 20, paddingBottom: 20 }}
+            style={{ marginTop: 20, paddingTop: 25, paddingBottom: 5 }}
           >
             <LineItem
               text="Total Liabilities"

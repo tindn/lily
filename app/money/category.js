@@ -31,7 +31,11 @@ function Category(props) {
           .map(account => (
             <TouchableOpacity
               key={account.id}
-              onPress={() => navigation.navigate('Account')}
+              onPress={() =>
+                navigation.navigate('AccountDetails', {
+                  account,
+                })
+              }
             >
               <LineItem
                 text={account.name}
