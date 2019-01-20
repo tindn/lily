@@ -1,11 +1,13 @@
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import theme from '../theme';
 
 function Card(props) {
-  const { style, children } = props;
+  const { style, children, onPress } = props;
   return (
-    <View
+    <TouchableOpacity
+      disabled={!onPress}
+      onPress={onPress}
       style={[
         {
           flex: 1,
@@ -24,7 +26,7 @@ function Card(props) {
       ]}
     >
       {children}
-    </View>
+    </TouchableOpacity>
   );
 }
 

@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
 import Card from '../card';
@@ -34,11 +34,19 @@ class Home extends React.PureComponent {
           props.electricityReadings[1].timestamp) /
           86400000);
 
+      const usedThisMonth = lastReading.value - monthStart.value;
+
+      const dailyAverage =
+        usedThisMonth /
+        ((props.electricityReadings[0].timestamp - monthStart.timestamp) /
+          86400000);
+
       return {
         lastReading,
         monthStart,
-        usedThisMonth: lastReading.value - monthStart.value,
+        usedThisMonth,
         usageRate: usageRate.toFixed(2),
+        dailyAverage: dailyAverage.toFixed(2),
       };
     }
     return null;
@@ -55,7 +63,9 @@ class Home extends React.PureComponent {
           snapshot.forEach(function(doc) {
             let reading = doc.data();
             reading.id = doc.id;
-            reading.timestamp = reading.timestamp.toDate();
+            if (reading.timestamp) {
+              reading.timestamp = reading.timestamp.toDate();
+            }
             data.push(reading);
           });
           this.props.updateElectricityReadings(data);
@@ -77,50 +87,51 @@ class Home extends React.PureComponent {
           // }
         >
           <Card
-            style={{
-              paddingTop: 30,
-              paddingBottom: 30,
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}
+            onPress={() =>
+              this.props.navigation.navigate('ElectricityReadingsList')
+            }
+            style={styles.electricityReadingCard}
           >
-            <View>
+            <View
+              style={{
+                paddingTop: 20,
+              }}
+            >
               <Text
                 style={{
+                  fontWeight: '700',
+                  color: theme.colors.green,
                   fontSize: 17,
-                  fontWeight: '600',
                 }}
               >
-                {this.state.usedThisMonth} kWh
-              </Text>
-              <Text
-                style={{
-                  color: theme.colors.darkGray,
-                  fontSize: 12,
-                  fontWeight: '500',
-                }}
-              >
-                (this month)
+                Electricity
               </Text>
             </View>
-            <View>
-              <Text
-                style={{
-                  fontSize: 17,
-                  fontWeight: '600',
-                }}
-              >
-                {this.state.usageRate} kWh
-              </Text>
-              <Text
-                style={{
-                  color: theme.colors.darkGray,
-                  fontSize: 12,
-                  fontWeight: '500',
-                }}
-              >
-                (usage rate)
-              </Text>
+            <View style={styles.electricityReadings}>
+              <View>
+                <Text style={styles.electricityReading}>
+                  {this.state.usageRate} kWh
+                </Text>
+                <Text style={styles.electricityReadingAnnotation}>
+                  (usage rate)
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.electricityReading}>
+                  {this.state.usedThisMonth} kWh
+                </Text>
+                <Text style={styles.electricityReadingAnnotation}>
+                  (this month)
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.electricityReading}>
+                  {this.state.dailyAverage} kWh
+                </Text>
+                <Text style={styles.electricityReadingAnnotation}>
+                  (daily average)
+                </Text>
+              </View>
             </View>
           </Card>
         </ScrollView>
@@ -128,6 +139,29 @@ class Home extends React.PureComponent {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  electricityReading: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  electricityReadingAnnotation: {
+    color: theme.colors.darkGray,
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  electricityReadingCard: {
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  electricityReadings: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingBottom: 30,
+    paddingTop: 20,
+    width: '100%',
+  },
+});
 
 function mapStateToProps(state) {
   return {

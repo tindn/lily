@@ -4,10 +4,19 @@ import { createStackNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Home from './home';
+import ElectricityReadingsList from './electricityReadingsList';
 import { persistor, store } from './store';
+import ElectricityReadingAdd from './electricityReadingAdd';
 
 const MiscStack = createStackNavigator({
   Home,
+  ElectricityReadingsList: {
+    screen: ElectricityReadingsList,
+    navigationOptions: {
+      title: 'Readings',
+      headerRight: <ElectricityReadingAdd />,
+    },
+  },
 });
 
 class Misc extends React.Component {

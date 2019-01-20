@@ -5,7 +5,7 @@ export function toSimpleDateString(date) {
   return date.toLocaleDateString('en-US', {
     day: '2-digit',
     month: '2-digit',
-    year: 'numeric'
+    year: 'numeric',
   });
 }
 
@@ -17,6 +17,6 @@ export function toWeekDayDateString(date) {
     weekday: 'short',
     day: '2-digit',
     month: '2-digit',
-    year: 'numeric'
+    year: 'numeric',
   });
 }
