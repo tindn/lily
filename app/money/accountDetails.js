@@ -1,37 +1,29 @@
+import firebase from 'firebase';
 import React from 'react';
-import { Text, ScrollView, StyleSheet, View, FlatList } from 'react-native';
-import Screen from '../screen';
+import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux';
 import theme from '../../theme';
 import MoneyDisplay from '../moneyDisplay';
-import firebase from 'firebase';
-import LineItem from './lineItem';
+import Pill from '../pill';
+import Screen from '../screen';
 import AccountEntry from './accountEntry';
+import AccountEntryForm from './accountEntryForm';
 
 class AccountDetails extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
-    const account = navigation.getParam('account', {});
+    const account = navigation.getParam('accountName', undefined);
     return { title: account.name || 'Account Details' };
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (!state.account.id) {
-      const account = props.navigation.getParam('account', {});
-      return {
-        account,
-      };
-    }
-    return null;
-  }
-
   state = {
-    account: {},
+    showNewEntryForm: false,
   };
 
   componentDidMount() {
     firebase
       .firestore()
       .collection('accountEntries')
-      .where('accountId', '==', this.state.account.id)
+      .where('accountId', '==', this.props.accountId)
       .orderBy('date', 'desc')
       .onSnapshot(
         function(snapshot) {
@@ -48,7 +40,10 @@ class AccountDetails extends React.PureComponent {
   }
 
   render() {
-    const { name, balance, type, category } = this.state.account;
+    if (!this.props.account) {
+      return null;
+    }
+    const { name, balance, type, category } = this.props.account;
     return (
       <Screen>
         <ScrollView>
@@ -63,11 +58,35 @@ class AccountDetails extends React.PureComponent {
             <Text style={{ fontSize: 17 }}>{category}</Text>
             <Text style={{ fontSize: 17 }}>{type}</Text>
           </View>
+
+          <View
+            style={{
+              marginTop: 20,
+            }}
+          >
+            {this.state.showNewEntryForm ? (
+              <AccountEntryForm
+                onCancel={() => this.setState({ showNewEntryForm: false })}
+                accountId={this.props.accountId}
+              />
+            ) : (
+              <Pill
+                backgroundColor={theme.colors.primary}
+                color={theme.colors.secondary}
+                onPress={() => this.setState({ showNewEntryForm: true })}
+                style={{ padding: 12, marginLeft: 50, marginRight: 50 }}
+                label="Add Entry"
+                textStyle={{ textAlign: 'center' }}
+              />
+            )}
+          </View>
           <FlatList
             data={this.state.entries}
             keyExtractor={item => item.id}
             renderItem={({ item }) => <AccountEntry entry={item} />}
             style={{
+              borderTopColor: theme.colors.lighterGray,
+              borderTopWidth: 1,
               marginTop: 30,
             }}
           />
@@ -79,13 +98,21 @@ class AccountDetails extends React.PureComponent {
 
 const styles = StyleSheet.create({
   row: {
-    padding: 12,
     backgroundColor: '#fff',
     borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
-    justifyContent: 'space-between',
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 12,
   },
 });
 
-export default AccountDetails;
+function mapStateToProps(state, ownProps) {
+  const accountId = ownProps.navigation.getParam('accountId', '');
+  return {
+    account: state.accounts[accountId],
+    accountId,
+  };
+}
+
+export default connect(mapStateToProps)(AccountDetails);

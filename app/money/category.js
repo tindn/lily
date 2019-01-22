@@ -33,7 +33,8 @@ function Category(props) {
               key={account.id}
               onPress={() =>
                 navigation.navigate('AccountDetails', {
-                  account,
+                  accountId: account.id,
+                  accountName: account.name,
                 })
               }
             >

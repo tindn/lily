@@ -27,6 +27,7 @@ class DateInput extends React.PureComponent {
             this.toggleModal();
             this.props.onFocus && this.props.onFocus();
           }}
+          disabled={this.props.disabled}
         >
           <Text style={sharedStyles.dateText}>
             {toSimpleDateString(this.props.date)}
@@ -39,7 +40,7 @@ class DateInput extends React.PureComponent {
         >
           <View style={sharedStyles.datePickerModal}>
             <DatePickerIOS
-              mode="datetime"
+              mode={this.props.mode || 'datetime'}
               minuteInterval={15}
               date={this.props.date}
               onDateChange={this.props.onChange}
@@ -64,19 +65,19 @@ class DateInput extends React.PureComponent {
 
 const sharedStyles = StyleSheet.create({
   dateText: {
-    fontSize: 20,
     color: theme.colors.darkGray,
+    fontSize: 20,
     fontWeight: '500',
   },
   datePickerModal: {
     backgroundColor: '#fff',
-    top: 10,
+    elevation: 4,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-    elevation: 4,
+    top: 10,
   },
 });
 

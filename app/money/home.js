@@ -14,6 +14,7 @@ import Screen from '../screen';
 import FinanceOverview from './financeOverview';
 import SpendTracking from './spendTracking';
 import TransactionForm from './transactionForm';
+import Card from '../card';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -95,11 +96,17 @@ class Home extends React.PureComponent {
             />
           }
         >
-          <SpendTracking
-            spendingThisMonth={this.state.spendingThisMonth}
-            earningThisMonth={this.state.earningThisMonth}
-            navigation={this.props.navigation}
-          />
+          <Card
+            onPress={() => {
+              this.props.navigation.navigate('MonthTransactions');
+            }}
+          >
+            <SpendTracking
+              spendingThisMonth={this.state.spendingThisMonth}
+              earningThisMonth={this.state.earningThisMonth}
+              navigation={this.props.navigation}
+            />
+          </Card>
           <TransactionForm
             isExpanded={this.state.transactionFormExpanded}
             collapse={() => {
@@ -114,16 +121,6 @@ class Home extends React.PureComponent {
           >
             <Pill
               onPress={() => {
-                this.props.navigation.navigate('MonthTransactions');
-              }}
-              label="Transactions This Month"
-              style={{ padding: 12, marginBottom: 20 }}
-              color={theme.colors.secondary}
-              backgroundColor={theme.colors.primary}
-              textStyle={{ textAlign: 'center' }}
-            />
-            <Pill
-              onPress={() => {
                 this.props.navigation.navigate('MonthlyAnalytics');
               }}
               label="Monthly Analytics"
@@ -133,11 +130,18 @@ class Home extends React.PureComponent {
               textStyle={{ textAlign: 'center' }}
             />
           </View>
-          <TouchableOpacity
+          <Card
+            style={{
+              marginTop: 25,
+              paddingTop: 25,
+              paddingBottom: 25,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
             onPress={() => this.props.navigation.navigate('Accounts')}
           >
             <FinanceOverview />
-          </TouchableOpacity>
+          </Card>
         </ScrollView>
         <TouchableOpacity
           onPress={() => {

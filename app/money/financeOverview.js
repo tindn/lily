@@ -3,7 +3,6 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
-import Card from '../card';
 import MoneyDisplay from '../moneyDisplay';
 
 class FinanceOverview extends React.PureComponent {
@@ -68,55 +67,46 @@ class FinanceOverview extends React.PureComponent {
   }
 
   render() {
-    return (
-      <Card
-        style={{
-          paddingTop: 30,
-          paddingBottom: 30,
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-        }}
-      >
-        <View style={{ alignItems: 'center' }}>
-          <MoneyDisplay
-            amount={this.state.liquidAssets - this.state.shortTermLiabilities}
-            style={{
-              fontSize: 17,
-              fontWeight: '600',
-              paddingBottom: 5,
-            }}
-          />
-          <Text
-            style={{
-              color: theme.colors.darkGray,
-              fontSize: 12,
-              fontWeight: '500',
-            }}
-          >
-            Liquidity
-          </Text>
-        </View>
-        <View style={{ alignItems: 'center' }}>
-          <MoneyDisplay
-            amount={this.state.totalAssets - this.state.totalLiabilities}
-            style={{
-              fontSize: 17,
-              fontWeight: '600',
-              paddingBottom: 5,
-            }}
-          />
-          <Text
-            style={{
-              color: theme.colors.darkGray,
-              fontSize: 12,
-              fontWeight: '500',
-            }}
-          >
-            Networth
-          </Text>
-        </View>
-      </Card>
-    );
+    return [
+      <View key="liquidity" style={{ alignItems: 'center' }}>
+        <MoneyDisplay
+          amount={this.state.liquidAssets - this.state.shortTermLiabilities}
+          style={{
+            fontSize: 17,
+            fontWeight: '600',
+            paddingBottom: 5,
+          }}
+        />
+        <Text
+          style={{
+            color: theme.colors.darkGray,
+            fontSize: 12,
+            fontWeight: '500',
+          }}
+        >
+          Liquidity
+        </Text>
+      </View>,
+      <View key="networth" style={{ alignItems: 'center' }}>
+        <MoneyDisplay
+          amount={this.state.totalAssets - this.state.totalLiabilities}
+          style={{
+            fontSize: 17,
+            fontWeight: '600',
+            paddingBottom: 5,
+          }}
+        />
+        <Text
+          style={{
+            color: theme.colors.darkGray,
+            fontSize: 12,
+            fontWeight: '500',
+          }}
+        >
+          Networth
+        </Text>
+      </View>,
+    ];
   }
 }
 

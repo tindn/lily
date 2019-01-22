@@ -57,6 +57,7 @@ class TransactionDetails extends React.Component {
             onChange={amount => this.setState({ amount })}
             amount={this.state.amount}
             style={sharedStyles.inputRow}
+            editable={true}
           />
           <TextInput
             key="vendorInput"

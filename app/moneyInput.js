@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { formatAmountToDisplay } from '../utils';
+import theme from '../theme';
 
 class MoneyInput extends React.PureComponent {
   onChangeText = text => {
@@ -30,6 +31,7 @@ class MoneyInput extends React.PureComponent {
           keyboardType="number-pad"
           onChangeText={this.onChangeText}
           autoFocus={true}
+          editable={this.props.editable}
         />
         <TouchableOpacity
           onPress={() => {
@@ -37,7 +39,18 @@ class MoneyInput extends React.PureComponent {
             this.props.onFocus && this.props.onFocus();
           }}
         >
-          <Text style={styles.display}>
+          <Text
+            style={[
+              styles.display,
+              this.props.type && {
+                color:
+                  this.props.type === 'credit'
+                    ? theme.colors.green
+                    : theme.colors.red,
+              },
+              this.props.textStyle,
+            ]}
+          >
             {formatAmountToDisplay(this.props.amount)}
           </Text>
         </TouchableOpacity>
@@ -50,8 +63,8 @@ const styles = StyleSheet.create({
   display: {
     flex: 1,
     fontSize: 26,
-    textAlign: 'right',
     fontWeight: '500',
+    textAlign: 'right',
   },
 });
 

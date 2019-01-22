@@ -51,6 +51,7 @@ class TransactionForm extends React.Component {
               onChange={amount => this.setState({ amount })}
               key={this.state.moneyInputKey}
               amount={this.state.amount}
+              editable={true}
             />
           </View>,
           <View
