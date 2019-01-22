@@ -1,4 +1,4 @@
-import { applyMiddleware, createStore, compose, combineReducers } from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 import storage from 'redux-persist/es/storage';
@@ -7,7 +7,7 @@ import reducers from './reducers';
 const persistConfig = {
   key: 'misc',
   storage,
-  whitelist: [],
+  whitelist: ['electricityReadings'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

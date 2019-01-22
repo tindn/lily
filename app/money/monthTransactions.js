@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
-import { formatAmountToDisplay, toWeekDayDateString } from '../../utils';
+import { formatAmountToDisplay } from '../../utils/money';
+import { toWeekDayDateString } from '../../utils/date';
 import Screen from '../screen';
 import { queryData, watchData } from '../../firebaseHelper';
 

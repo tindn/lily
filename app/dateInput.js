@@ -9,7 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import theme from '../theme';
-import { toSimpleDateString } from '../utils';
+import { toSimpleDateString } from '../utils/date';
 import OutlineButton from './outlineButton';
 import sharedStyles from './sharedStyles';
 

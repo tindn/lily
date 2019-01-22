@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import theme from '../../theme';
-import { formatAmountToDisplay } from '../../utils';
+import { formatAmountToDisplay } from '../../utils/money';
 
 function SpendTracking(props) {
   const { spendingThisMonth, earningThisMonth } = props;

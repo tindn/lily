@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import theme from '../theme';
-import { formatAmountToDisplay } from '../utils';
+import { formatAmountToDisplay } from '../utils/money';
 
 function MoneyDisplay(props) {
   const color = props.amount < 0 ? theme.colors.red : theme.colors.green;

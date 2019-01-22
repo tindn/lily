@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
-import { formatAmountToDisplay } from '../../utils';
+import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../screen';
 import { queryData, watchData } from '../../firebaseHelper';
 

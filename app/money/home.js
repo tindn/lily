@@ -2,7 +2,6 @@ import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
-import { getMonthlyAnalyticsCollection } from '../../utils';
 import Card from '../card';
 import Pill from '../pill';
 import Screen from '../screen';
