@@ -1,6 +1,9 @@
 export function toSimpleDateString(date) {
-  if (!(date instanceof Date) && date.toDate) {
-    date = date.toDate();
+  if (!date) {
+    return '';
+  }
+  if (!(date instanceof Date)) {
+    return '';
   }
   return date.toLocaleDateString('en-US', {
     day: '2-digit',
@@ -10,13 +13,17 @@ export function toSimpleDateString(date) {
 }
 
 export function toWeekDayDateString(date) {
-  if (!(date instanceof Date) && date.toDate) {
-    date = date.toDate();
+  if (!date) {
+    return '';
   }
-  return date.toLocaleDateString('en-US', {
-    weekday: 'short',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
+  if (!(date instanceof Date)) {
+    return '';
+  }
+  if (date)
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
 }

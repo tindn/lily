@@ -1,6 +1,7 @@
 import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { connect } from 'react-redux';
+import { getDocument, watchData, watchDocument } from '../../firebaseHelper';
 import theme from '../../theme';
 import Card from '../card';
 import Pill from '../pill';
@@ -8,7 +9,6 @@ import Screen from '../screen';
 import FinanceOverview from './financeOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
-import { getDocument, watchDocument } from '../../firebaseHelper';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -67,6 +67,7 @@ class Home extends React.PureComponent {
       this.currentMonthAnalyticsId,
       this.props.updateMonthlyAnalytics
     );
+    watchData('vendors', [], this.props.updateVendors);
   }
 
   render() {
@@ -143,6 +144,12 @@ function mapDispatchToProps(dispatch) {
         payload: {
           [analytics.id]: analytics,
         },
+      });
+    },
+    updateVendors(vendors) {
+      dispatch({
+        type: 'UPDATE_VENDORS',
+        payload: vendors,
       });
     },
   };

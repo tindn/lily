@@ -13,6 +13,9 @@ import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
 import sharedStyles from '../sharedStyles';
 import { addDocument } from '../../firebaseHelper';
+import PickerInput from '../pickerInput';
+import { connect } from 'react-redux';
+import { isNearby } from '../../utils/location';
 
 function getDefaultState(moneyInputKey) {
   return {
@@ -22,6 +25,7 @@ function getDefaultState(moneyInputKey) {
     isCredit: false,
     moneyInputKey: moneyInputKey || 0,
     vendor: '',
+    vendors: [],
   };
 }
 
@@ -33,8 +37,40 @@ class TransactionForm extends React.Component {
     navigator.geolocation.getCurrentPosition(
       function({ coords }) {
         this.setState({ coords });
+        const nearbyVendors = this.props.vendors.filter(vendor => {
+          if (vendor.locations && vendor.locations.length) {
+            return vendor.locations.find(function(location) {
+              if (isNearby(coords, location)) {
+                return true;
+              }
+            });
+          }
+          return false;
+        });
+
+        this.setState({
+          vendors: Array.from(
+            // eslint-disable-next-line no-undef
+            new Set(
+              [{ id: '' }, ...nearbyVendors, ...this.props.vendors].map(
+                vendor => decodeURI(vendor.id)
+              )
+            )
+          ),
+        });
       }.bind(this),
-      null,
+      function() {
+        this.setState({
+          vendors: Array.from(
+            // eslint-disable-next-line no-undef
+            new Set(
+              [{ id: '' }, ...this.props.vendors].map(vendor =>
+                decodeURI(vendor.id)
+              )
+            )
+          ),
+        });
+      },
       { enableHighAccuracy: true }
     );
   }
@@ -65,12 +101,12 @@ class TransactionForm extends React.Component {
           key="secondRow"
           style={[sharedStyles.formRow, styles.borderBottom]}
         >
-          <TextInput
-            key="vendorInput"
-            style={[sharedStyles.formTextInput, styles.vendorInput]}
+          <PickerInput
             value={this.state.vendor}
-            placeholder="vendor"
             onChangeText={text => this.setState({ vendor: text })}
+            dropDownList={this.state.vendors}
+            style={[sharedStyles.formTextInput, styles.vendorInput]}
+            placeholder="vendor"
           />
           <TextInput
             key="memoInput"
@@ -146,4 +182,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TransactionForm;
+function mapStateToProps(state) {
+  return {
+    vendors: state.vendors,
+  };
+}
+
+export default connect(mapStateToProps)(TransactionForm);

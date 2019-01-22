@@ -152,3 +152,18 @@ function accountsDeserialize(doc) {
   account.id = doc.id;
   return account;
 }
+
+// eslint-disable-next-line no-unused-vars
+function vendorsFromSnapshot(snapshot) {
+  let data = [];
+  snapshot.forEach(function(doc) {
+    data.push(vendorsDeserialize(doc));
+  });
+  return data;
+}
+
+function vendorsDeserialize(doc) {
+  let vendor = doc.data();
+  vendor.id = doc.id;
+  return vendor;
+}
