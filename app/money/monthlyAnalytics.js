@@ -109,30 +109,30 @@ export default connect(
 )(MonthlyAnalytics);
 
 const styles = StyleSheet.create({
+  amount: {
+    fontSize: 20,
+    fontWeight: '500',
+  },
   emptyComponent: {
+    alignItems: 'center',
     backgroundColor: '#fff',
     padding: 20,
-    alignItems: 'center',
   },
   listItem: {
+    alignItems: 'center',
     backgroundColor: theme.colors.backgroundColor,
     borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
     flex: 1,
-    paddingTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingBottom: 8,
     paddingLeft: 10,
     paddingRight: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingTop: 8,
   },
   month: {
     fontSize: 18,
     marginBottom: 8,
-  },
-  amount: {
-    fontSize: 20,
-    fontWeight: '500',
   },
 });

@@ -71,6 +71,7 @@ export function deleteDocument(collection, docId) {
     .delete();
 }
 
+// eslint-disable-next-line no-unused-vars
 function monthlyAnalyticsFromSnapshot(snapshot) {
   let data = {};
   snapshot.forEach(function(doc) {
@@ -86,6 +87,7 @@ function monthlyAnalyticsDeserialize(doc) {
   return month;
 }
 
+// eslint-disable-next-line no-unused-vars
 function transactionsFromSnapshot(snapshot) {
   let transactions = [];
   snapshot.forEach(function(doc) {
@@ -102,6 +104,7 @@ function transactionsDeserialize(doc) {
   return transaction;
 }
 
+// eslint-disable-next-line no-unused-vars
 function electricityReadingsFromSnapshot(snapshot) {
   let readings = [];
   snapshot.forEach(function(doc) {
@@ -119,6 +122,7 @@ function electricityReadingsDeserialize(doc) {
   return reading;
 }
 
+// eslint-disable-next-line no-unused-vars
 function accountEntriesFromSnapshot(snapshot) {
   let data = {};
   snapshot.forEach(function(doc) {
@@ -134,6 +138,7 @@ function accountEntriesDeserialize(doc) {
   return entry;
 }
 
+// eslint-disable-next-line no-unused-vars
 function accountsFromSnapshot(snapshot) {
   let data = {};
   snapshot.forEach(function(doc) {

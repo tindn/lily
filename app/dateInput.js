@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  // eslint-disable-next-line react-native/split-platform-components
   DatePickerIOS,
   Modal,
   StyleSheet,

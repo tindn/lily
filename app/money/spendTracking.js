@@ -82,23 +82,23 @@ function SpendTracking(props) {
 
 const sharedStyles = StyleSheet.create({
   container: {
+    marginBottom: 10,
     marginLeft: 8,
     marginRight: 8,
-    marginBottom: 10,
-  },
-  title: {
-    fontWeight: '600',
-    color: '#bbb',
-    marginBottom: 8,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   spendAmount: {
-    fontWeight: '600',
     color: theme.colors.darkGray,
     fontSize: 16,
+    fontWeight: '600',
+  },
+  title: {
+    color: '#bbb',
+    fontWeight: '600',
+    marginBottom: 8,
   },
 });
 

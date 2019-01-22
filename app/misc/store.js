@@ -12,6 +12,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 // eslint-disable-next-line no-underscore-dangle
+// eslint-disable-next-line no-undef
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export const store = createStore(
   persistedReducer,
