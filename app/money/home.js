@@ -131,35 +131,6 @@ class Home extends React.PureComponent {
             <FinanceOverview />
           </Card>
         </ScrollView>
-        {/* <TouchableOpacity
-          onPress={() => {
-            if (!this.state.transactionFormExpanded) {
-              this.setState({
-                transactionFormExpanded: true,
-              });
-            }
-          }}
-          style={{
-            position: 'absolute',
-            bottom: 10,
-            alignSelf: 'center',
-            backgroundColor: theme.colors.primary,
-            borderRadius: 30,
-            width: 60,
-            height: 60,
-            justifyContent: 'center',
-            alignItems: 'center',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.23,
-            shadowRadius: 2.62,
-            elevation: 4,
-          }}
-        >
-          <Text style={{ color: theme.colors.secondary, fontSize: 16 }}>
-            Add
-          </Text>
-        </TouchableOpacity> */}
         <TransactionAdd />
       </Screen>
     );

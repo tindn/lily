@@ -68,6 +68,7 @@ class AccountDetails extends React.PureComponent {
               <AccountEntryForm
                 onCancel={() => this.setState({ showNewEntryForm: false })}
                 accountId={this.props.accountId}
+                accountBalance={balance}
               />
             ) : (
               <Pill

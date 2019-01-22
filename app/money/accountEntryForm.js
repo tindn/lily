@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React from 'react';
-import { Alert, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Alert, Switch, Text, TextInput, View } from 'react-native';
 import theme from '../../theme';
 import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
@@ -11,21 +11,25 @@ class AccountEntryForm extends React.PureComponent {
   constructor(props) {
     super(props);
     if (props.entry) {
-      this.state = { ...props.entry };
+      this.state = {
+        ...props.entry,
+      };
     } else {
       this.state = {
         id: undefined,
         accountId: props.accountId,
         memo: '',
         amount: 0,
-        type: 'debit',
+        type: 'credit',
         date: new Date(),
+        isBalanceUpdate: false,
+        balance: props.accountBalance,
       };
     }
   }
 
   render() {
-    const { memo, amount, type, date, id, accountId } = this.state;
+    const { memo, amount, type, date, id, accountId, balance } = this.state;
     return (
       <View style={sharedStyles.formContainer}>
         <View
@@ -69,6 +73,27 @@ class AccountEntryForm extends React.PureComponent {
             }
           />
         </View>
+        {this.state.isBalanceUpdate && (
+          <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
+            <View />
+            <MoneyInput
+              onChange={amount => {
+                let diff = amount - this.props.accountBalance;
+
+                this.setState({
+                  balance: amount,
+                  amount: Math.abs(diff),
+                  type: diff < 0 ? 'debit' : 'credit',
+                });
+              }}
+              amount={balance}
+              style={{}}
+              textStyle={{
+                flex: 10,
+              }}
+            />
+          </View>
+        )}
         <View key="buttons" style={sharedStyles.formButtons}>
           <OutlineButton
             label="Cancel"
@@ -76,7 +101,7 @@ class AccountEntryForm extends React.PureComponent {
             style={[sharedStyles.outlineButton]}
             color={theme.colors.darkGray}
           />
-          {id && (
+          {id ? (
             <OutlineButton
               label="Delete"
               onPress={() => {
@@ -102,6 +127,14 @@ class AccountEntryForm extends React.PureComponent {
               }}
               style={[sharedStyles.outlineButton]}
               color={theme.colors.red}
+            />
+          ) : (
+            <OutlineButton
+              label="Balance"
+              onPress={() => {
+                this.setState({ isBalanceUpdate: !this.state.isBalanceUpdate });
+              }}
+              style={[sharedStyles.outlineButton]}
             />
           )}
           <OutlineButton
