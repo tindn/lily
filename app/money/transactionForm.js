@@ -12,8 +12,7 @@ import { addTransaction } from '../../utils';
 import OutlineButton from '../outlineButton';
 import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
-
-const smallFontSize = 20;
+import sharedStyles from '../sharedStyles';
 
 function getDefaultState(moneyInputKey) {
   return {
@@ -31,14 +30,14 @@ class TransactionForm extends React.Component {
 
   render() {
     return (
-      <View style={sharedStyles.container}>
+      <View style={sharedStyles.formContainer}>
         {this.props.isExpanded && [
           <View
             key="firstRow"
             style={[
-              sharedStyles.row,
-              sharedStyles.borderBottom,
-              sharedStyles.firstRow,
+              sharedStyles.formRow,
+              styles.borderBottom,
+              sharedStyles.formFirstRow,
             ]}
           >
             <DateInput
@@ -56,22 +55,18 @@ class TransactionForm extends React.Component {
           </View>,
           <View
             key="secondRow"
-            style={[
-              sharedStyles.row,
-              sharedStyles.borderBottom,
-              sharedStyles.secondRow,
-            ]}
+            style={[sharedStyles.formRow, styles.borderBottom]}
           >
             <TextInput
               key="vendorInput"
-              style={sharedStyles.vendorInput}
+              style={[sharedStyles.formTextInput, styles.vendorInput]}
               value={this.state.vendor}
               placeholder="vendor"
               onChangeText={text => this.setState({ vendor: text })}
             />
             <TextInput
               key="memoInput"
-              style={sharedStyles.memoInput}
+              style={[sharedStyles.formTextInput, styles.memoInput]}
               value={this.state.memo}
               placeholder="memo"
               onChangeText={text => this.setState({ memo: text })}
@@ -79,15 +74,17 @@ class TransactionForm extends React.Component {
           </View>,
           <View
             key="creditSwitch"
-            style={[sharedStyles.row, sharedStyles.isCreditSwitch]}
+            style={[sharedStyles.formRow, sharedStyles.formSwitchRow]}
           >
-            <Text style={{ color: theme.colors.darkGray }}>Income</Text>
+            <Text style={{ color: theme.colors.darkGray }}>
+              {this.state.isCredit ? 'Income' : 'Expense'}
+            </Text>
             <Switch
               value={this.state.isCredit}
               onValueChange={val => this.setState({ isCredit: val })}
             />
           </View>,
-          <View key="buttons" style={sharedStyles.buttonContainer}>
+          <View key="buttons" style={sharedStyles.formButtons}>
             <OutlineButton
               label="Cancel"
               onPress={() => {
@@ -95,7 +92,7 @@ class TransactionForm extends React.Component {
                 this.setState(getDefaultState(this.state.moneyInputKey + 1));
                 this.props.collapse && this.props.collapse();
               }}
-              style={[sharedStyles.button]}
+              style={[sharedStyles.outlineButton]}
               color={theme.colors.darkGray}
             />
             <OutlineButton
@@ -118,7 +115,7 @@ class TransactionForm extends React.Component {
                 this.setState(getDefaultState(this.state.moneyInputKey + 1));
                 this.props.collapse && this.props.collapse();
               }}
-              style={[sharedStyles.button]}
+              style={[sharedStyles.outlineButton]}
             />
           </View>,
         ]}
@@ -127,72 +124,16 @@ class TransactionForm extends React.Component {
   }
 }
 
-const sharedStyles = StyleSheet.create({
-  container: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-    marginLeft: 5,
-    marginRight: 5,
-    backgroundColor: theme.colors.backgroundColor,
-    borderRadius: 10,
-  },
-  firstRow: {
-    flexDirection: 'row',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    alignItems: 'center',
-  },
-  amountInput: {
-    flex: 1,
-    fontSize: 26,
-    textAlign: 'right',
-    fontWeight: '500',
-  },
-  secondRow: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  vendorInput: {
-    flex: 1,
-    textAlign: 'left',
-    fontSize: smallFontSize,
-    fontWeight: '500',
-    color: theme.colors.darkerGray,
-  },
-  memoInput: {
-    flex: 1,
-    textAlign: 'right',
-    fontSize: smallFontSize,
-    fontWeight: '500',
-    color: theme.colors.darkerGray,
-  },
-  isCreditSwitch: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    padding: 12,
-    justifyContent: 'space-between',
-  },
-  button: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 7,
-    paddingBottom: 7,
-  },
-  row: {
-    padding: 12,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-  },
+const styles = StyleSheet.create({
   borderBottom: {
     borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
+  },
+  memoInput: {
+    textAlign: 'right',
+  },
+  vendorInput: {
+    textAlign: 'left',
   },
 });
 

@@ -64,11 +64,6 @@ class DateInput extends React.PureComponent {
 }
 
 const sharedStyles = StyleSheet.create({
-  dateText: {
-    color: theme.colors.darkGray,
-    fontSize: 20,
-    fontWeight: '500',
-  },
   datePickerModal: {
     backgroundColor: '#fff',
     elevation: 4,
@@ -78,6 +73,11 @@ const sharedStyles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     top: 10,
+  },
+  dateText: {
+    color: theme.colors.darkGray,
+    fontSize: 20,
+    fontWeight: '500',
   },
 });
 

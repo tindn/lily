@@ -124,7 +124,7 @@ class TransactionDetails extends React.Component {
                   [
                     {
                       text: 'Cancel',
-                      onPress: () => console.log('Cancel Pressed'),
+                      onPress: function() {},
                     },
                     {
                       text: 'Delete',
