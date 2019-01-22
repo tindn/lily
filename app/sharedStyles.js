@@ -51,4 +51,16 @@ export default StyleSheet.create({
     paddingRight: 20,
     paddingTop: 7,
   },
+  modalContainer: {
+    backgroundColor: '#fff',
+    elevation: 4,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+  },
+  headerRight: {
+    marginRight: 10,
+  },
 });

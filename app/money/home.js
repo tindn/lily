@@ -1,20 +1,14 @@
 import React from 'react';
-import {
-  RefreshControl,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
 import { getMonthlyAnalyticsCollection } from '../../utils';
+import Card from '../card';
 import Pill from '../pill';
 import Screen from '../screen';
 import FinanceOverview from './financeOverview';
 import SpendTracking from './spendTracking';
-import TransactionForm from './transactionForm';
-import Card from '../card';
+import TransactionAdd from './transactionAdd';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -107,12 +101,6 @@ class Home extends React.PureComponent {
               navigation={this.props.navigation}
             />
           </Card>
-          <TransactionForm
-            isExpanded={this.state.transactionFormExpanded}
-            collapse={() => {
-              this.setState({ transactionFormExpanded: false });
-            }}
-          />
           <View
             style={{
               marginTop: 20,
@@ -143,7 +131,7 @@ class Home extends React.PureComponent {
             <FinanceOverview />
           </Card>
         </ScrollView>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             if (!this.state.transactionFormExpanded) {
               this.setState({
@@ -171,7 +159,8 @@ class Home extends React.PureComponent {
           <Text style={{ color: theme.colors.secondary, fontSize: 16 }}>
             Add
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <TransactionAdd />
       </Screen>
     );
   }

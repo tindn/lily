@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import theme from '../../theme';
 import Card from '../card';
 import Screen from '../screen';
+import ElectricityReadingAdd from './electricityReadingAdd';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -134,6 +135,7 @@ class Home extends React.PureComponent {
               </View>
             </View>
           </Card>
+          <ElectricityReadingAdd />
         </ScrollView>
       </Screen>
     );

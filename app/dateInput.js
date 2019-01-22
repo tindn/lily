@@ -6,10 +6,12 @@ import {
   Text,
   TouchableOpacity,
   View,
+  SafeAreaView,
 } from 'react-native';
 import theme from '../theme';
 import { toSimpleDateString } from '../utils';
 import OutlineButton from './outlineButton';
+import sharedStyles from './sharedStyles';
 
 class DateInput extends React.PureComponent {
   state = {
@@ -29,7 +31,7 @@ class DateInput extends React.PureComponent {
           }}
           disabled={this.props.disabled}
         >
-          <Text style={sharedStyles.dateText}>
+          <Text style={styles.dateText}>
             {toSimpleDateString(this.props.date)}
           </Text>
         </TouchableOpacity>
@@ -38,7 +40,7 @@ class DateInput extends React.PureComponent {
           transparent={true}
           visible={this.state.dateModalVisible}
         >
-          <View style={sharedStyles.datePickerModal}>
+          <SafeAreaView style={sharedStyles.modalContainer}>
             <DatePickerIOS
               mode={this.props.mode || 'datetime'}
               minuteInterval={15}
@@ -49,30 +51,21 @@ class DateInput extends React.PureComponent {
               onPress={this.toggleModal}
               label="Done"
               color={theme.colors.primary}
-              style={{
-                width: 100,
-                alignSelf: 'center',
-                padding: 5,
-              }}
+              style={[sharedStyles.outlineButton, styles.button]}
               textStyle={{ textAlign: 'center' }}
             />
-          </View>
+          </SafeAreaView>
         </Modal>
       </View>
     );
   }
 }
 
-const sharedStyles = StyleSheet.create({
-  datePickerModal: {
-    backgroundColor: '#fff',
-    elevation: 4,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    top: 10,
+const styles = StyleSheet.create({
+  button: {
+    alignSelf: 'center',
+    marginBottom: 20,
+    marginTop: 20,
   },
   dateText: {
     color: theme.colors.darkGray,

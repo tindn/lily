@@ -61,7 +61,6 @@ class MoneyInput extends React.PureComponent {
 
 const styles = StyleSheet.create({
   display: {
-    flex: 1,
     fontSize: 26,
     fontWeight: '500',
     textAlign: 'right',
