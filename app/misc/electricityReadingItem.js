@@ -1,4 +1,3 @@
-import firebase from 'firebase';
 import React from 'react';
 import {
   DatePickerIOS,
@@ -10,9 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
+import { deleteDocument, updateDocument } from '../../firebaseHelper';
 import theme from '../../theme';
 import OutlineButton from '../outlineButton';
-import { connect } from 'react-redux';
 
 class ElectricityReadingItem extends React.Component {
   constructor(props) {
@@ -102,11 +102,7 @@ class ElectricityReadingItem extends React.Component {
               label="Delete"
               onPress={() => {
                 LayoutAnimation.easeInEaseOut();
-                firebase
-                  .firestore()
-                  .collection('electricityReadings')
-                  .doc(this.state.id)
-                  .delete();
+                deleteDocument('electricityReadings', this.state.id);
               }}
               style={[styles.button]}
             />
@@ -114,15 +110,11 @@ class ElectricityReadingItem extends React.Component {
               color={theme.colors.iosBlue}
               label="Save"
               onPress={() => {
-                firebase
-                  .firestore()
-                  .collection('electricityReadings')
-                  .doc(this.state.id)
-                  .update({
-                    timestamp: this.state.timestamp,
-                    value: parseFloat(this.state.value),
-                    cycleEnd: this.state.cycleEnd,
-                  });
+                updateDocument('electricityReadings', this.state.id, {
+                  timestamp: this.state.timestamp,
+                  value: parseFloat(this.state.value),
+                  cycleEnd: this.state.cycleEnd,
+                });
                 this.setState({ expanded: false });
                 LayoutAnimation.easeInEaseOut();
               }}

@@ -8,11 +8,11 @@ import {
   View,
 } from 'react-native';
 import theme from '../../theme';
-import { addTransaction } from '../../utils';
 import OutlineButton from '../outlineButton';
 import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
 import sharedStyles from '../sharedStyles';
+import { addDocument } from '../../firebaseHelper';
 
 function getDefaultState(moneyInputKey) {
   return {
@@ -102,12 +102,13 @@ class TransactionForm extends React.Component {
             }
             label="Add"
             onPress={() => {
-              addTransaction({
+              addDocument('transactions', {
                 date: this.state.date,
                 memo: this.state.memo,
-                amount: parseFloat(this.state.amount),
-                isCredit: this.state.isCredit,
                 vendor: this.state.vendor,
+                amount: parseFloat(this.state.amount),
+                entryType: this.state.isCredit ? 'credit' : 'debit',
+                _addedOn: new Date(),
               });
               LayoutAnimation.easeInEaseOut();
               this.setState(getDefaultState(this.state.moneyInputKey + 1));

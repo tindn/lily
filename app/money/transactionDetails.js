@@ -10,10 +10,10 @@ import {
   View,
 } from 'react-native';
 import theme from '../../theme';
-import { updateTransaction, deleteTransaction } from '../../utils';
 import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
 import Screen from '../screen';
+import { updateDocument, deleteDocument } from '../../firebaseHelper';
 
 class TransactionDetails extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -102,13 +102,12 @@ class TransactionDetails extends React.Component {
             <Button
               title="Save"
               onPress={() => {
-                updateTransaction({
-                  id: this.state.id,
+                updateDocument('transactions', this.state.id, {
                   date: this.state.date,
                   memo: this.state.memo,
-                  amount: parseFloat(this.state.amount),
                   vendor: this.state.vendor,
-                  isCredit: this.state.isCredit,
+                  amount: parseFloat(this.state.amount),
+                  entryType: this.state.isCredit ? 'credit' : 'debit',
                 });
                 this.props.navigation.pop();
               }}
@@ -129,7 +128,7 @@ class TransactionDetails extends React.Component {
                     {
                       text: 'Delete',
                       onPress: () => {
-                        deleteTransaction(this.state.id);
+                        deleteDocument('transactions', this.state.id);
                         this.props.navigation.pop();
                       },
                       style: 'destructive',

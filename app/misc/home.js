@@ -1,7 +1,7 @@
-import firebase from 'firebase';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
+import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
 import Card from '../card';
 import Screen from '../screen';
@@ -54,24 +54,11 @@ class Home extends React.PureComponent {
   }
 
   componentDidMount() {
-    firebase
-      .firestore()
-      .collection('electricityReadings')
-      .orderBy('timestamp', 'desc')
-      .onSnapshot(
-        function(snapshot) {
-          let data = [];
-          snapshot.forEach(function(doc) {
-            let reading = doc.data();
-            reading.id = doc.id;
-            if (reading.timestamp) {
-              reading.timestamp = reading.timestamp.toDate();
-            }
-            data.push(reading);
-          });
-          this.props.updateElectricityReadings(data);
-        }.bind(this)
-      );
+    watchData(
+      'electricityReadings',
+      [['orderBy', 'timestamp', 'desc']],
+      this.props.updateElectricityReadings
+    );
   }
 
   render() {

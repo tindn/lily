@@ -9,13 +9,9 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
-import {
-  formatAmountToDisplay,
-  getTransactionsFromSnapshot,
-  getTransactionsQuery,
-  toWeekDayDateString,
-} from '../../utils';
+import { formatAmountToDisplay, toWeekDayDateString } from '../../utils';
 import Screen from '../screen';
+import { queryData, watchData } from '../../firebaseHelper';
 
 class MonthTransactions extends React.PureComponent {
   static getDerivedStateFromProps(props) {
@@ -28,11 +24,7 @@ class MonthTransactions extends React.PureComponent {
   constructor(props) {
     super(props);
     const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    this.monthTransactionsQuery = getTransactionsQuery([
-      ['where', 'date', '>=', startOfMonth],
-      ['orderBy', 'date', 'desc'],
-    ]);
+    this.startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     this.state = {
       refreshing: false,
       data: [],
@@ -40,17 +32,19 @@ class MonthTransactions extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.monthTransactionsQuery.onSnapshot(snapshot => {
-      const transactions = getTransactionsFromSnapshot(snapshot);
-      this.props.updateMonthTransactions(transactions);
-    });
+    watchData(
+      'transactions',
+      [['where', 'date', '>=', this.startOfMonth], ['orderBy', 'date', 'desc']],
+      this.props.updateMonthTransactions
+    );
   }
 
   fetchData = () => {
     this.setState({ refreshing: true });
-    this.monthTransactionsQuery
-      .get()
-      .then(getTransactionsFromSnapshot)
+    queryData('transactions', [
+      ['where', 'date', '>=', this.startOfMonth],
+      ['orderBy', 'date', 'desc'],
+    ])
       .then(this.props.updateMonthTransactions)
       .finally(() => {
         this.setState({

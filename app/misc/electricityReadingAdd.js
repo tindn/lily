@@ -1,4 +1,3 @@
-import firebase from 'firebase';
 import React from 'react';
 import { Modal, SafeAreaView, Switch, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -6,6 +5,7 @@ import theme from '../../theme';
 import OutlineButton from '../outlineButton';
 import sharedStyles from '../sharedStyles';
 import Pill from '../pill';
+import { addDocument } from '../../firebaseHelper';
 
 class ElectricityReadingAdd extends React.Component {
   state = {
@@ -83,14 +83,10 @@ class ElectricityReadingAdd extends React.Component {
                 color={theme.colors.iosBlue}
                 label="Add"
                 onPress={() => {
-                  firebase
-                    .firestore()
-                    .collection('electricityReadings')
-                    .add({
-                      value: parseFloat(this.state.value),
-                      timestamp: new Date(),
-                    })
-                    .then(this.closeModal);
+                  addDocument('electricityReadings', {
+                    value: parseFloat(this.state.value),
+                    timestamp: new Date(),
+                  }).then(this.closeModal);
                 }}
                 style={[sharedStyles.outlineButton]}
               />

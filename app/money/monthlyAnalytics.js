@@ -2,12 +2,9 @@ import React from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import theme from '../../theme';
-import {
-  formatAmountToDisplay,
-  getMonthlyAnalyticsFromSnapshot,
-  getMonthlyAnalyticsQuery,
-} from '../../utils';
+import { formatAmountToDisplay } from '../../utils';
 import Screen from '../screen';
+import { queryData, watchData } from '../../firebaseHelper';
 
 class MonthlyAnalytics extends React.PureComponent {
   static navigationOptions = {
@@ -25,7 +22,6 @@ class MonthlyAnalytics extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.monthlyAnalyticsQuery = getMonthlyAnalyticsQuery([]);
     this.state = {
       data: [],
       isRefreshing: true,
@@ -34,9 +30,7 @@ class MonthlyAnalytics extends React.PureComponent {
 
   fetchData = () => {
     this.setState({ refreshing: true });
-    this.monthlyAnalyticsQuery
-      .get()
-      .then(getMonthlyAnalyticsFromSnapshot)
+    queryData('monthlyAnalytics')
       .then(this.props.updateMonthlyAnalytics)
       .finally(() => {
         this.setState({
@@ -46,10 +40,7 @@ class MonthlyAnalytics extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.monthlyAnalyticsQuery.onSnapshot(snapshot => {
-      const data = getMonthlyAnalyticsFromSnapshot(snapshot);
-      this.props.updateMonthlyAnalytics(data);
-    });
+    watchData('monthlyAnalytics', [], this.props.updateMonthlyAnalytics);
   }
 
   render() {

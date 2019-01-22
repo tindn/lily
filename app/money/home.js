@@ -9,6 +9,7 @@ import Screen from '../screen';
 import FinanceOverview from './financeOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
+import { getDocument, watchDocument } from '../../firebaseHelper';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -48,13 +49,9 @@ class Home extends React.PureComponent {
 
   fetchData = () => {
     this.setState({ refreshing: true });
-    getMonthlyAnalyticsCollection()
-      .doc(this.currentMonthAnalyticsId)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          const analytics = doc.data();
-          analytics.id = doc.id;
+    getDocument('monthlyAnalytics', this.currentMonthAnalyticsId)
+      .then(analytics => {
+        if (analytics) {
           this.props.updateMonthlyAnalytics(analytics);
         }
       })
@@ -66,15 +63,11 @@ class Home extends React.PureComponent {
   };
 
   componentDidMount() {
-    getMonthlyAnalyticsCollection()
-      .doc(this.currentMonthAnalyticsId)
-      .onSnapshot(doc => {
-        if (doc.exists) {
-          const analytics = doc.data();
-          analytics.id = doc.id;
-          this.props.updateMonthlyAnalytics(analytics);
-        }
-      });
+    watchDocument(
+      'monthlyAnalytics',
+      this.currentMonthAnalyticsId,
+      this.props.updateMonthlyAnalytics
+    );
   }
 
   render() {

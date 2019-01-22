@@ -1,7 +1,7 @@
-import firebase from 'firebase';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
+import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
 import MoneyDisplay from '../moneyDisplay';
 
@@ -50,20 +50,7 @@ class FinanceOverview extends React.PureComponent {
   };
 
   componentDidMount() {
-    firebase
-      .firestore()
-      .collection('accounts')
-      .onSnapshot(
-        function(snapshot) {
-          let data = {};
-          snapshot.forEach(function(doc) {
-            let account = doc.data();
-            account.id = doc.id;
-            data[doc.id] = account;
-          });
-          this.props.updateAccounts(data);
-        }.bind(this)
-      );
+    watchData('accounts', [], this.props.updateAccounts);
   }
 
   render() {

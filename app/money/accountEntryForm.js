@@ -1,6 +1,10 @@
-import firebase from 'firebase';
 import React from 'react';
 import { Alert, Switch, Text, TextInput, View } from 'react-native';
+import {
+  addDocument,
+  deleteDocument,
+  updateDocument,
+} from '../../firebaseHelper';
 import theme from '../../theme';
 import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
@@ -114,11 +118,7 @@ class AccountEntryForm extends React.PureComponent {
                   {
                     text: 'Delete',
                     onPress: () => {
-                      firebase
-                        .firestore()
-                        .collection('accountEntries')
-                        .doc(id)
-                        .delete();
+                      deleteDocument('accountEntries', id);
                       this.props.onCancel();
                     },
                     style: 'destructive',
@@ -135,6 +135,7 @@ class AccountEntryForm extends React.PureComponent {
                 this.setState({ isBalanceUpdate: !this.state.isBalanceUpdate });
               }}
               style={[sharedStyles.outlineButton]}
+              color="#000"
             />
           )}
           <OutlineButton
@@ -146,15 +147,11 @@ class AccountEntryForm extends React.PureComponent {
                 amount: parseFloat(amount),
                 type,
                 accountId,
-                _updatedOn: new Date(),
               };
-              const accountEntries = firebase
-                .firestore()
-                .collection('accountEntries');
               if (id) {
-                accountEntries.doc(id).update(entry);
+                updateDocument('accountEntries', id, entry);
               } else {
-                accountEntries.add(entry);
+                addDocument('accountEntries', entry);
               }
               this.props.onCancel();
             }}

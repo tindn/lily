@@ -1,7 +1,7 @@
-import firebase from 'firebase';
 import React from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
+import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
 import MoneyDisplay from '../moneyDisplay';
 import Pill from '../pill';
@@ -20,23 +20,11 @@ class AccountDetails extends React.PureComponent {
   };
 
   componentDidMount() {
-    firebase
-      .firestore()
-      .collection('accountEntries')
-      .where('accountId', '==', this.props.accountId)
-      .orderBy('date', 'desc')
-      .onSnapshot(
-        function(snapshot) {
-          let entries = {};
-          snapshot.forEach(function(doc) {
-            let entry = doc.data();
-            entry.id = doc.id;
-            entry.date = entry.date.toDate();
-            entries[doc.id] = entry;
-          });
-          this.setState({ entries: Object.values(entries) });
-        }.bind(this)
-      );
+    watchData(
+      'accountEntries',
+      [['where', 'accountId', '==', this.props.accountId]],
+      entries => this.setState({ entries: Object.values(entries) })
+    );
   }
 
   render() {
