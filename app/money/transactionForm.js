@@ -28,6 +28,16 @@ function getDefaultState(moneyInputKey) {
 class TransactionForm extends React.Component {
   state = getDefaultState();
 
+  componentDidMount() {
+    // eslint-disable-next-line no-undef
+    navigator.geolocation.getCurrentPosition(
+      function({ coords }) {
+        this.setState({ coords });
+      }.bind(this),
+      null,
+      { enableHighAccuracy: true }
+    );
+  }
   render() {
     return (
       <View style={[sharedStyles.formContainer, { top: 30 }]}>
@@ -108,6 +118,7 @@ class TransactionForm extends React.Component {
                 vendor: this.state.vendor,
                 amount: parseFloat(this.state.amount),
                 entryType: this.state.isCredit ? 'credit' : 'debit',
+                coords: this.state.coords,
                 _addedOn: new Date(),
               });
               LayoutAnimation.easeInEaseOut();
