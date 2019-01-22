@@ -1,16 +1,46 @@
 import React from 'react';
 import {
-  ScrollView,
-  TouchableOpacity,
   LayoutAnimation,
+  ScrollView,
   StyleSheet,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
 import { connect } from 'react-redux';
 import Screen from '../screen';
 import Category from './category';
 import LineItem from './lineItem';
 
 class Accounts extends React.Component {
+  static navigationOptions = {
+    headerTitle: 'Accounts',
+    headerRight: (
+      <TouchableOpacity
+        onPress={() =>
+          Alert.alert('Confirm', 'Do you want to create a new snapshot?', [
+            {
+              text: 'Cancel',
+              onPress: function() {},
+              style: 'cancel',
+            },
+            {
+              text: 'Yes',
+              onPress: () =>
+                fetch(
+                  'https://us-central1-lily-cc62d.cloudfunctions.net/buildAccountsSnapshot',
+                  { method: 'POST' }
+                ),
+            },
+          ])
+        }
+        style={{ marginRight: 10 }}
+      >
+        <Icon name="addfolder" size={25} />
+      </TouchableOpacity>
+    ),
+  };
+
   static getDerivedStateFromProps(props) {
     if (props.accounts) {
       const accounts = Object.values(props.accounts);

@@ -22,18 +22,8 @@ const MoneyStack = createStackNavigator({
       }),
     },
   },
-  MonthlyAnalytics: {
-    screen: MonthlyAnalytics,
-    navigationOptions: {
-      title: 'Monthly Analytics',
-    },
-  },
-  Accounts: {
-    screen: Accounts,
-    navigationOptions: {
-      title: 'Accounts',
-    },
-  },
+  MonthlyAnalytics,
+  Accounts,
   AccountDetails,
 });
 

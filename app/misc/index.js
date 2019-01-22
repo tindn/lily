@@ -3,20 +3,13 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { createStackNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import Home from './home';
 import ElectricityReadingsList from './electricityReadingsList';
+import Home from './home';
 import { persistor, store } from './store';
-import ElectricityReadingAdd from './electricityReadingAdd';
 
 const MiscStack = createStackNavigator({
   Home,
-  ElectricityReadingsList: {
-    screen: ElectricityReadingsList,
-    navigationOptions: {
-      title: 'Readings',
-      headerRight: <ElectricityReadingAdd />,
-    },
-  },
+  ElectricityReadingsList,
 });
 
 class Misc extends React.Component {

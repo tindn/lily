@@ -10,6 +10,10 @@ import {
 import Screen from '../screen';
 
 class MonthlyAnalytics extends React.PureComponent {
+  static navigationOptions = {
+    headerTitle: 'Monthly Analytics',
+  };
+
   static getDerivedStateFromProps(props) {
     if (props.monthlyAnalytics) {
       const data = Object.values(props.monthlyAnalytics);
