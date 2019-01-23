@@ -24,3 +24,10 @@ export function isNearby(current, location) {
     isInRange(current.longitude, location.longitude, 0.001)
   );
 }
+
+export function cleanCoordinate(coordinate, decimal = 4) {
+  return {
+    latitude: parseFloat(coordinate.latitude.toFixed(decimal)),
+    longitude: parseFloat(coordinate.longitude.toFixed(decimal)),
+  };
+}

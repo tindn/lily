@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    vendors: state.vendors,
+    vendors: Object.values(state.vendors),
   };
 }
 

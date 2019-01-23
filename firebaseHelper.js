@@ -53,8 +53,13 @@ export function watchData(collection, queryArgs = [], onChange) {
   });
 }
 
-export function addDocument(collection, document) {
+export function addDocument(collection, document, docId) {
   document._updatedOn = new Date();
+  if (docId) {
+    return getCollection(collection)
+      .doc(docId)
+      .set(document);
+  }
   return getCollection(collection).add(document);
 }
 
@@ -155,9 +160,9 @@ function accountsDeserialize(doc) {
 
 // eslint-disable-next-line no-unused-vars
 function vendorsFromSnapshot(snapshot) {
-  let data = [];
+  let data = {};
   snapshot.forEach(function(doc) {
-    data.push(vendorsDeserialize(doc));
+    data[doc.id] = vendorsDeserialize(doc);
   });
   return data;
 }

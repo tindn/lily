@@ -3,17 +3,17 @@ import {
   Alert,
   Button,
   ScrollView,
-  StyleSheet,
   Switch,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { deleteDocument, updateDocument } from '../../firebaseHelper';
 import theme from '../../theme';
 import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
 import Screen from '../screen';
-import { updateDocument, deleteDocument } from '../../firebaseHelper';
+import sharedStyles from '../sharedStyles';
 
 class TransactionDetails extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -98,7 +98,7 @@ class TransactionDetails extends React.Component {
               }}
             />
           </View>
-          <View style={[{ marginTop: 40 }, sharedStyles.inputRow]}>
+          <View style={[{ marginTop: 40 }, sharedStyles.actionButton]}>
             <Button
               title="Save"
               onPress={() => {
@@ -113,7 +113,7 @@ class TransactionDetails extends React.Component {
               }}
             />
           </View>
-          <View style={[sharedStyles.inputRow, { borderBottomWidth: 0 }]}>
+          <View style={[sharedStyles.actionButton, { borderBottomWidth: 0 }]}>
             <Button
               title="Delete"
               onPress={() => {
@@ -144,14 +144,5 @@ class TransactionDetails extends React.Component {
     );
   }
 }
-
-const sharedStyles = StyleSheet.create({
-  inputRow: {
-    padding: 12,
-    backgroundColor: '#fff',
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
-  },
-});
 
 export default TransactionDetails;

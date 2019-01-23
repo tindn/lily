@@ -94,9 +94,21 @@ class Home extends React.PureComponent {
               navigation={this.props.navigation}
             />
           </Card>
+          <Card
+            style={{
+              marginTop: 25,
+              paddingTop: 25,
+              paddingBottom: 25,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
+            onPress={() => this.props.navigation.navigate('Accounts')}
+          >
+            <FinanceOverview />
+          </Card>
           <View
             style={{
-              marginTop: 20,
+              marginTop: 25,
               paddingHorizontal: 50,
             }}
           >
@@ -111,18 +123,23 @@ class Home extends React.PureComponent {
               textStyle={{ textAlign: 'center' }}
             />
           </View>
-          <Card
+          <View
             style={{
               marginTop: 25,
-              paddingTop: 25,
-              paddingBottom: 25,
-              flexDirection: 'row',
-              justifyContent: 'space-around',
+              paddingHorizontal: 50,
             }}
-            onPress={() => this.props.navigation.navigate('Accounts')}
           >
-            <FinanceOverview />
-          </Card>
+            <Pill
+              onPress={() => {
+                this.props.navigation.navigate('Vendors');
+              }}
+              label="Vendors"
+              style={{ padding: 12 }}
+              color={theme.colors.secondary}
+              backgroundColor={theme.colors.primary}
+              textStyle={{ textAlign: 'center' }}
+            />
+          </View>
         </ScrollView>
         <TransactionAdd />
       </Screen>

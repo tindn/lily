@@ -10,6 +10,8 @@ import { store, persistor } from './store';
 import TransactionDetails from './transactionDetails';
 import Accounts from './accounts';
 import AccountDetails from './accountDetails';
+import Vendors from './vendors';
+import VendorDetails from './vendorDetails';
 
 const MoneyStack = createStackNavigator({
   Home,
@@ -25,6 +27,8 @@ const MoneyStack = createStackNavigator({
   MonthlyAnalytics,
   Accounts,
   AccountDetails,
+  Vendors,
+  VendorDetails,
 });
 
 class Money extends React.Component {
