@@ -109,4 +109,10 @@ export default StyleSheet.create({
     borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
   },
+  inputRow: {
+    padding: 12,
+    backgroundColor: '#fff',
+    borderBottomColor: theme.colors.lighterGray,
+    borderBottomWidth: 1,
+  },
 });
