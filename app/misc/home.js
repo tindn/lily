@@ -28,26 +28,19 @@ class Home extends React.PureComponent {
         monthStart = props.electricityReadings[cycleEndIndex];
       }
 
-      const usageRate =
-        (props.electricityReadings[0].value -
-          props.electricityReadings[1].value) /
-        ((props.electricityReadings[0].timestamp -
-          props.electricityReadings[1].timestamp) /
-          86400000);
-
       const usedThisMonth = lastReading.value - monthStart.value;
 
-      const dailyAverage =
-        usedThisMonth /
-        ((props.electricityReadings[0].timestamp - monthStart.timestamp) /
-          86400000);
+      const daysElapsed =
+        (lastReading.timestamp - monthStart.timestamp) / 86400000;
+
+      const dailyAverage = usedThisMonth / daysElapsed;
 
       return {
         lastReading,
         monthStart,
         usedThisMonth,
-        usageRate: usageRate.toFixed(2),
         dailyAverage: dailyAverage.toFixed(2),
+        daysElapsed: daysElapsed.toFixed(0),
       };
     }
     return null;
@@ -82,7 +75,7 @@ class Home extends React.PureComponent {
           >
             <View
               style={{
-                paddingTop: 20,
+                paddingTop: 10,
               }}
             >
               <Text
@@ -98,15 +91,25 @@ class Home extends React.PureComponent {
             <View style={styles.electricityReadings}>
               <View>
                 <Text style={styles.electricityReading}>
-                  {this.state.usageRate} kWh
+                  {this.state.usedThisMonth} kWh
                 </Text>
                 <Text style={styles.electricityReadingAnnotation}>
-                  (usage rate)
+                  (actual)
                 </Text>
               </View>
               <View>
                 <Text style={styles.electricityReading}>
-                  {this.state.usedThisMonth} kWh
+                  {this.state.dailyAverage * 30} kWh
+                </Text>
+                <Text style={styles.electricityReadingAnnotation}>
+                  (estimate)
+                </Text>
+              </View>
+            </View>
+            <View style={styles.electricityReadings}>
+              <View>
+                <Text style={styles.electricityReading}>
+                  {this.state.daysElapsed} day(s)
                 </Text>
                 <Text style={styles.electricityReadingAnnotation}>
                   (this month)
@@ -138,6 +141,7 @@ const styles = StyleSheet.create({
     color: theme.colors.darkGray,
     fontSize: 12,
     fontWeight: '500',
+    textAlign: 'center',
   },
   electricityReadingCard: {
     alignItems: 'center',
@@ -146,8 +150,8 @@ const styles = StyleSheet.create({
   electricityReadings: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingBottom: 30,
-    paddingTop: 20,
+    marginBottom: 15,
+    marginTop: 15,
     width: '100%',
   },
 });
