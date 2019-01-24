@@ -5,6 +5,7 @@ import theme from '../../theme';
 import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../screen';
 import { queryData, watchData } from '../../firebaseHelper';
+import { by } from '../../utils/sort';
 
 class MonthlyAnalytics extends React.PureComponent {
   static navigationOptions = {
@@ -14,7 +15,7 @@ class MonthlyAnalytics extends React.PureComponent {
   static getDerivedStateFromProps(props) {
     if (props.monthlyAnalytics) {
       const data = Object.values(props.monthlyAnalytics);
-      data.sort((a, b) => b.startDate - a.startDate);
+      data.sort(by('startDate', 'desc'));
       return { data };
     }
     return null;

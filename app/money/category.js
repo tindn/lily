@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import LineItem from './lineItem';
+import { by } from '../../utils/sort';
 
 function Category(props) {
   const { accounts, name, negative, navigation } = props;
@@ -26,26 +27,24 @@ function Category(props) {
           paddingLeft: 5,
         }}
       >
-        {accounts
-          .sort((a, b) => b.balance - a.balance)
-          .map(account => (
-            <TouchableOpacity
-              key={account.id}
-              onPress={() =>
-                navigation.navigate('AccountDetails', {
-                  accountId: account.id,
-                  accountName: account.name,
-                })
-              }
-            >
-              <LineItem
-                text={account.name}
-                amount={account.balance}
-                negative={negative}
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-              />
-            </TouchableOpacity>
-          ))}
+        {accounts.sort(by('balance', 'desc')).map(account => (
+          <TouchableOpacity
+            key={account.id}
+            onPress={() =>
+              navigation.navigate('AccountDetails', {
+                accountId: account.id,
+                accountName: account.name,
+              })
+            }
+          >
+            <LineItem
+              text={account.name}
+              amount={account.balance}
+              negative={negative}
+              style={{ paddingTop: 5, paddingBottom: 5 }}
+            />
+          </TouchableOpacity>
+        ))}
       </View>
     </View>
   );

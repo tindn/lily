@@ -99,7 +99,7 @@ class Home extends React.PureComponent {
               </View>
               <View>
                 <Text style={styles.electricityReading}>
-                  {this.state.dailyAverage * 30} kWh
+                  {(this.state.dailyAverage * 30).toFixed(0)} kWh
                 </Text>
                 <Text style={styles.electricityReadingAnnotation}>
                   (estimate)

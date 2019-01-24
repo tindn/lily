@@ -8,6 +8,7 @@ import Pill from '../pill';
 import Screen from '../screen';
 import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
+import { by } from '../../utils/sort';
 
 class AccountDetails extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -23,7 +24,10 @@ class AccountDetails extends React.PureComponent {
     watchData(
       'accountEntries',
       [['where', 'accountId', '==', this.props.accountId]],
-      entries => this.setState({ entries: Object.values(entries) })
+      entries =>
+        this.setState({
+          entries: Object.values(entries).sort(by('date', 'desc')),
+        })
     );
   }
 
