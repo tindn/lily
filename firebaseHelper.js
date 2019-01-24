@@ -9,7 +9,7 @@ export function getDocument(collection, docId) {
     .get(docId)
     .then(function(doc) {
       if (doc.exists) {
-        return eval(collection + 'Deserialize')(doc);
+        return deserializers[collection + 'Deserialize'](doc);
       }
       return null;
     });
@@ -20,7 +20,7 @@ export function watchDocument(collection, docId, onChange) {
     .doc(docId)
     .onSnapshot(function(doc) {
       if (doc.exists) {
-        const data = eval(collection + 'Deserialize')(doc);
+        const data = deserializers[collection + 'Deserialize'](doc);
         if (onChange) {
           onChange(data);
         }
@@ -35,7 +35,7 @@ export function queryData(collection, queryArgs = []) {
     const params = arg.slice(1);
     query = query[operator].apply(query, params);
   });
-  return query.get().then(eval(collection + 'FromSnapshot'));
+  return query.get().then(transformers[collection + 'FromSnapshot']);
 }
 
 export function watchData(collection, queryArgs = [], onChange) {
@@ -46,7 +46,7 @@ export function watchData(collection, queryArgs = [], onChange) {
     query = query[operator].apply(query, params);
   });
   return query.onSnapshot(function(snapshot) {
-    const data = eval(collection + 'FromSnapshot')(snapshot);
+    const data = transformers[collection + 'FromSnapshot'](snapshot);
     if (onChange) {
       onChange(data);
     }
@@ -76,7 +76,24 @@ export function deleteDocument(collection, docId) {
     .delete();
 }
 
-// eslint-disable-next-line no-unused-vars
+const deserializers = {
+  monthlyAnalyticsDeserialize,
+  transactionsDeserialize,
+  electricityReadingsDeserialize,
+  accountEntriesDeserialize,
+  accountsDeserialize,
+  vendorsDeserialize,
+};
+
+const transformers = {
+  monthlyAnalyticsFromSnapshot,
+  transactionsFromSnapshot,
+  electricityReadingsFromSnapshot,
+  accountEntriesFromSnapshot,
+  accountsFromSnapshot,
+  vendorsFromSnapshot,
+};
+
 function monthlyAnalyticsFromSnapshot(snapshot) {
   let data = {};
   snapshot.forEach(function(doc) {
@@ -92,7 +109,6 @@ function monthlyAnalyticsDeserialize(doc) {
   return month;
 }
 
-// eslint-disable-next-line no-unused-vars
 function transactionsFromSnapshot(snapshot) {
   let transactions = [];
   snapshot.forEach(function(doc) {
@@ -109,7 +125,6 @@ function transactionsDeserialize(doc) {
   return transaction;
 }
 
-// eslint-disable-next-line no-unused-vars
 function electricityReadingsFromSnapshot(snapshot) {
   let readings = [];
   snapshot.forEach(function(doc) {
@@ -127,7 +142,6 @@ function electricityReadingsDeserialize(doc) {
   return reading;
 }
 
-// eslint-disable-next-line no-unused-vars
 function accountEntriesFromSnapshot(snapshot) {
   let data = {};
   snapshot.forEach(function(doc) {
@@ -143,7 +157,6 @@ function accountEntriesDeserialize(doc) {
   return entry;
 }
 
-// eslint-disable-next-line no-unused-vars
 function accountsFromSnapshot(snapshot) {
   let data = {};
   snapshot.forEach(function(doc) {
@@ -158,7 +171,6 @@ function accountsDeserialize(doc) {
   return account;
 }
 
-// eslint-disable-next-line no-unused-vars
 function vendorsFromSnapshot(snapshot) {
   let data = {};
   snapshot.forEach(function(doc) {
