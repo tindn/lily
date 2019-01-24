@@ -6,7 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "madge": "madge --image madge.svg ./index.js",
     "test": "jest",
-    "ios": "react-native run-ios"
+    "ios": "react-native run-ios",
+    "qrcode": "qrcode -t png -o contact.png -w 1024 \"https: //tindn.io/contact.vcf\""
   },
   "dependencies": {
     "babel-eslint": "^10.0.1",

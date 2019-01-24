@@ -4,7 +4,7 @@ import config from '../config.json';
 import theme from '../theme';
 import Money from './money';
 import Misc from './misc';
-import Settings from './settings';
+import Contact from './contact';
 import { AsyncStorage } from 'react-native';
 require('firebase/firestore');
 firebase.initializeApp(config.firebase);
@@ -25,7 +25,7 @@ const TabNavigator = createBottomTabNavigator(
   {
     Money,
     Misc,
-    Settings,
+    Contact,
   },
   {
     tabBarOptions: {
