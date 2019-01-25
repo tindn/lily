@@ -5581,6 +5581,11 @@ react-native-gesture-handler@^1.0.0, react-native-gesture-handler@^1.0.10:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
+react-native-keyboard-manager@^4.0.13-10:
+  version "4.0.13-10"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-manager/-/react-native-keyboard-manager-4.0.13-10.tgz#ec0a156edac846350f7374760406bae0dfec8744"
+  integrity sha512-h3YmuJrL2teEeTm4t9jYUn5InMx7yvX2JfvOTQufrpFElLYuJ+QtYaRZpsT/arx8SzzjXUNHTl4xWYvXRhWDNQ==
+
 react-native-maps@^0.23.0:
   version "0.23.0"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.23.0.tgz#edbfdcad0e42190627eb1c8067eaba5965c8f81e"

@@ -6,6 +6,8 @@ import Money from './money';
 import Misc from './misc';
 import Contact from './contact';
 import { AsyncStorage } from 'react-native';
+import KeyboardManager from 'react-native-keyboard-manager';
+
 require('firebase/firestore');
 firebase.initializeApp(config.firebase);
 firebase
@@ -21,6 +23,9 @@ firebase
 firebase.firestore().settings({
   timestampsInSnapshots: true,
 });
+
+KeyboardManager.setToolbarPreviousNextButtonEnable(true);
+
 const TabNavigator = createBottomTabNavigator(
   {
     Money,
