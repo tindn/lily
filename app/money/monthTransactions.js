@@ -33,11 +33,15 @@ class MonthTransactions extends React.PureComponent {
   }
 
   componentDidMount() {
-    watchData(
+    this.unsubscribe = watchData(
       'transactions',
       [['where', 'date', '>=', this.startOfMonth], ['orderBy', 'date', 'desc']],
       this.props.updateMonthTransactions
     );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   fetchData = () => {

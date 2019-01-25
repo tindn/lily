@@ -41,7 +41,15 @@ class MonthlyAnalytics extends React.PureComponent {
   };
 
   componentDidMount() {
-    watchData('monthlyAnalytics', [], this.props.updateMonthlyAnalytics);
+    this.unsubscribe = watchData(
+      'monthlyAnalytics',
+      [],
+      this.props.updateMonthlyAnalytics
+    );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   render() {

@@ -47,11 +47,15 @@ class Home extends React.PureComponent {
   }
 
   componentDidMount() {
-    watchData(
+    this.unsubscribe = watchData(
       'electricityReadings',
       [['orderBy', 'timestamp', 'desc']],
       this.props.updateElectricityReadings
     );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   render() {

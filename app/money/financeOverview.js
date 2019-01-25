@@ -50,7 +50,11 @@ class FinanceOverview extends React.PureComponent {
   };
 
   componentDidMount() {
-    watchData('accounts', [], this.props.updateAccounts);
+    this.unsubscribe = watchData('accounts', [], this.props.updateAccounts);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   render() {

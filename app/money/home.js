@@ -62,12 +62,17 @@ class Home extends React.PureComponent {
   };
 
   componentDidMount() {
-    watchDocument(
+    this.unsubscribe1 = watchDocument(
       'monthlyAnalytics',
       this.currentMonthAnalyticsId,
       this.props.updateMonthlyAnalytics
     );
-    watchData('vendors', [], this.props.updateVendors);
+    this.unsubscribe2 = watchData('vendors', [], this.props.updateVendors);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe1();
+    this.unsubscribe2();
   }
 
   render() {

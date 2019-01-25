@@ -21,7 +21,7 @@ class AccountDetails extends React.PureComponent {
   };
 
   componentDidMount() {
-    watchData(
+    this.unsubscribe = watchData(
       'accountEntries',
       [['where', 'accountId', '==', this.props.accountId]],
       entries =>
@@ -29,6 +29,10 @@ class AccountDetails extends React.PureComponent {
           entries: Object.values(entries).sort(by('date', 'desc')),
         })
     );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   render() {
