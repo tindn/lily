@@ -69,7 +69,7 @@ class Vendors extends React.Component {
               >
                 <View>
                   <Text style={styles.transactionItemMemo}>
-                    {decodeURI(item)}
+                    {unescape(item)}
                   </Text>
                 </View>
               </TouchableOpacity>

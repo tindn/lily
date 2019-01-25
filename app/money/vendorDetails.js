@@ -1,24 +1,32 @@
 import React from 'react';
-import { ScrollView, View, Button, Alert, TextInput } from 'react-native';
+import {
+  Alert,
+  Button,
+  Linking,
+  ScrollView,
+  TextInput,
+  View,
+} from 'react-native';
 import { connect } from 'react-redux';
+import {
+  addDocument,
+  deleteDocument,
+  updateDocument,
+} from '../../firebaseHelper';
 import theme from '../../theme';
+import { cleanCoordinate } from '../../utils/location';
+import { createMapUrl } from '../../utils/map';
 import Pill from '../pill';
 import Screen from '../screen';
 import sharedStyles from '../sharedStyles';
 import MapLocationInput from './mapLocationInput';
-import {
-  updateDocument,
-  deleteDocument,
-  addDocument,
-} from '../../firebaseHelper';
-import { cleanCoordinate } from '../../utils/location';
 
 class VendorDetails extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
     return {
       title:
-        params && params.vendorId ? decodeURI(params.vendorId) : 'New Vendor',
+        params && params.vendorId ? unescape(params.vendorId) : 'New Vendor',
     };
   };
 
@@ -75,29 +83,51 @@ class VendorDetails extends React.PureComponent {
               />
             </View>
           )}
-          <View style={{ marginTop: 10, paddingLeft: 20, paddingRight: 80 }}>
+          <View style={{ marginTop: 10, paddingLeft: 20 }}>
             {this.state.locations &&
               this.state.locations.map((location, index) => (
-                <MapLocationInput
+                <View
                   key={index}
-                  coord={location}
-                  title={decodeURI(this.state.id)}
-                  style={[
-                    sharedStyles.shadow2,
-                    { height: 220, marginBottom: 20 },
-                  ]}
-                  mapStyle={{ borderRadius: 10 }}
-                  removeLocation={() => {
-                    this.removeLocation(index);
+                  style={{
+                    height: 220,
+                    marginBottom: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}
-                  updateLocation={e => {
-                    this.updateLocation(
-                      index,
-                      cleanCoordinate(e.nativeEvent.coordinate)
-                    );
-                  }}
-                  markerDraggable={true}
-                />
+                >
+                  <MapLocationInput
+                    coord={location}
+                    title={unescape(this.state.id)}
+                    style={[sharedStyles.shadow2, { flex: 1 }]}
+                    mapStyle={{ borderRadius: 10 }}
+                    removeLocation={() => {
+                      this.removeLocation(index);
+                    }}
+                    updateLocation={e => {
+                      this.updateLocation(
+                        index,
+                        cleanCoordinate(e.nativeEvent.coordinate)
+                      );
+                    }}
+                    markerDraggable={true}
+                  />
+                  <Pill
+                    label="Go"
+                    onPress={() => {
+                      Linking.openURL(
+                        createMapUrl({
+                          travelMode: 'd',
+                          q: unescape(this.state.id),
+                          latitude: location.latitude,
+                          longitude: location.longitude,
+                        })
+                      );
+                    }}
+                    style={{ padding: 12, marginHorizontal: 10 }}
+                    color={theme.colors.secondary}
+                    backgroundColor={theme.colors.primary}
+                  />
+                </View>
               ))}
           </View>
           <View

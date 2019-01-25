@@ -23,7 +23,7 @@ function MapLocationInput(props) {
       <TouchableOpacity
         style={{
           position: 'absolute',
-          right: 5,
+          left: 5,
           top: 5,
           zIndex: 1,
           padding: 10,

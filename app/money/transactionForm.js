@@ -53,7 +53,7 @@ class TransactionForm extends React.Component {
             // eslint-disable-next-line no-undef
             new Set(
               [{ id: '' }, ...nearbyVendors, ...this.props.vendors].map(
-                vendor => decodeURI(vendor.id)
+                vendor => unescape(vendor.id)
               )
             )
           ),
@@ -65,7 +65,7 @@ class TransactionForm extends React.Component {
             // eslint-disable-next-line no-undef
             new Set(
               [{ id: '' }, ...this.props.vendors].map(vendor =>
-                decodeURI(vendor.id)
+                unescape(vendor.id)
               )
             )
           ),
