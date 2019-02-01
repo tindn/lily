@@ -15,13 +15,13 @@ export function isNearby(current, location) {
   ) {
     return false;
   }
-  current.latitude = parseFloat(current.latitude.toFixed(3));
-  current.longitude = parseFloat(current.longitude.toFixed(3));
-  location.latitude = parseFloat(location.latitude.toFixed(3));
-  location.longitude = parseFloat(location.longitude.toFixed(3));
+  const currentLatitude = parseFloat(current.latitude.toFixed(3));
+  const currentLongitude = parseFloat(current.longitude.toFixed(3));
+  const locationLatitude = parseFloat(location.latitude.toFixed(3));
+  const locationLongitude = parseFloat(location.longitude.toFixed(3));
   return (
-    isInRange(current.latitude, location.latitude, 0.001) &&
-    isInRange(current.longitude, location.longitude, 0.001)
+    isInRange(currentLatitude, locationLatitude, 0.001) &&
+    isInRange(currentLongitude, locationLongitude, 0.001)
   );
 }
 

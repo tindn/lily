@@ -6,7 +6,8 @@ export function getCollection(collection) {
 
 export function getDocument(collection, docId) {
   return getCollection(collection)
-    .get(docId)
+  .doc(docId)
+    .get()
     .then(function(doc) {
       if (doc.exists) {
         return deserializers[collection + 'Deserialize'](doc);
