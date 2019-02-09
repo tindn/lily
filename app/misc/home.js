@@ -16,16 +16,13 @@ class Home extends React.PureComponent {
 
   static getDerivedStateFromProps(props) {
     if (props.electricityReadings && props.electricityReadings.length) {
-      let lastReading = props.electricityReadings[0],
-        monthStart = undefined;
-      const cycleEndIndex = props.electricityReadings.indexOf(
+      let lastReading = props.electricityReadings[0];
+      let monthStart = props.electricityReadings.find(
         reading => reading.cycleEnd
       );
-      if (cycleEndIndex === -1) {
+      if (!monthStart) {
         monthStart =
           props.electricityReadings[props.electricityReadings.length - 1];
-      } else {
-        monthStart = props.electricityReadings[cycleEndIndex];
       }
 
       const usedThisMonth = lastReading.value - monthStart.value;
