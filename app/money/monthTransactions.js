@@ -32,18 +32,6 @@ class MonthTransactions extends React.PureComponent {
     };
   }
 
-  componentDidMount() {
-    this.unsubscribe = watchData(
-      'transactions',
-      [['where', 'date', '>=', this.startOfMonth], ['orderBy', 'date', 'desc']],
-      this.props.updateMonthTransactions
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
   fetchData = () => {
     this.setState({ refreshing: true });
     queryData('transactions', [
@@ -59,7 +47,6 @@ class MonthTransactions extends React.PureComponent {
   };
 
   render() {
-    const { data } = this.state;
     return (
       <Screen>
         <FlatList
@@ -69,7 +56,7 @@ class MonthTransactions extends React.PureComponent {
               onRefresh={this.fetchData}
             />
           }
-          data={data}
+          data={this.state.data}
           keyExtractor={item => item.id}
           ListEmptyComponent={
             <View style={styles.emptyComponent}>
@@ -113,18 +100,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateMonthTransactions(transactions) {
-      dispatch({ type: 'UPDATE_MONTH_TRANSACTIONS', transactions });
-    },
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(React.memo(MonthTransactions));
+export default connect(mapStateToProps)(React.memo(MonthTransactions));
 
 const styles = StyleSheet.create({
   emptyComponent: {

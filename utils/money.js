@@ -27,3 +27,10 @@ export function formatAmountToDisplay(amount, useParentheses = false) {
 
   return display;
 }
+
+export function getTotalAmount(transactions) {
+  return transactions.reduce((acc, curr) => {
+    acc = acc + curr.amount;
+    return acc;
+  }, 0);
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { connect } from 'react-redux';
-import { getDocument, watchData, watchDocument } from '../../firebaseHelper';
+import { getDocument, watchData } from '../../firebaseHelper';
 import theme from '../../theme';
 import Card from '../card';
 import Pill from '../pill';
@@ -9,6 +9,7 @@ import Screen from '../screen';
 import FinanceOverview from './financeOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
+import { getTotalAmount } from '../../utils/money';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -16,63 +17,53 @@ class Home extends React.PureComponent {
   };
 
   static getDerivedStateFromProps(props) {
-    if (props.monthlyAnalytics) {
-      const currentMonthAnalyticsId = new Date().toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-      });
-
-      const currentMonthAnalytics =
-        props.monthlyAnalytics[currentMonthAnalyticsId];
-      if (currentMonthAnalytics) {
-        return {
-          spendingThisMonth: currentMonthAnalytics.spent,
-          earningThisMonth: currentMonthAnalytics.earned,
-        };
-      }
+    if (props.monthTransactions) {
+      const spent = getTotalAmount(
+        props.monthTransactions.filter(t => t.entryType === 'debit')
+      ).toFixed(2);
+      const earned = getTotalAmount(
+        props.monthTransactions.filter(t => t.entryType === 'credit')
+      ).toFixed(2);
+      return {
+        spendingThisMonth: spent,
+        earningThisMonth: earned,
+      };
     }
+
     return null;
   }
-  state = {
-    refreshing: false,
-    spendingThisMonth: undefined,
-    earningThisMonth: undefined,
-    transactionListExpanded: false,
-    transactionFormExpanded: false,
-  };
+
+  constructor(props) {
+    super(props);
+    const today = new Date();
+    this.startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    this.state = {
+      refreshing: false,
+      spendingThisMonth: undefined,
+      earningThisMonth: undefined,
+      transactionListExpanded: false,
+      transactionFormExpanded: false,
+    };
+  }
 
   currentMonthAnalyticsId = new Date().toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
   });
 
-  fetchData = () => {
-    this.setState({ refreshing: true });
-    getDocument('monthlyAnalytics', this.currentMonthAnalyticsId)
-      .then(analytics => {
-        if (analytics) {
-          this.props.updateMonthlyAnalytics(analytics);
-        }
-      })
-      .finally(() => {
-        this.setState({
-          refreshing: false,
-        });
-      });
-  };
-
   componentDidMount() {
-    this.unsubscribe1 = watchDocument(
-      'monthlyAnalytics',
-      this.currentMonthAnalyticsId,
-      this.props.updateMonthlyAnalytics
+    this.unsubscribe = watchData(
+      'transactions',
+      [['where', 'date', '>=', this.startOfMonth], ['orderBy', 'date', 'desc']],
+      this.props.updateMonthTransactions
     );
+
     this.unsubscribe2 = watchData('vendors', [], this.props.updateVendors);
   }
 
   componentWillUnmount() {
-    this.unsubscribe1();
     this.unsubscribe2();
+    this.unsubscribe();
   }
 
   render() {
@@ -81,12 +72,6 @@ class Home extends React.PureComponent {
         <ScrollView
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="always"
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.fetchData}
-            />
-          }
         >
           <Card
             onPress={() => {
@@ -154,25 +139,20 @@ class Home extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    monthlyAnalytics: state.monthlyAnalytics,
+    monthTransactions: state.monthTransactions,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    updateMonthlyAnalytics(analytics) {
-      dispatch({
-        type: 'UPDATE_MONTHLY_ANALYTICS',
-        payload: {
-          [analytics.id]: analytics,
-        },
-      });
-    },
     updateVendors(vendors) {
       dispatch({
         type: 'UPDATE_VENDORS',
         payload: vendors,
       });
+    },
+    updateMonthTransactions(transactions) {
+      dispatch({ type: 'UPDATE_MONTH_TRANSACTIONS', transactions });
     },
   };
 }

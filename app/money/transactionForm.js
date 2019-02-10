@@ -58,6 +58,7 @@ class TransactionForm extends React.Component {
               )
             )
           ),
+          vendor: nearbyVendors.length === 1 ? nearbyVendors[0].id : '',
         });
       }.bind(this),
       function() {
@@ -71,7 +72,7 @@ class TransactionForm extends React.Component {
             )
           ),
         });
-      },
+      }.bind(this),
       { enableHighAccuracy: true }
     );
   }
