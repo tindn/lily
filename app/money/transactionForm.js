@@ -1,22 +1,22 @@
 import React from 'react';
 import {
   LayoutAnimation,
+  Picker,
   StyleSheet,
   Switch,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { PreviousNextView } from 'react-native-keyboard-manager';
+import { connect } from 'react-redux';
+import { addDocument } from '../../firebaseHelper';
 import theme from '../../theme';
-import OutlineButton from '../outlineButton';
+import { isNearby } from '../../utils/location';
 import DateInput from '../dateInput';
 import MoneyInput from '../moneyInput';
+import OutlineButton from '../outlineButton';
 import sharedStyles from '../sharedStyles';
-import { addDocument } from '../../firebaseHelper';
-import PickerInput from '../pickerInput';
-import { connect } from 'react-redux';
-import { isNearby } from '../../utils/location';
-import { PreviousNextView } from 'react-native-keyboard-manager';
 
 function getDefaultState(moneyInputKey) {
   return {
@@ -100,17 +100,33 @@ class TransactionForm extends React.Component {
               type={this.state.isCredit ? 'credit' : 'debit'}
             />
           </View>
+          <View key="secondRow" style={[sharedStyles.formRow]}>
+            <TextInput
+              key="vendorInput"
+              style={[sharedStyles.formTextInput, styles.memoInput]}
+              value={this.state.vendor}
+              placeholder="vendor"
+              onChangeText={text => this.setState({ vendor: text })}
+            />
+          </View>
           <View
-            key="secondRow"
+            key="thirdRow"
+            style={[sharedStyles.formRow, styles.borderBottom, { padding: 0 }]}
+          >
+            <Picker
+              selectedValue={this.state.vendor}
+              onValueChange={text => this.setState({ vendor: text })}
+              style={{ flex: 1 }}
+            >
+              {this.state.vendors.map(function(item, index) {
+                return <Picker.Item key={index} label={item} value={item} />;
+              })}
+            </Picker>
+          </View>
+          <View
+            key="fourthRow"
             style={[sharedStyles.formRow, styles.borderBottom]}
           >
-            <PickerInput
-              value={this.state.vendor}
-              onChangeText={text => this.setState({ vendor: text })}
-              dropDownList={this.state.vendors}
-              style={[sharedStyles.formTextInput, styles.vendorInput]}
-              placeholder="vendor"
-            />
             <TextInput
               key="memoInput"
               style={[sharedStyles.formTextInput, styles.memoInput]}
@@ -120,7 +136,7 @@ class TransactionForm extends React.Component {
             />
           </View>
           <View
-            key="creditSwitch"
+            key="fifthRow"
             style={[sharedStyles.formRow, sharedStyles.formSwitchRow]}
           >
             <Text style={{ color: theme.colors.darkGray }}>
