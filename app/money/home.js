@@ -1,15 +1,15 @@
 import React from 'react';
-import { RefreshControl, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { connect } from 'react-redux';
-import { getDocument, watchData } from '../../firebaseHelper';
+import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
+import { getTotalAmount } from '../../utils/money';
 import Card from '../card';
 import Pill from '../pill';
 import Screen from '../screen';
 import FinanceOverview from './financeOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
-import { getTotalAmount } from '../../utils/money';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
