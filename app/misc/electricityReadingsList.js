@@ -3,10 +3,12 @@ import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import Screen from '../screen';
 import ElectricityReadingItem from './electricityReadingItem';
+import ElectricityReadingAdd from './electricityReadingAdd';
 
 class ElectricityReadingsList extends React.Component {
   static navigationOptions = {
     headerTitle: 'Readings',
+    headerRight: <ElectricityReadingAdd />,
   };
   render() {
     return (

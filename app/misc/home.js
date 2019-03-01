@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
 import Card from '../card';
+import Pill from '../pill';
 import Screen from '../screen';
-import ElectricityReadingAdd from './electricityReadingAdd';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -126,7 +126,22 @@ class Home extends React.PureComponent {
               </View>
             </View>
           </Card>
-          <ElectricityReadingAdd />
+
+          <View
+            style={{
+              marginTop: 25,
+              paddingHorizontal: 50,
+            }}
+          >
+            <Pill
+              backgroundColor={theme.colors.primary}
+              color={theme.colors.secondary}
+              onPress={() => {}}
+              style={{ padding: 12, marginLeft: 50, marginRight: 50 }}
+              label="Display"
+              textStyle={{ textAlign: 'center' }}
+            />
+          </View>
         </ScrollView>
       </Screen>
     );

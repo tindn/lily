@@ -1,10 +1,17 @@
 import React from 'react';
-import { Modal, SafeAreaView, Switch, Text, View } from 'react-native';
+import {
+  Modal,
+  SafeAreaView,
+  Switch,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import theme from '../../theme';
 import OutlineButton from '../outlineButton';
 import sharedStyles from '../sharedStyles';
-import Pill from '../pill';
+import Icon from 'react-native-vector-icons/AntDesign';
 import { addDocument } from '../../firebaseHelper';
 
 class ElectricityReadingAdd extends React.Component {
@@ -29,14 +36,12 @@ class ElectricityReadingAdd extends React.Component {
           marginTop: 20,
         }}
       >
-        <Pill
-          backgroundColor={theme.colors.primary}
-          color={theme.colors.secondary}
+        <TouchableOpacity
+          style={{ bottom: 10, right: 10 }}
           onPress={() => this.setState({ showModal: !this.state.showModal })}
-          style={{ padding: 12, marginLeft: 50, marginRight: 50 }}
-          label="New Reading"
-          textStyle={{ textAlign: 'center' }}
-        />
+        >
+          <Icon name="plus" size={25} color={theme.colors.iosBlue} />
+        </TouchableOpacity>
         <Modal
           key="modal"
           animationType="slide"
