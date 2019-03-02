@@ -14,6 +14,12 @@ class Home extends React.PureComponent {
 
   state = {};
 
+  navigate = route => {
+    return () => {
+      this.props.navigation.navigate(route);
+    };
+  };
+
   static getDerivedStateFromProps(props) {
     if (props.electricityReadings && props.electricityReadings.length) {
       let lastReading = props.electricityReadings[0];
@@ -61,17 +67,9 @@ class Home extends React.PureComponent {
         <ScrollView
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="always"
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={this.state.refreshing}
-          //     onRefresh={this.fetchData}
-          //   />
-          // }
         >
           <Card
-            onPress={() =>
-              this.props.navigation.navigate('ElectricityReadingsList')
-            }
+            onPress={this.navigate('ElectricityReadingsList')}
             style={styles.electricityReadingCard}
           >
             <View
@@ -136,9 +134,9 @@ class Home extends React.PureComponent {
             <Pill
               backgroundColor={theme.colors.primary}
               color={theme.colors.secondary}
-              onPress={() => {}}
-              style={{ padding: 12, marginLeft: 50, marginRight: 50 }}
-              label="Display"
+              onPress={this.navigate('LargeDisplay')}
+              style={{ padding: 12 }}
+              label="Large Display"
               textStyle={{ textAlign: 'center' }}
             />
           </View>
