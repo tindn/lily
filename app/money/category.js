@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import LineItem from './lineItem';
 import { by } from '../../utils/sort';
+import theme from '../../theme';
 
 function Category(props) {
   const { accounts, name, negative, navigation } = props;
@@ -11,16 +12,9 @@ function Category(props) {
   return (
     <View
       style={{
-        marginTop: 15,
-        paddingLeft: 5,
+        marginBottom: 15,
       }}
     >
-      <LineItem
-        text={name}
-        amount={sum}
-        negative={negative}
-        textStyle={{ fontSize: 16, fontWeight: 'bold', opacity: 0.7 }}
-      />
       <View
         style={{
           marginTop: 5,
@@ -36,16 +30,28 @@ function Category(props) {
                 accountName: account.name,
               })
             }
+            style={{ paddingTop: 5, paddingBottom: 5 }}
           >
             <LineItem
               text={account.name}
               amount={account.balance}
               negative={negative}
-              style={{ paddingTop: 5, paddingBottom: 5 }}
             />
           </TouchableOpacity>
         ))}
       </View>
+      <LineItem
+        text={name}
+        amount={sum}
+        negative={negative}
+        style={{ borderTopWidth: 1, borderColor: theme.colors.lightGray }}
+        textStyle={{
+          paddingTop: 5,
+          paddingLeft: 5,
+          fontSize: 15,
+          fontWeight: 'bold',
+        }}
+      />
     </View>
   );
 }
