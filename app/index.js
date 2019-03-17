@@ -20,9 +20,7 @@ firebase
     AsyncStorage.setItem('lily-firebase-init-error', JSON.stringify(error));
   });
 
-firebase.firestore().settings({
-  timestampsInSnapshots: true,
-});
+firebase.firestore();
 
 KeyboardManager.setToolbarPreviousNextButtonEnable(true);
 

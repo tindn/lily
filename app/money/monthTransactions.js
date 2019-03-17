@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   FlatList,
+  LayoutAnimation,
   RefreshControl,
   StyleSheet,
   Text,
@@ -13,6 +14,8 @@ import theme from '../../theme';
 import { toWeekDayDateString } from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../screen';
+import PlaidTransactionsList from './plaidTransactionsList';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 class MonthTransactions extends React.PureComponent {
   static getDerivedStateFromProps(props) {
@@ -29,6 +32,7 @@ class MonthTransactions extends React.PureComponent {
     this.state = {
       refreshing: false,
       data: [],
+      showPlaidTransactions: false,
     };
   }
 
@@ -44,6 +48,13 @@ class MonthTransactions extends React.PureComponent {
           refreshing: false,
         });
       });
+  };
+
+  togglePlaidTransactions = () => {
+    this.setState(function(state) {
+      return { showPlaidTransactions: !state.showPlaidTransactions };
+    });
+    LayoutAnimation.easeInEaseOut();
   };
 
   render() {
@@ -78,7 +89,7 @@ class MonthTransactions extends React.PureComponent {
               >
                 <View>
                   <Text style={styles.transactionItemMemo}>
-                    {item.memo || item.vendor}
+                    {(item.memo || item.vendor).slice(0, 25)}
                   </Text>
                   <Text style={styles.transactionItemDate}>{dateDisplay}</Text>
                 </View>
@@ -89,6 +100,37 @@ class MonthTransactions extends React.PureComponent {
             );
           }}
         />
+        <View
+          style={{
+            backgroundColor: '#fff',
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 3,
+            },
+            shadowOpacity: 0.29,
+            shadowRadius: 4.65,
+            elevation: 7,
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+          }}
+        >
+          <TouchableOpacity
+            onPress={this.togglePlaidTransactions}
+            style={{
+              paddingVertical: 10,
+              alignItems: 'center',
+              borderBottomWidth: StyleSheet.hairlineWidth,
+              borderBottomColor: theme.colors.lighterGray,
+            }}
+          >
+            <Icon
+              name={this.state.showPlaidTransactions ? 'caretdown' : 'caretup'}
+              size={16}
+            />
+          </TouchableOpacity>
+          {this.state.showPlaidTransactions && <PlaidTransactionsList />}
+        </View>
       </Screen>
     );
   }
@@ -113,7 +155,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.backgroundColor,
     borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingBottom: 8,

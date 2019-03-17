@@ -1,12 +1,12 @@
 import firebase from 'firebase';
-
+require('firebase/functions');
 export function getCollection(collection) {
   return firebase.firestore().collection(collection);
 }
 
 export function getDocument(collection, docId) {
   return getCollection(collection)
-  .doc(docId)
+    .doc(docId)
     .get()
     .then(function(doc) {
       if (doc.exists) {
@@ -184,4 +184,16 @@ function vendorsDeserialize(doc) {
   let vendor = doc.data();
   vendor.id = doc.id;
   return vendor;
+}
+
+export function getPlaidTransactions(data) {
+  if (
+    !data.accessToken ||
+    !data.accountId ||
+    !data.startDate ||
+    !data.endDate
+  ) {
+    return null;
+  }
+  return firebase.functions().httpsCallable('plaidTransactions')(data);
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
@@ -96,40 +96,34 @@ class Home extends React.PureComponent {
           >
             <FinanceOverview />
           </Card>
-          <View
-            style={{
-              marginTop: 25,
-              paddingHorizontal: 50,
+          <Pill
+            onPress={() => {
+              this.props.navigation.navigate('MonthlyAnalytics');
             }}
-          >
-            <Pill
-              onPress={() => {
-                this.props.navigation.navigate('MonthlyAnalytics');
-              }}
-              label="Monthly Analytics"
-              style={{ padding: 12 }}
-              color={theme.colors.secondary}
-              backgroundColor={theme.colors.primary}
-              textStyle={{ textAlign: 'center' }}
-            />
-          </View>
-          <View
+            label="Monthly Analytics"
             style={{
+              padding: 12,
               marginTop: 25,
-              paddingHorizontal: 50,
+              marginHorizontal: 50,
             }}
-          >
-            <Pill
-              onPress={() => {
-                this.props.navigation.navigate('Vendors');
-              }}
-              label="Vendors"
-              style={{ padding: 12 }}
-              color={theme.colors.secondary}
-              backgroundColor={theme.colors.primary}
-              textStyle={{ textAlign: 'center' }}
-            />
-          </View>
+            color={theme.colors.secondary}
+            backgroundColor={theme.colors.primary}
+            textStyle={{ textAlign: 'center' }}
+          />
+          <Pill
+            onPress={() => {
+              this.props.navigation.navigate('Vendors');
+            }}
+            label="Vendors"
+            style={{
+              padding: 12,
+              marginTop: 25,
+              marginHorizontal: 50,
+            }}
+            color={theme.colors.secondary}
+            backgroundColor={theme.colors.primary}
+            textStyle={{ textAlign: 'center' }}
+          />
         </ScrollView>
         <TransactionAdd />
       </Screen>
