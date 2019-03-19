@@ -11,6 +11,7 @@ import Screen from '../screen';
 import FinanceOverview from './financeOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
+import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -74,7 +75,7 @@ class Home extends React.PureComponent {
   }
 
   render() {
-    const data = Object.values(this.props.monthlyAnalytics)
+    const lastThreeMonths = Object.values(this.props.monthlyAnalytics)
       .sort(by('startDate', 'desc'))
       .slice(0, 3)
       .sort(by('startDate', 'asc'));
@@ -104,35 +105,7 @@ class Home extends React.PureComponent {
             }}
             onPress={() => this.props.navigation.navigate('MonthlyAnalytics')}
           >
-            {data.map(month => {
-              const diff = month.earned - month.spent;
-              const color = diff >= 0 ? theme.colors.green : theme.colors.red;
-              return (
-                <View key={month.id}>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      fontWeight: '500',
-                      marginBottom: 10,
-                    }}
-                  >
-                    {month.id}
-                  </Text>
-                  <Text
-                    style={[
-                      {
-                        color,
-                        textAlign: 'center',
-                        fontWeight: '500',
-                        fontSize: 16,
-                      },
-                    ]}
-                  >
-                    {formatAmountToDisplay(diff, true)}
-                  </Text>
-                </View>
-              );
-            })}
+            <MonthlyAnalyticsOverview data={lastThreeMonths} />
           </Card>
           <Card
             style={{
