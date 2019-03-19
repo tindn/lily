@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import MoneyDisplay from '../moneyDisplay';
 
 function LineItem(props) {
@@ -9,13 +9,23 @@ function LineItem(props) {
   }
 
   return (
-    <View
-      style={[{ flexDirection: 'row', justifyContent: 'space-between' }, style]}
-    >
-      <Text style={[{ fontSize: 16 }, textStyle]}>{text}</Text>
-      <MoneyDisplay amount={amount} style={[{ fontSize: 16 }, textStyle]} />
+    <View style={[styles.row, style]}>
+      <Text style={[styles.text, textStyle]}>{text}</Text>
+      <MoneyDisplay amount={amount} style={[styles.text, textStyle]} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 2,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+});
 
 export default LineItem;

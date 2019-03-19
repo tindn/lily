@@ -197,3 +197,10 @@ export function getPlaidTransactions(data) {
   }
   return firebase.functions().httpsCallable('plaidTransactions')(data);
 }
+
+export function getPlaidBalance(data) {
+  if (!data.accessToken || !data.accountId) {
+    return null;
+  }
+  return firebase.functions().httpsCallable('plaidBalance')(data);
+}

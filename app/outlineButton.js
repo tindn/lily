@@ -4,6 +4,18 @@ import { TouchableOpacity, Text } from 'react-native';
 const OutlineButton = props => {
   let color = props.color || '#007aff';
   let backgroundColor = '#fff';
+  let label = props.labelElement || (
+    <Text
+      style={[
+        {
+          color,
+        },
+        props.textStyle,
+      ]}
+    >
+      {props.label}
+    </Text>
+  );
 
   return (
     <TouchableOpacity
@@ -24,17 +36,9 @@ const OutlineButton = props => {
         props.style,
       ]}
     >
-      <Text
-        style={[
-          {
-            color,
-          },
-          props.textStyle,
-        ]}
-      >
-        {props.label}
-      </Text>
+      {label}
     </TouchableOpacity>
   );
 };
+
 export default OutlineButton;

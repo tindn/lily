@@ -1,9 +1,17 @@
 import React from 'react';
-import { Alert, Switch, Text, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Switch,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import {
   addDocument,
   deleteDocument,
   updateDocument,
+  getPlaidBalance,
 } from '../../firebaseHelper';
 import theme from '../../theme';
 import DateInput from '../dateInput';
@@ -27,13 +35,109 @@ class AccountEntryForm extends React.PureComponent {
         type: 'credit',
         date: new Date(),
         isBalanceUpdate: false,
-        balance: props.accountBalance,
+        balance: props.account.balance,
       };
     }
   }
 
+  onBalancePressed = () => {
+    if (!this.state.isBalanceUpdate && this.props.account.plaidAccessToken) {
+      this.setState(
+        function() {
+          return { fetchingPlaidBalance: true };
+        },
+        function() {
+          getPlaidBalance({
+            accessToken: this.props.account.plaidAccessToken,
+            accountId: this.props.account.plaidAccountId,
+          })
+            .then(
+              function(result) {
+                const currentBalance = result.data.accounts[0].balances.current;
+                let diff = currentBalance - this.props.account.balance;
+
+                this.setState({
+                  balance: currentBalance,
+                  amount: Math.abs(diff),
+                  type: diff < 0 ? 'debit' : 'credit',
+                  fetchingPlaidBalance: false,
+                });
+              }.bind(this)
+            )
+            .catch(
+              function() {
+                this.setState({ fetchingPlaidBalance: false });
+              }.bind(this)
+            );
+        }.bind(this)
+      );
+    }
+
+    this.setState(function(state) {
+      return {
+        isBalanceUpdate: !state.isBalanceUpdate,
+        memo: state.isBalanceUpdate ? '' : 'Balance update',
+      };
+    });
+  };
+
+  updateType = val => {
+    this.setState({ type: val ? 'credit' : 'debit' });
+
+    if (this.state.isBalanceUpdate) {
+      this.setState({
+        balance:
+          this.props.account.balance + (val ? 1 : -1) * this.state.amount,
+      });
+    }
+  };
+
+  updateBalanceAmount = amount => {
+    let diff = amount - this.props.account.balance;
+
+    this.setState({
+      balance: amount,
+      amount: Math.abs(diff),
+      type: diff < 0 ? 'debit' : 'credit',
+    });
+  };
+
+  confirmDelete = () => {
+    Alert.alert('Confirm', 'Do you want to delete this entry?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => {
+          deleteDocument('accountEntries', this.state.id);
+          this.props.onCancel();
+        },
+        style: 'destructive',
+      },
+    ]);
+  };
+
+  save = () => {
+    const { memo, amount, type, date, id, accountId } = this.state;
+    const entry = {
+      date,
+      memo,
+      amount: parseFloat(amount),
+      type,
+      accountId,
+    };
+    if (id) {
+      updateDocument('accountEntries', id, entry);
+    } else {
+      addDocument('accountEntries', entry);
+    }
+    this.props.onCancel();
+  };
+
   render() {
-    const { memo, amount, type, date, id, accountId, balance } = this.state;
+    const { memo, amount, type, date, id, balance } = this.state;
     return (
       <View style={sharedStyles.formContainer}>
         <View
@@ -67,31 +171,23 @@ class AccountEntryForm extends React.PureComponent {
         </View>
         <View
           key="creditSwitch"
-          style={[sharedStyles.formRow, sharedStyles.formSwitchRow]}
+          style={[
+            sharedStyles.formRow,
+            sharedStyles.borderBottom,
+            sharedStyles.formSwitchRow,
+          ]}
         >
           <Text style={{ color: theme.colors.darkGray }}>{type}</Text>
-          <Switch
-            value={type === 'credit'}
-            onValueChange={val =>
-              this.setState({ type: val ? 'credit' : 'debit' })
-            }
-          />
+          <Switch value={type === 'credit'} onValueChange={this.updateType} />
         </View>
         {this.state.isBalanceUpdate && (
           <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
-            <View />
+            <View style={{ justifyContent: 'center' }}>
+              <Text style={{ color: theme.colors.darkGray }}>New balance</Text>
+            </View>
             <MoneyInput
-              onChange={amount => {
-                let diff = amount - this.props.accountBalance;
-
-                this.setState({
-                  balance: amount,
-                  amount: Math.abs(diff),
-                  type: diff < 0 ? 'debit' : 'credit',
-                });
-              }}
+              onChange={this.updateBalanceAmount}
               amount={balance}
-              style={{}}
               textStyle={{
                 flex: 10,
               }}
@@ -108,53 +204,33 @@ class AccountEntryForm extends React.PureComponent {
           {id ? (
             <OutlineButton
               label="Delete"
-              onPress={() => {
-                Alert.alert('Confirm', 'Do you want to delete this entry?', [
-                  {
-                    text: 'Cancel',
-                    style: 'cancel',
-                    onPress: function() {},
-                  },
-                  {
-                    text: 'Delete',
-                    onPress: () => {
-                      deleteDocument('accountEntries', id);
-                      this.props.onCancel();
-                    },
-                    style: 'destructive',
-                  },
-                ]);
-              }}
+              onPress={this.confirmDelete}
               style={[sharedStyles.outlineButton]}
               color={theme.colors.red}
             />
           ) : (
             <OutlineButton
               label="Balance"
-              onPress={() => {
-                this.setState({ isBalanceUpdate: !this.state.isBalanceUpdate });
-              }}
+              onPress={this.onBalancePressed}
               style={[sharedStyles.outlineButton]}
               color="#000"
+              labelElement={
+                <View style={{ flexDirection: 'row' }}>
+                  <Text
+                    style={{
+                      color: '#000',
+                    }}
+                  >
+                    Balance
+                  </Text>
+                  {this.state.fetchingPlaidBalance && <ActivityIndicator />}
+                </View>
+              }
             />
           )}
           <OutlineButton
             label={id ? 'Save' : 'Add'}
-            onPress={() => {
-              const entry = {
-                date,
-                memo,
-                amount: parseFloat(amount),
-                type,
-                accountId,
-              };
-              if (id) {
-                updateDocument('accountEntries', id, entry);
-              } else {
-                addDocument('accountEntries', entry);
-              }
-              this.props.onCancel();
-            }}
+            onPress={this.save}
             style={[sharedStyles.outlineButton]}
             color={id ? theme.colors.primary : theme.colors.iosBlue}
           />

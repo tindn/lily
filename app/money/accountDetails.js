@@ -35,14 +35,26 @@ class AccountDetails extends React.PureComponent {
     this.unsubscribe();
   }
 
+  toggleAccountEntry = () => {
+    this.setState(function(state) {
+      return { showNewEntryForm: !state.showNewEntryForm };
+    });
+  };
+
   render() {
     if (!this.props.account) {
       return null;
     }
-    const { name, balance, type, category } = this.props.account;
+    const {
+      name,
+      balance,
+      type,
+      category,
+      plaidAccessToken,
+    } = this.props.account;
     return (
       <Screen>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="always">
           <View style={[styles.row]}>
             <Text style={{ fontSize: 17 }}>{name}</Text>
             <MoneyDisplay
@@ -54,6 +66,12 @@ class AccountDetails extends React.PureComponent {
             <Text style={{ fontSize: 17 }}>{category}</Text>
             <Text style={{ fontSize: 17 }}>{type}</Text>
           </View>
+          {plaidAccessToken && (
+            <View style={styles.row}>
+              <View />
+              <Text>Has Plaid</Text>
+            </View>
+          )}
 
           <View
             style={{
@@ -62,15 +80,16 @@ class AccountDetails extends React.PureComponent {
           >
             {this.state.showNewEntryForm ? (
               <AccountEntryForm
-                onCancel={() => this.setState({ showNewEntryForm: false })}
+                onCancel={this.toggleAccountEntry}
                 accountId={this.props.accountId}
                 accountBalance={balance}
+                account={this.props.account}
               />
             ) : (
               <Pill
                 backgroundColor={theme.colors.primary}
                 color={theme.colors.secondary}
-                onPress={() => this.setState({ showNewEntryForm: true })}
+                onPress={this.toggleAccountEntry}
                 style={{ padding: 12, marginLeft: 50, marginRight: 50 }}
                 label="Add Entry"
                 textStyle={{ textAlign: 'center' }}
