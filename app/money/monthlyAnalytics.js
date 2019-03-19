@@ -40,18 +40,6 @@ class MonthlyAnalytics extends React.PureComponent {
       });
   };
 
-  componentDidMount() {
-    this.unsubscribe = watchData(
-      'monthlyAnalytics',
-      [],
-      this.props.updateMonthlyAnalytics
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
   render() {
     return (
       <Screen>
@@ -101,21 +89,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateMonthlyAnalytics(analytics) {
-      dispatch({
-        type: 'UPDATE_MONTHLY_ANALYTICS',
-        payload: analytics,
-      });
-    },
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MonthlyAnalytics);
+export default connect(mapStateToProps)(MonthlyAnalytics);
 
 const styles = StyleSheet.create({
   amount: {

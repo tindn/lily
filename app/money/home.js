@@ -1,9 +1,10 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
-import { getTotalAmount } from '../../utils/money';
+import { getTotalAmount, formatAmountToDisplay } from '../../utils/money';
+import { by } from '../../utils/sort';
 import Card from '../card';
 import Pill from '../pill';
 import Screen from '../screen';
@@ -59,14 +60,24 @@ class Home extends React.PureComponent {
     );
 
     this.unsubscribe2 = watchData('vendors', [], this.props.updateVendors);
+    this.unsubscribe3 = watchData(
+      'monthlyAnalytics',
+      [],
+      this.props.updateMonthlyAnalytics
+    );
   }
 
   componentWillUnmount() {
-    this.unsubscribe2();
     this.unsubscribe();
+    this.unsubscribe2();
+    this.unsubscribe3();
   }
 
   render() {
+    const data = Object.values(this.props.monthlyAnalytics)
+      .sort(by('startDate', 'desc'))
+      .slice(0, 3)
+      .sort(by('startDate', 'asc'));
     return (
       <Screen>
         <ScrollView
@@ -87,8 +98,46 @@ class Home extends React.PureComponent {
           <Card
             style={{
               marginTop: 25,
-              paddingTop: 25,
-              paddingBottom: 25,
+              paddingVertical: 25,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
+            onPress={() => this.props.navigation.navigate('MonthlyAnalytics')}
+          >
+            {data.map(month => {
+              const diff = month.earned - month.spent;
+              const color = diff >= 0 ? theme.colors.green : theme.colors.red;
+              return (
+                <View key={month.id}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontWeight: '500',
+                      marginBottom: 10,
+                    }}
+                  >
+                    {month.id}
+                  </Text>
+                  <Text
+                    style={[
+                      {
+                        color,
+                        textAlign: 'center',
+                        fontWeight: '500',
+                        fontSize: 16,
+                      },
+                    ]}
+                  >
+                    {formatAmountToDisplay(diff, true)}
+                  </Text>
+                </View>
+              );
+            })}
+          </Card>
+          <Card
+            style={{
+              marginTop: 25,
+              paddingVertical: 25,
               flexDirection: 'row',
               justifyContent: 'space-around',
             }}
@@ -96,20 +145,6 @@ class Home extends React.PureComponent {
           >
             <FinanceOverview />
           </Card>
-          <Pill
-            onPress={() => {
-              this.props.navigation.navigate('MonthlyAnalytics');
-            }}
-            label="Monthly Analytics"
-            style={{
-              padding: 12,
-              marginTop: 25,
-              marginHorizontal: 50,
-            }}
-            color={theme.colors.secondary}
-            backgroundColor={theme.colors.primary}
-            textStyle={{ textAlign: 'center' }}
-          />
           <Pill
             onPress={() => {
               this.props.navigation.navigate('Vendors');
@@ -134,6 +169,7 @@ class Home extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     monthTransactions: state.monthTransactions,
+    monthlyAnalytics: state.monthlyAnalytics,
   };
 }
 
@@ -147,6 +183,12 @@ function mapDispatchToProps(dispatch) {
     },
     updateMonthTransactions(transactions) {
       dispatch({ type: 'UPDATE_MONTH_TRANSACTIONS', transactions });
+    },
+    updateMonthlyAnalytics(analytics) {
+      dispatch({
+        type: 'UPDATE_MONTHLY_ANALYTICS',
+        payload: analytics,
+      });
     },
   };
 }
