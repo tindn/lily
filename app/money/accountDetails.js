@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
@@ -10,107 +10,92 @@ import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
 import { by } from '../../utils/sort';
 
-class AccountDetails extends React.PureComponent {
-  static navigationOptions = ({ navigation }) => {
-    const account = navigation.getParam('accountName', undefined);
-    return { title: account.name || 'Account Details' };
-  };
+function AccountDetails(props) {
+  const [showNewEntryForm, setForm] = useState(false);
+  const [entries, setEntries] = useState();
 
-  state = {
-    showNewEntryForm: false,
-  };
-
-  componentDidMount() {
-    this.unsubscribe = watchData(
+  useEffect(() => {
+    const unsubscribe = watchData(
       'accountEntries',
-      [['where', 'accountId', '==', this.props.accountId]],
-      entries =>
-        this.setState({
-          entries: Object.values(entries).sort(by('date', 'desc')),
-        })
+      [['where', 'accountId', '==', props.accountId]],
+      entries => setEntries(Object.values(entries).sort(by('date', 'desc')))
     );
-  }
+    return function cleanup() {
+      unsubscribe();
+    };
+  });
 
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  toggleAccountEntry = () => {
-    this.setState(function(state) {
-      return { showNewEntryForm: !state.showNewEntryForm };
-    });
+  const toggleAccountEntry = () => {
+    setForm(!showNewEntryForm);
   };
 
-  render() {
-    if (!this.props.account) {
-      return null;
-    }
-    const {
-      name,
-      balance,
-      type,
-      category,
-      plaidAccessToken,
-    } = this.props.account;
-    return (
-      <Screen>
-        <ScrollView keyboardShouldPersistTaps="always">
-          <View style={[styles.row]}>
-            <Text style={{ fontSize: 17 }}>{name}</Text>
-            <MoneyDisplay
-              amount={balance}
-              style={{ color: '#000', fontSize: 17 }}
-            />
-          </View>
-          <View style={[styles.row]}>
-            <Text style={{ fontSize: 17 }}>{category}</Text>
-            <Text style={{ fontSize: 17 }}>{type}</Text>
-          </View>
-          {plaidAccessToken && (
-            <View style={styles.row}>
-              <View />
-              <Text>Has Plaid</Text>
-            </View>
-          )}
-
-          <View
-            style={{
-              marginTop: 20,
-            }}
-          >
-            {this.state.showNewEntryForm ? (
-              <AccountEntryForm
-                onCancel={this.toggleAccountEntry}
-                accountId={this.props.accountId}
-                accountBalance={balance}
-                account={this.props.account}
-              />
-            ) : (
-              <Pill
-                backgroundColor={theme.colors.primary}
-                color={theme.colors.secondary}
-                onPress={this.toggleAccountEntry}
-                style={{ padding: 12, marginLeft: 50, marginRight: 50 }}
-                label="Add Entry"
-                textStyle={{ textAlign: 'center' }}
-              />
-            )}
-          </View>
-          <FlatList
-            data={this.state.entries}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => <AccountEntry entry={item} />}
-            style={{
-              borderTopColor: theme.colors.lighterGray,
-              borderTopWidth: 1,
-              marginTop: 30,
-            }}
-          />
-        </ScrollView>
-      </Screen>
-    );
+  if (!props.account) {
+    return null;
   }
+  const { name, balance, type, category, plaidAccessToken } = props.account;
+  return (
+    <Screen>
+      <ScrollView keyboardShouldPersistTaps="always">
+        <View style={[styles.row]}>
+          <Text style={{ fontSize: 17 }}>{name}</Text>
+          <MoneyDisplay
+            amount={balance}
+            style={{ color: '#000', fontSize: 17 }}
+          />
+        </View>
+        <View style={[styles.row]}>
+          <Text style={{ fontSize: 17 }}>{category}</Text>
+          <Text style={{ fontSize: 17 }}>{type}</Text>
+        </View>
+        {plaidAccessToken && (
+          <View style={styles.row}>
+            <View />
+            <Text>Has Plaid</Text>
+          </View>
+        )}
+
+        <View
+          style={{
+            marginTop: 20,
+          }}
+        >
+          {showNewEntryForm ? (
+            <AccountEntryForm
+              onCancel={toggleAccountEntry}
+              accountId={props.accountId}
+              accountBalance={balance}
+              account={props.account}
+            />
+          ) : (
+            <Pill
+              backgroundColor={theme.colors.primary}
+              color={theme.colors.secondary}
+              onPress={toggleAccountEntry}
+              style={{ padding: 12, marginLeft: 50, marginRight: 50 }}
+              label="Add Entry"
+              textStyle={{ textAlign: 'center' }}
+            />
+          )}
+        </View>
+        <FlatList
+          data={entries}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => <AccountEntry entry={item} />}
+          style={{
+            borderTopColor: theme.colors.lighterGray,
+            borderTopWidth: 1,
+            marginTop: 30,
+          }}
+        />
+      </ScrollView>
+    </Screen>
+  );
 }
+
+AccountDetails.navigationOptions = ({ navigation }) => {
+  const account = navigation.getParam('accountName', undefined);
+  return { title: account.name || 'Account Details' };
+};
 
 const styles = StyleSheet.create({
   row: {
