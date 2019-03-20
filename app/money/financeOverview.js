@@ -4,43 +4,12 @@ import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
 import MoneyDisplay from '../moneyDisplay';
+import { calculateFinanceOverview } from '../../utils/money';
 
 class FinanceOverview extends React.PureComponent {
   static getDerivedStateFromProps(props) {
     if (props.accounts) {
-      const accounts = Object.values(props.accounts);
-      let totalAssets = 0,
-        totalLiabilities = 0,
-        liquidAssets = 0,
-        shortTermLiabilities = 0;
-      accounts.forEach(function(account) {
-        switch (account.category) {
-          case 'Investments':
-          case 'Fixed Assets':
-            totalAssets += account.balance;
-            break;
-          case 'Liquid Assets':
-            totalAssets += account.balance;
-            liquidAssets += account.balance;
-            break;
-          case 'Long Term Liabilities':
-            totalLiabilities += account.balance;
-            break;
-          case 'Short Term Liabilities':
-            totalLiabilities += account.balance;
-            shortTermLiabilities += account.balance;
-            break;
-          default:
-            break;
-        }
-      });
-
-      return {
-        totalAssets,
-        totalLiabilities,
-        liquidAssets,
-        shortTermLiabilities,
-      };
+      return calculateFinanceOverview(Object.values(props.accounts));
     }
     return null;
   }

@@ -1,13 +1,16 @@
 import React from 'react';
 import {
+  Alert,
   LayoutAnimation,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Alert,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { connect } from 'react-redux';
+import theme from '../../theme';
+import Pill from '../pill';
 import Screen from '../screen';
 import Category from './category';
 import LineItem from './lineItem';
@@ -16,27 +19,8 @@ class Accounts extends React.Component {
   static navigationOptions = {
     headerTitle: 'Accounts',
     headerRight: (
-      <TouchableOpacity
-        onPress={() =>
-          Alert.alert('Confirm', 'Do you want to create a new snapshot?', [
-            {
-              text: 'Cancel',
-              onPress: function() {},
-              style: 'cancel',
-            },
-            {
-              text: 'Yes',
-              onPress: () =>
-                fetch(
-                  'https://us-central1-lily-cc62d.cloudfunctions.net/buildAccountsSnapshot',
-                  { method: 'POST' }
-                ),
-            },
-          ])
-        }
-        style={{ marginRight: 10 }}
-      >
-        <Icon name="addfolder" size={25} />
+      <TouchableOpacity onPress={() => {}} style={{ marginRight: 10 }}>
+        <Icon name="barschart" size={25} color={theme.colors.primary} />
       </TouchableOpacity>
     ),
   };
@@ -168,6 +152,36 @@ class Accounts extends React.Component {
               navigation={this.props.navigation}
             />,
           ]}
+          <Pill
+            onPress={() =>
+              Alert.alert('Confirm', 'Do you want to create a new snapshot?', [
+                {
+                  text: 'Cancel',
+                  onPress: function() {},
+                  style: 'cancel',
+                },
+                {
+                  text: 'Yes',
+                  onPress: () =>
+                    // eslint-disable-next-line no-undef
+                    fetch(
+                      'https://us-central1-lily-cc62d.cloudfunctions.net/buildAccountsSnapshot',
+                      { method: 'POST' }
+                    ),
+                },
+              ])
+            }
+            label="Create snapshot"
+            style={{
+              padding: 12,
+              marginTop: 25,
+              marginHorizontal: 50,
+            }}
+            color={theme.colors.secondary}
+            backgroundColor={theme.colors.primary}
+            textStyle={{ textAlign: 'center' }}
+          />
+          <View style={{ paddingVertical: 25 }} />
         </ScrollView>
       </Screen>
     );
