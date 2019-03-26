@@ -8,14 +8,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
 import { connect } from 'react-redux';
 import { queryData } from '../../firebaseHelper';
 import theme from '../../theme';
 import { toWeekDayDateString } from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../screen';
-import PlaidTransactionsList from './plaidTransactionsList';
-import Icon from 'react-native-vector-icons/AntDesign';
+import PlaidTransactionsCarousel from './plaidTransactionsCarousel';
 
 class MonthTransactions extends React.PureComponent {
   static getDerivedStateFromProps(props) {
@@ -118,7 +118,7 @@ class MonthTransactions extends React.PureComponent {
           <TouchableOpacity
             onPress={this.togglePlaidTransactions}
             style={{
-              paddingVertical: 10,
+              paddingVertical: 20,
               alignItems: 'center',
               borderBottomWidth: StyleSheet.hairlineWidth,
               borderBottomColor: theme.colors.lighterGray,
@@ -129,7 +129,7 @@ class MonthTransactions extends React.PureComponent {
               size={16}
             />
           </TouchableOpacity>
-          {this.state.showPlaidTransactions && <PlaidTransactionsList />}
+          {this.state.showPlaidTransactions && <PlaidTransactionsCarousel />}
         </View>
       </Screen>
     );

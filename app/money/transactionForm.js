@@ -76,6 +76,7 @@ class TransactionForm extends React.Component {
       { enableHighAccuracy: true }
     );
   }
+
   render() {
     return (
       <View style={[sharedStyles.formContainer, { top: 30 }]}>
@@ -116,7 +117,7 @@ class TransactionForm extends React.Component {
             <Picker
               selectedValue={this.state.vendor}
               onValueChange={text => this.setState({ vendor: text })}
-              style={{ flex: 1 }}
+              style={{ flex: 1, height: 200 }}
             >
               {this.state.vendors.map(function(item, index) {
                 return <Picker.Item key={index} label={item} value={item} />;
@@ -196,9 +197,6 @@ const styles = StyleSheet.create({
   },
   memoInput: {
     textAlign: 'right',
-  },
-  vendorInput: {
-    textAlign: 'left',
   },
 });
 
