@@ -1,10 +1,11 @@
 import React from 'react';
-import { FlatList, View, Dimensions } from 'react-native';
+import { Dimensions, FlatList, View } from 'react-native';
 import { connect } from 'react-redux';
 import PlaidTransactionsList from './plaidTransactionsList';
 
 var arr = ['JB Barclays', 'Simple', 'Amex Cash'];
 const WIDTH = Dimensions.get('window').width;
+
 function PlaidTransactionsCarousel(props) {
   return (
     <View style={{ height: 330 }}>

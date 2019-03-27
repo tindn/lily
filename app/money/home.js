@@ -3,7 +3,6 @@ import { ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
-import { getTotalAmount } from '../../utils/money';
 import { by } from '../../utils/sort';
 import Card from '../card';
 import Pill from '../pill';
@@ -20,15 +19,30 @@ class Home extends React.PureComponent {
 
   static getDerivedStateFromProps(props) {
     if (props.monthTransactions) {
-      const spent = getTotalAmount(
-        props.monthTransactions.filter(t => t.entryType === 'debit')
-      ).toFixed(2);
-      const earned = getTotalAmount(
-        props.monthTransactions.filter(t => t.entryType === 'credit')
-      ).toFixed(2);
+      const today = new Date();
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const summary = props.monthTransactions.reduce(
+        function(acc, t) {
+          if (t.date < startOfMonth) {
+            return acc;
+          }
+          if (t.entryType == 'debit') {
+            acc.spent = acc.spent + t.amount;
+            return acc;
+          }
+
+          if (t.entryType == 'credit') {
+            acc.earned = acc.earned + t.amount;
+            return acc;
+          }
+          return acc;
+        },
+        { spent: 0, earned: 0 }
+      );
+
       return {
-        spendingThisMonth: spent,
-        earningThisMonth: earned,
+        spendingThisMonth: summary.spent.toFixed(2),
+        earningThisMonth: summary.earned.toFixed(2),
       };
     }
 
@@ -37,8 +51,6 @@ class Home extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    const today = new Date();
-    this.startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     this.state = {
       refreshing: false,
       spendingThisMonth: undefined,
@@ -54,9 +66,13 @@ class Home extends React.PureComponent {
   });
 
   componentDidMount() {
+    const transactionsStartDate = new Date(Date.now() - 3600000 * 24 * 35);
     this.unsubscribe = watchData(
       'transactions',
-      [['where', 'date', '>=', this.startOfMonth], ['orderBy', 'date', 'desc']],
+      [
+        ['where', 'date', '>=', transactionsStartDate],
+        ['orderBy', 'date', 'desc'],
+      ],
       this.props.updateMonthTransactions
     );
 
@@ -77,8 +93,7 @@ class Home extends React.PureComponent {
   render() {
     const lastThreeMonths = Object.values(this.props.monthlyAnalytics)
       .sort(by('startDate', 'desc'))
-      .slice(0, 3)
-      .sort(by('startDate', 'asc'));
+      .slice(0, 3);
     return (
       <Screen>
         <ScrollView

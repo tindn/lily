@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   Alert,
+  Dimensions,
   FlatList,
   RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { addDocument, getPlaidTransactions } from '../../firebaseHelper';

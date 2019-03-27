@@ -4,7 +4,6 @@ import monthlyAnalytics from './monthlyAnalytics';
 import accounts from './accounts';
 import vendors from './vendors';
 import plaidTransactions from './plaidTransactions';
-import loadingPlaidTransactions from './loadingPlaidTransactions';
 
 export default combineReducers({
   monthTransactions,
@@ -12,5 +11,4 @@ export default combineReducers({
   accounts,
   vendors,
   plaidTransactions,
-  loadingPlaidTransactions,
 });
