@@ -4,6 +4,8 @@ import theme from '../../theme';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 
+const rate = 0.26;
+
 class ElectricityOverview extends React.Component {
   static getDerivedStateFromProps(props) {
     if (props.electricityReadings && props.electricityReadings.length) {
@@ -83,19 +85,18 @@ class ElectricityOverview extends React.Component {
         <View style={styles.electricityReadings}>
           <View>
             <Text style={styles.electricityReading}>
-              {this.state.daysElapsed} day(s)
+              {this.state.dailyAverage} kWh/day
             </Text>
             <Text style={styles.electricityReadingAnnotation}>
-              (this month)
+              {this.state.daysElapsed} day{this.state.daysElapsed > 1 && 's'}{' '}
+              this month
             </Text>
           </View>
           <View>
             <Text style={styles.electricityReading}>
-              {this.state.dailyAverage} kWh
+              $ {(this.state.dailyAverage * 30 * rate).toFixed(0)}
             </Text>
-            <Text style={styles.electricityReadingAnnotation}>
-              (daily average)
-            </Text>
+            <Text style={styles.electricityReadingAnnotation}>(estimate)</Text>
           </View>
         </View>
       </>
