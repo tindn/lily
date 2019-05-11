@@ -15,39 +15,33 @@ function SpendTracking(props) {
       <View style={sharedStyles.row}>
         <View>
           <Text style={sharedStyles.title}>Spent</Text>
-          {spendingThisMonth !== undefined && (
-            <Text style={sharedStyles.spendAmount}>
-              {formatAmountToDisplay(spendingThisMonth)}
-            </Text>
-          )}
+          <Text style={sharedStyles.spendAmount}>
+            {formatAmountToDisplay(spendingThisMonth)}
+          </Text>
         </View>
         <View>
           <Text style={[sharedStyles.title, { textAlign: 'center' }]}>
             {new Date().toLocaleDateString('en-US', { month: 'long' })}
           </Text>
-          {diff && (
-            <Text
-              style={[
-                sharedStyles.spendAmount,
-                {
-                  color: diff < 0 ? theme.colors.red : theme.colors.green,
-                  textAlign: 'center',
-                },
-              ]}
-            >
-              {formatAmountToDisplay(diff, true)}
-            </Text>
-          )}
+          <Text
+            style={[
+              sharedStyles.spendAmount,
+              {
+                color: diff < 0 ? theme.colors.red : theme.colors.green,
+                textAlign: 'center',
+              },
+            ]}
+          >
+            {formatAmountToDisplay(diff, true)}
+          </Text>
         </View>
         <View>
           <Text style={[sharedStyles.title, { textAlign: 'right' }]}>
             Earned
           </Text>
-          {earningThisMonth !== undefined && (
-            <Text style={[sharedStyles.spendAmount, { textAlign: 'right' }]}>
-              {formatAmountToDisplay(earningThisMonth)}
-            </Text>
-          )}
+          <Text style={[sharedStyles.spendAmount, { textAlign: 'right' }]}>
+            {formatAmountToDisplay(earningThisMonth)}
+          </Text>
         </View>
       </View>
       {diff > 0 && (

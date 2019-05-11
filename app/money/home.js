@@ -53,8 +53,8 @@ class Home extends React.PureComponent {
     super(props);
     this.state = {
       refreshing: false,
-      spendingThisMonth: undefined,
-      earningThisMonth: undefined,
+      spendingThisMonth: 0,
+      earningThisMonth: 0,
       transactionListExpanded: false,
       transactionFormExpanded: false,
     };
