@@ -93,7 +93,7 @@ class Home extends React.PureComponent {
   render() {
     const lastThreeMonths = Object.values(this.props.monthlyAnalytics)
       .sort(by('startDate', 'desc'))
-      .slice(0, 3);
+      .slice(1, 4);
     return (
       <Screen>
         <ScrollView
@@ -104,6 +104,7 @@ class Home extends React.PureComponent {
             onPress={() => {
               this.props.navigation.navigate('MonthTransactions');
             }}
+            style={{ padding: 15 }}
           >
             <SpendTracking
               spendingThisMonth={this.state.spendingThisMonth}
@@ -114,7 +115,7 @@ class Home extends React.PureComponent {
           <Card
             style={{
               marginTop: 25,
-              paddingVertical: 25,
+              paddingVertical: 15,
               flexDirection: 'row',
               justifyContent: 'space-around',
             }}
@@ -125,7 +126,7 @@ class Home extends React.PureComponent {
           <Card
             style={{
               marginTop: 25,
-              paddingVertical: 25,
+              paddingVertical: 20,
               flexDirection: 'row',
               justifyContent: 'space-around',
             }}

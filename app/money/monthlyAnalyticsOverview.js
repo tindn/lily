@@ -13,23 +13,32 @@ function MonthlyAnalyticsOverview(props) {
         <Text
           style={{
             textAlign: 'center',
-            fontWeight: '500',
             marginBottom: 10,
+            color: theme.colors.darkGray,
           }}
         >
           {month.id}
         </Text>
         <Text
-          style={[
-            {
-              color,
-              textAlign: 'center',
-              fontWeight: '500',
-              fontSize: 16,
-            },
-          ]}
+          style={{
+            color: color,
+            textAlign: 'center',
+            fontWeight: '500',
+            fontSize: 16,
+          }}
         >
-          {formatAmountToDisplay(diff, true)}
+          {formatAmountToDisplay(diff)}
+        </Text>
+        <Text
+          style={{
+            color: theme.colors.lightGray,
+            textAlign: 'center',
+            fontWeight: '600',
+            fontSize: 14,
+            marginTop: 10,
+          }}
+        >
+          {formatAmountToDisplay(-month.spent, true)}
         </Text>
       </View>
     );

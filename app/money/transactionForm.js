@@ -79,7 +79,7 @@ class TransactionForm extends React.Component {
 
   render() {
     return (
-      <View style={[sharedStyles.formContainer, { top: 30 }]}>
+      <View style={[sharedStyles.formContainer, { top: 25 }]}>
         <PreviousNextView>
           <View
             key="firstRow"
@@ -112,12 +112,16 @@ class TransactionForm extends React.Component {
           </View>
           <View
             key="thirdRow"
-            style={[sharedStyles.formRow, styles.borderBottom, { padding: 0 }]}
+            style={[
+              sharedStyles.formRow,
+              styles.borderBottom,
+              { padding: 0, height: 180 },
+            ]}
           >
             <Picker
               selectedValue={this.state.vendor}
               onValueChange={text => this.setState({ vendor: text })}
-              style={{ flex: 1, height: 200 }}
+              style={{ flex: 1, height: 200, top: -20 }}
             >
               {this.state.vendors.map(function(item, index) {
                 return <Picker.Item key={index} label={item} value={item} />;

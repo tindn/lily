@@ -31,7 +31,7 @@ export default StyleSheet.create({
   formRow: {
     backgroundColor: '#fff',
     flexDirection: 'row',
-    padding: 12,
+    padding: 10,
     justifyContent: 'space-between',
   },
   formSwitchRow: {
@@ -42,7 +42,7 @@ export default StyleSheet.create({
   formTextInput: {
     color: theme.colors.darkerGray,
     flex: 1,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '500',
   },
   outlineButton: {

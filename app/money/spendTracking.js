@@ -1,7 +1,12 @@
+import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import theme from '../../theme';
 import { formatAmountToDisplay } from '../../utils/money';
+
+const today = moment();
+const dayOfMonth = today.date();
+const daysInMonth = today.daysInMonth();
 
 function SpendTracking(props) {
   const { spendingThisMonth, earningThisMonth } = props;
@@ -11,88 +16,89 @@ function SpendTracking(props) {
   }
 
   return (
-    <View style={sharedStyles.container}>
-      <View style={sharedStyles.row}>
-        <View>
-          <Text style={sharedStyles.title}>Spent</Text>
-          <Text style={sharedStyles.spendAmount}>
-            {formatAmountToDisplay(spendingThisMonth)}
-          </Text>
-        </View>
-        <View>
-          <Text style={[sharedStyles.title, { textAlign: 'center' }]}>
-            {new Date().toLocaleDateString('en-US', { month: 'long' })}
-          </Text>
-          <Text
-            style={[
-              sharedStyles.spendAmount,
-              {
-                color: diff < 0 ? theme.colors.red : theme.colors.green,
-                textAlign: 'center',
-              },
-            ]}
-          >
-            {formatAmountToDisplay(diff, true)}
-          </Text>
-        </View>
-        <View>
-          <Text style={[sharedStyles.title, { textAlign: 'right' }]}>
-            Earned
-          </Text>
-          <Text style={[sharedStyles.spendAmount, { textAlign: 'right' }]}>
-            {formatAmountToDisplay(earningThisMonth)}
-          </Text>
-        </View>
+    <View style={styles.row}>
+      <View style={{ justifyContent: 'space-between' }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            marginBottom: 10,
+            color: theme.colors.darkGray,
+          }}
+        >
+          {new Date().toLocaleDateString('en-US', { month: 'long' })}
+        </Text>
+        <Text style={styles.earnAmount}>
+          {formatAmountToDisplay(earningThisMonth)}
+        </Text>
+        <Text style={styles.spendAmount}>
+          {formatAmountToDisplay(spendingThisMonth)}
+        </Text>
       </View>
-      {diff > 0 && (
-        <View
+      <View>
+        <Text
+          style={{
+            textAlign: 'center',
+            marginBottom: 10,
+            color: theme.colors.darkGray,
+          }}
+        >
+          Net
+        </Text>
+        <Text
           style={[
-            sharedStyles.row,
+            styles.net,
             {
-              borderRadius: 5,
-              overflow: 'hidden',
-              height: 25,
+              color: diff < 0 ? theme.colors.red : theme.colors.green,
               marginTop: 10,
             },
           ]}
         >
-          <View
-            style={{
-              flex: Math.floor(spendingThisMonth),
-              backgroundColor: theme.colors.red,
-            }}
-          />
-          <View
-            style={{
-              flex: Math.floor(diff),
-              backgroundColor: theme.colors.green,
-            }}
-          />
-        </View>
-      )}
+          {formatAmountToDisplay(diff, true)}
+        </Text>
+      </View>
+      <View>
+        <Text
+          style={{
+            alignSelf: 'flex-start',
+            textAlign: 'center',
+            marginBottom: 10,
+            color: theme.colors.darkGray,
+          }}
+        >
+          Est. spend
+        </Text>
+        <Text style={[styles.spendAmount, { marginTop: 10 }]}>
+          {formatAmountToDisplay(
+            (spendingThisMonth / dayOfMonth) * daysInMonth
+          )}
+        </Text>
+      </View>
     </View>
   );
 }
 
-const sharedStyles = StyleSheet.create({
-  container: {
+const styles = StyleSheet.create({
+  earnAmount: {
+    color: theme.colors.green,
+    fontSize: 15,
+    fontWeight: '600',
     marginBottom: 10,
-    marginLeft: 8,
-    marginRight: 8,
+    textAlign: 'center',
+  },
+  net: {
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   spendAmount: {
-    color: theme.colors.darkGray,
-    fontSize: 16,
+    color: theme.colors.red,
+    fontSize: 15,
     fontWeight: '600',
-  },
-  title: {
-    color: '#bbb',
-    fontWeight: '600',
-    marginBottom: 8,
+    textAlign: 'center',
   },
 });
 
