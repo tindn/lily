@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import monthTransactions from './monthTransactions';
-import monthlyAnalytics from './monthlyAnalytics';
 import accounts from './accounts';
-import vendors from './vendors';
+import financeSnapshots from './financeSnapshots';
+import monthlyAnalytics from './monthlyAnalytics';
+import monthTransactions from './monthTransactions';
 import plaidTransactions from './plaidTransactions';
+import vendors from './vendors';
 
 export default combineReducers({
   monthTransactions,
@@ -11,4 +12,5 @@ export default combineReducers({
   accounts,
   vendors,
   plaidTransactions,
+  financeSnapshots,
 });

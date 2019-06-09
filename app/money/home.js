@@ -114,7 +114,7 @@ class Home extends React.PureComponent {
           </Card>
           <Card
             style={{
-              marginTop: 25,
+              marginTop: 15,
               paddingVertical: 15,
               flexDirection: 'row',
               justifyContent: 'space-around',
@@ -125,9 +125,8 @@ class Home extends React.PureComponent {
           </Card>
           <Card
             style={{
-              marginTop: 25,
+              marginTop: 15,
               paddingVertical: 20,
-              flexDirection: 'row',
               justifyContent: 'space-around',
             }}
             onPress={() => this.props.navigation.navigate('Accounts')}
@@ -141,7 +140,7 @@ class Home extends React.PureComponent {
             label="Vendors"
             style={{
               padding: 12,
-              marginTop: 25,
+              marginTop: 15,
               marginHorizontal: 50,
             }}
             color={theme.colors.secondary}

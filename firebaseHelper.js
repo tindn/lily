@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-require('firebase/functions');
+import 'firebase/functions';
 export function getCollection(collection) {
   return firebase.firestore().collection(collection);
 }
@@ -84,6 +84,7 @@ const deserializers = {
   accountEntriesDeserialize,
   accountsDeserialize,
   vendorsDeserialize,
+  accountsSnapshotsDeserialize,
 };
 
 const transformers = {
@@ -93,6 +94,7 @@ const transformers = {
   accountEntriesFromSnapshot,
   accountsFromSnapshot,
   vendorsFromSnapshot,
+  accountsSnapshotsFromSnapshot,
 };
 
 function monthlyAnalyticsFromSnapshot(snapshot) {
@@ -184,6 +186,23 @@ function vendorsDeserialize(doc) {
   let vendor = doc.data();
   vendor.id = doc.id;
   return vendor;
+}
+
+function accountsSnapshotsFromSnapshot(snapshot) {
+  let snapshots = [];
+  snapshot.forEach(function(doc) {
+    snapshots.push(accountsSnapshotsDeserialize(doc));
+  });
+  return snapshots;
+}
+
+function accountsSnapshotsDeserialize(doc) {
+  let snapshot = doc.data();
+  snapshot.id = doc.id;
+  if (snapshot._updatedOn) {
+    snapshot._updatedOn = snapshot._updatedOn.toDate();
+  }
+  return snapshot;
 }
 
 export function getPlaidTransactions(data) {

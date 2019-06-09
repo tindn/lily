@@ -12,6 +12,7 @@ import Accounts from './accounts';
 import AccountDetails from './accountDetails';
 import Vendors from './vendors';
 import VendorDetails from './vendorDetails';
+import SnapshotList from './snapshotList';
 
 const MoneyStack = createStackNavigator({
   Home,
@@ -29,6 +30,7 @@ const MoneyStack = createStackNavigator({
   AccountDetails,
   Vendors,
   VendorDetails,
+  SnapshotList,
 });
 
 class Money extends React.Component {

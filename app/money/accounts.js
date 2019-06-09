@@ -16,14 +16,19 @@ import Category from './category';
 import LineItem from './lineItem';
 
 class Accounts extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Accounts',
     headerRight: (
-      <TouchableOpacity onPress={() => {}} style={{ marginRight: 10 }}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('SnapshotList');
+        }}
+        style={{ marginRight: 10 }}
+      >
         <Icon name="barschart" size={25} color={theme.colors.primary} />
       </TouchableOpacity>
     ),
-  };
+  });
 
   static getDerivedStateFromProps(props) {
     if (props.accounts) {

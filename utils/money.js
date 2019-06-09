@@ -60,5 +60,7 @@ export function calculateFinanceOverview(accounts) {
     totalLiabilities,
     liquidAssets,
     shortTermLiabilities,
+    liquidity: liquidAssets - shortTermLiabilities,
+    networth: totalAssets - totalLiabilities,
   };
 }
