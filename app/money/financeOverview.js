@@ -186,10 +186,10 @@ class FinanceOverview extends React.PureComponent {
               color: theme.colors.darkGray,
             }}
           >
-            5 years
+            3 years
           </Text>
           <MoneyDisplay
-            amount={(this.state.liquidity + liquidityRate * 60).toFixed(2)}
+            amount={(this.state.liquidity + liquidityRate * 36).toFixed(2)}
             style={{
               fontSize: 15,
               fontWeight: '500',
@@ -197,7 +197,7 @@ class FinanceOverview extends React.PureComponent {
             }}
           />
           <MoneyDisplay
-            amount={(this.state.networth + networthRate * 60).toFixed(2)}
+            amount={(this.state.networth + networthRate * 36).toFixed(2)}
             style={{
               fontSize: 15,
               fontWeight: '500',
@@ -213,10 +213,10 @@ class FinanceOverview extends React.PureComponent {
               color: theme.colors.darkGray,
             }}
           >
-            10 years
+            5 years
           </Text>
           <MoneyDisplay
-            amount={(this.state.liquidity + liquidityRate * 120).toFixed(2)}
+            amount={(this.state.liquidity + liquidityRate * 60).toFixed(2)}
             style={{
               fontSize: 15,
               fontWeight: '500',
@@ -224,7 +224,7 @@ class FinanceOverview extends React.PureComponent {
             }}
           />
           <MoneyDisplay
-            amount={(this.state.networth + networthRate * 120).toFixed(2)}
+            amount={(this.state.networth + networthRate * 60).toFixed(2)}
             style={{
               fontSize: 15,
               fontWeight: '500',
