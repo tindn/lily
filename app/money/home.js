@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 import theme from '../../theme';
@@ -133,20 +133,12 @@ class Home extends React.PureComponent {
           >
             <FinanceOverview />
           </Card>
-          <Pill
-            onPress={() => {
-              this.props.navigation.navigate('Vendors');
-            }}
-            label="Vendors"
-            style={{
-              padding: 12,
-              marginTop: 15,
-              marginHorizontal: 50,
-            }}
-            color={theme.colors.secondary}
-            backgroundColor={theme.colors.primary}
-            textStyle={{ textAlign: 'center' }}
-          />
+          <Card
+            style={{ paddingVertical: 15, marginTop: 15, alignItems: 'center' }}
+            onPress={() => this.props.navigation.navigate('Vendors')}
+          >
+            <Text style={{}}>Vendors</Text>
+          </Card>
         </ScrollView>
         <TransactionAdd />
       </Screen>

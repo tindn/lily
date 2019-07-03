@@ -1,11 +1,12 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import theme from '../../theme';
 import Card from '../card';
 import Pill from '../pill';
 import Screen from '../screen';
 import ElectricityOverview from './electricityOverview';
 import ElectricityReadingAdd from './electricityReadingAdd';
+import Counter from './Counter';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -32,26 +33,15 @@ class Home extends React.PureComponent {
             style={styles.electricityReadingCard}
           >
             <ElectricityOverview />
-          </Card>
-
-          <Card style={{ marginTop: 20 }}>
             <ElectricityReadingAdd />
           </Card>
-          <View
-            style={{
-              marginTop: 25,
-              paddingHorizontal: 50,
-            }}
+
+          <Card
+            style={{ paddingVertical: 15, marginTop: 25, alignItems: 'center' }}
+            onPress={this.navigate('LargeDisplay')}
           >
-            <Pill
-              backgroundColor={theme.colors.primary}
-              color={theme.colors.secondary}
-              onPress={this.navigate('LargeDisplay')}
-              style={{ padding: 12 }}
-              label="Large Display"
-              textStyle={{ textAlign: 'center' }}
-            />
-          </View>
+            <Text style={{}}>Large Display</Text>
+          </Card>
         </ScrollView>
       </Screen>
     );
@@ -60,7 +50,6 @@ class Home extends React.PureComponent {
 
 const styles = StyleSheet.create({
   electricityReadingCard: {
-    alignItems: 'center',
     flexDirection: 'column',
   },
 });

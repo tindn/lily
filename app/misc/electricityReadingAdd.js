@@ -27,13 +27,12 @@ function ElectricityReadingAdd() {
       <View
         style={[
           sharedStyles.formRow,
-          sharedStyles.borderBottom,
+          sharedStyles.borderTop,
           { backgroundColor: 'transparent' },
         ]}
       >
         <TextInput
           key="valueInput"
-          autoFocus={true}
           keyboardType="number-pad"
           value={value}
           onChangeText={text => setValue(text)}

@@ -2,8 +2,12 @@ import { StyleSheet } from 'react-native';
 import theme from '../theme';
 
 export default StyleSheet.create({
+  borderTop: {
+    borderColor: theme.colors.lighterGray,
+    borderTopWidth: 1,
+  },
   borderBottom: {
-    borderBottomColor: theme.colors.lighterGray,
+    borderColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
   },
   formButtons: {
