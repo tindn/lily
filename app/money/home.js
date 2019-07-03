@@ -2,15 +2,14 @@ import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
-import theme from '../../theme';
 import { by } from '../../utils/sort';
 import Card from '../card';
-import Pill from '../pill';
 import Screen from '../screen';
 import FinanceOverview from './financeOverview';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
+import theme from '../../theme';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -125,19 +124,27 @@ class Home extends React.PureComponent {
           </Card>
           <Card
             style={{
+              paddingVertical: 15,
               marginTop: 15,
-              paddingVertical: 20,
-              justifyContent: 'space-around',
+              alignItems: 'center',
             }}
-            onPress={() => this.props.navigation.navigate('Accounts')}
-          >
-            <FinanceOverview />
-          </Card>
-          <Card
-            style={{ paddingVertical: 15, marginTop: 15, alignItems: 'center' }}
             onPress={() => this.props.navigation.navigate('Vendors')}
           >
-            <Text style={{}}>Vendors</Text>
+            <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
+              Vendors
+            </Text>
+          </Card>
+          <Card
+            style={{
+              paddingVertical: 15,
+              marginTop: 15,
+              alignItems: 'center',
+            }}
+            onPress={() => this.props.navigation.navigate('FinanceOverview')}
+          >
+            <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
+              Overview
+            </Text>
           </Card>
         </ScrollView>
         <TransactionAdd />

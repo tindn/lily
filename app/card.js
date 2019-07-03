@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondary,
     borderRadius: 5,
     elevation: 3,
-    flex: 1,
     marginLeft: 5,
     marginRight: 5,
     padding: 10,

@@ -3,16 +3,17 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { createStackNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import AccountDetails from './accountDetails';
+import Accounts from './accounts';
+import FinanceOverview from './financeOverview';
 import Home from './home';
 import MonthlyAnalytics from './monthlyAnalytics';
 import MonthTransactions from './monthTransactions';
-import { store, persistor } from './store';
-import TransactionDetails from './transactionDetails';
-import Accounts from './accounts';
-import AccountDetails from './accountDetails';
-import Vendors from './vendors';
-import VendorDetails from './vendorDetails';
 import SnapshotList from './snapshotList';
+import { persistor, store } from './store';
+import TransactionDetails from './transactionDetails';
+import VendorDetails from './vendorDetails';
+import Vendors from './vendors';
 
 const MoneyStack = createStackNavigator({
   Home,
@@ -31,6 +32,7 @@ const MoneyStack = createStackNavigator({
   Vendors,
   VendorDetails,
   SnapshotList,
+  FinanceOverview,
 });
 
 class Money extends React.Component {

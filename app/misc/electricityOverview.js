@@ -53,20 +53,17 @@ class ElectricityOverview extends React.Component {
   render() {
     return (
       <>
-        <View
-          style={{
-            paddingTop: 10,
-          }}
-        >
-          <Text
+        <View>
+          {/* <Text
             style={{
               fontWeight: '700',
               color: theme.colors.green,
               fontSize: 17,
+              textAlign: 'center',
             }}
           >
             Electricity
-          </Text>
+          </Text> */}
         </View>
         <View style={styles.electricityReadings}>
           <View>

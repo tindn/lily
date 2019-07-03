@@ -36,9 +36,20 @@ function ElectricityReadingAdd() {
           keyboardType="number-pad"
           value={value}
           onChangeText={text => setValue(text)}
-          style={{ flex: 3, fontSize: 16 }}
+          style={{
+            flex: 3,
+            fontSize: 16,
+            backgroundColor: '#dddddd80',
+            marginRight: 20,
+            padding: 10,
+            borderRadius: 5,
+          }}
         />
-        <Switch value={cycleEnd} onValueChange={val => setCycleEnd(val)} />
+        <Switch
+          value={cycleEnd}
+          onValueChange={val => setCycleEnd(val)}
+          style={{ alignSelf: 'center' }}
+        />
       </View>
       <View style={sharedStyles.formButtons}>
         <OutlineButton

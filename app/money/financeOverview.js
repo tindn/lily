@@ -1,11 +1,13 @@
 import moment from 'moment';
 import React from 'react';
-import { View, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
-import { calculateFinanceOverview } from '../../utils/money';
-import MoneyDisplay from '../moneyDisplay';
 import theme from '../../theme';
+import { calculateFinanceOverview } from '../../utils/money';
+import Card from '../card';
+import MoneyDisplay from '../moneyDisplay';
+import Screen from '../screen';
 class FinanceOverview extends React.PureComponent {
   static getDerivedStateFromProps(props) {
     if (props.accounts) {
@@ -48,192 +50,212 @@ class FinanceOverview extends React.PureComponent {
       liquidityRate = ((changeInLiquidity / days) * 30).toFixed(2);
       networthRate = ((changeInNetworth / days) * 30).toFixed(2);
     }
-    return [
-      <View
-        key="first"
-        style={{ flexDirection: 'row', justifyContent: 'space-around' }}
-      >
-        <View>
-          <Text
+    return (
+      <Screen>
+        <ScrollView>
+          <Card
             style={{
-              textAlign: 'center',
-              marginBottom: 10,
-              color: theme.colors.darkGray,
+              marginTop: 20,
             }}
+            onPress={() => this.props.navigation.navigate('Accounts')}
           >
-            Current
-          </Text>
-          <MoneyDisplay
-            amount={this.state.liquidity}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-          <MoneyDisplay
-            amount={this.state.networth}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-        </View>
-        <View>
-          <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 10,
-              color: theme.colors.darkGray,
-            }}
-          >
-            Last
-          </Text>
-          <MoneyDisplay
-            amount={
-              this.props.financeSnapshots[1]
-                ? this.props.financeSnapshots[1].liquidity
-                : 0
-            }
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-          <MoneyDisplay
-            amount={
-              this.props.financeSnapshots[1]
-                ? this.props.financeSnapshots[1].networth
-                : 0
-            }
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-        </View>
-        <View>
-          <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 10,
-              color: theme.colors.darkGray,
-            }}
-          >
-            Avg. monthly
-          </Text>
-          <MoneyDisplay
-            amount={liquidityRate}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-          <MoneyDisplay
-            amount={networthRate}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-        </View>
-      </View>,
-      <View
-        key="second"
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          marginTop: 20,
-        }}
-      >
-        <View>
-          <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 10,
-              color: theme.colors.darkGray,
-            }}
-          >
-            1 year
-          </Text>
-          <MoneyDisplay
-            amount={(this.state.liquidity + liquidityRate * 12).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-          <MoneyDisplay
-            amount={(this.state.networth + networthRate * 12).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-        </View>
-        <View>
-          <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 10,
-              color: theme.colors.darkGray,
-            }}
-          >
-            3 years
-          </Text>
-          <MoneyDisplay
-            amount={(this.state.liquidity + liquidityRate * 36).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-          <MoneyDisplay
-            amount={(this.state.networth + networthRate * 36).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-        </View>
-        <View>
-          <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 10,
-              color: theme.colors.darkGray,
-            }}
-          >
-            5 years
-          </Text>
-          <MoneyDisplay
-            amount={(this.state.liquidity + liquidityRate * 60).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-          <MoneyDisplay
-            amount={(this.state.networth + networthRate * 60).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-        </View>
-      </View>,
-    ];
+            <View
+              key="first"
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+              }}
+            >
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    color: theme.colors.darkGray,
+                  }}
+                >
+                  Current
+                </Text>
+                <MoneyDisplay
+                  amount={this.state.liquidity}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+                <MoneyDisplay
+                  amount={this.state.networth}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+              </View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    color: theme.colors.darkGray,
+                  }}
+                >
+                  Last
+                </Text>
+                <MoneyDisplay
+                  amount={
+                    this.props.financeSnapshots[1]
+                      ? this.props.financeSnapshots[1].liquidity
+                      : 0
+                  }
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+                <MoneyDisplay
+                  amount={
+                    this.props.financeSnapshots[1]
+                      ? this.props.financeSnapshots[1].networth
+                      : 0
+                  }
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+              </View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    color: theme.colors.darkGray,
+                  }}
+                >
+                  Avg. monthly
+                </Text>
+                <MoneyDisplay
+                  amount={liquidityRate}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+                <MoneyDisplay
+                  amount={networthRate}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+              </View>
+            </View>
+            <View
+              key="second"
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                marginTop: 20,
+              }}
+            >
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    color: theme.colors.darkGray,
+                  }}
+                >
+                  1 year
+                </Text>
+                <MoneyDisplay
+                  amount={(this.state.liquidity + liquidityRate * 12).toFixed(
+                    2
+                  )}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+                <MoneyDisplay
+                  amount={(this.state.networth + networthRate * 12).toFixed(2)}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+              </View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    color: theme.colors.darkGray,
+                  }}
+                >
+                  3 years
+                </Text>
+                <MoneyDisplay
+                  amount={(this.state.liquidity + liquidityRate * 36).toFixed(
+                    2
+                  )}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+                <MoneyDisplay
+                  amount={(this.state.networth + networthRate * 36).toFixed(2)}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+              </View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    color: theme.colors.darkGray,
+                  }}
+                >
+                  5 years
+                </Text>
+                <MoneyDisplay
+                  amount={(this.state.liquidity + liquidityRate * 60).toFixed(
+                    2
+                  )}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+                <MoneyDisplay
+                  amount={(this.state.networth + networthRate * 60).toFixed(2)}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    paddingBottom: 5,
+                  }}
+                />
+              </View>
+            </View>
+          </Card>
+        </ScrollView>
+      </Screen>
+    );
   }
 }
 
