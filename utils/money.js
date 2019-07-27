@@ -1,9 +1,13 @@
-export function formatAmountToDisplay(amount, useParentheses = false) {
+export function formatAmountToDisplay(
+  amount,
+  useParentheses = false,
+  toFixed = 2
+) {
   if (!amount) {
     return '$ 00.00';
   }
   if (typeof amount === 'number') {
-    amount = amount.toFixed(2);
+    amount = amount.toFixed(toFixed);
   }
   let arr = amount.split('');
   let sign = '';

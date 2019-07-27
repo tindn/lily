@@ -49,14 +49,14 @@ function SpendTracking(props) {
             styles.net,
             {
               color: diff < 0 ? theme.colors.red : theme.colors.green,
-              marginTop: 10,
+              marginBottom: 10,
             },
           ]}
         >
           {formatAmountToDisplay(diff, true)}
         </Text>
       </View>
-      <View>
+      <View style={{ justifyContent: 'space-between' }}>
         <Text
           style={{
             alignSelf: 'flex-start',
@@ -67,10 +67,25 @@ function SpendTracking(props) {
         >
           Est. spend
         </Text>
-        <Text style={[styles.spendAmount, { marginTop: 10 }]}>
+        <Text style={[styles.spendAmount]}>
           {formatAmountToDisplay(
             (spendingThisMonth / dayOfMonth) * daysInMonth
           )}
+        </Text>
+        <Text
+          style={{
+            color: theme.colors.lightGray,
+            textAlign: 'center',
+            fontWeight: '600',
+            fontSize: 14,
+            marginBottom: 10,
+          }}
+        >
+          {`(${formatAmountToDisplay(
+            spendingThisMonth / dayOfMonth,
+            false,
+            0
+          )}/day)`}
         </Text>
       </View>
     </View>
@@ -98,6 +113,7 @@ const styles = StyleSheet.create({
     color: theme.colors.red,
     fontSize: 15,
     fontWeight: '600',
+    marginBottom: 10,
     textAlign: 'center',
   },
 });

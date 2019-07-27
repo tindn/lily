@@ -5,7 +5,6 @@ import { watchData } from '../../firebaseHelper';
 import { by } from '../../utils/sort';
 import Card from '../card';
 import Screen from '../screen';
-import FinanceOverview from './financeOverview';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
