@@ -27,6 +27,7 @@ function getDefaultState(moneyInputKey) {
     moneyInputKey: moneyInputKey || 0,
     vendor: '',
     vendors: [],
+    isFixed: false,
   };
 }
 
@@ -79,7 +80,7 @@ class TransactionForm extends React.Component {
 
   render() {
     return (
-      <View style={[sharedStyles.formContainer, { top: 25 }]}>
+      <View style={[sharedStyles.formContainer, { top: 10 }]}>
         <PreviousNextView>
           <View
             key="firstRow"
@@ -101,7 +102,7 @@ class TransactionForm extends React.Component {
               type={this.state.isCredit ? 'credit' : 'debit'}
             />
           </View>
-          <View key="secondRow" style={[sharedStyles.formRow]}>
+          {/* <View key="secondRow" style={[sharedStyles.formRow]}>
             <TextInput
               key="vendorInput"
               style={[sharedStyles.formTextInput, styles.memoInput]}
@@ -109,13 +110,13 @@ class TransactionForm extends React.Component {
               placeholder="vendor"
               onChangeText={text => this.setState({ vendor: text })}
             />
-          </View>
+          </View> */}
           <View
             key="thirdRow"
             style={[
               sharedStyles.formRow,
               styles.borderBottom,
-              { padding: 0, height: 180 },
+              { padding: 0, height: 160 },
             ]}
           >
             <Picker
@@ -142,14 +143,21 @@ class TransactionForm extends React.Component {
           </View>
           <View
             key="fifthRow"
-            style={[sharedStyles.formRow, sharedStyles.formSwitchRow]}
+            style={[
+              sharedStyles.formRow,
+              sharedStyles.formSwitchRow,
+              styles.borderBottom,
+            ]}
           >
-            <Text style={{ color: theme.colors.darkGray }}>
-              {this.state.isCredit ? 'Income' : 'Expense'}
-            </Text>
+            <Text style={{ color: theme.colors.darkGray }}>Income?</Text>
             <Switch
               value={this.state.isCredit}
               onValueChange={val => this.setState({ isCredit: val })}
+            />
+            <Text style={{ color: theme.colors.darkGray }}>Fixed?</Text>
+            <Switch
+              value={this.state.isFixed}
+              onValueChange={val => this.setState({ isFixed: val })}
             />
           </View>
           <View key="buttons" style={sharedStyles.formButtons}>
@@ -178,6 +186,7 @@ class TransactionForm extends React.Component {
                   vendor: this.state.vendor,
                   amount: parseFloat(this.state.amount),
                   entryType: this.state.isCredit ? 'credit' : 'debit',
+                  isFixed: this.state.isFixed,
                   coords: this.state.coords,
                   _addedOn: new Date(),
                 });

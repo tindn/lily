@@ -9,11 +9,19 @@ const dayOfMonth = today.date();
 const daysInMonth = today.daysInMonth();
 
 function SpendTracking(props) {
-  const { spendingThisMonth, earningThisMonth } = props;
+  const {
+    spendingThisMonth,
+    earningThisMonth,
+    fixedSpendingThisMonth,
+    variableSpendingThisMonth,
+  } = props;
   let diff = undefined;
   if (earningThisMonth !== undefined && spendingThisMonth !== undefined) {
     diff = earningThisMonth - spendingThisMonth;
   }
+  const estimatedSpendingPerDay =
+    variableSpendingThisMonth / dayOfMonth +
+    fixedSpendingThisMonth / daysInMonth;
 
   return (
     <View style={styles.row}>
@@ -68,9 +76,7 @@ function SpendTracking(props) {
           Est. spend
         </Text>
         <Text style={[styles.spendAmount]}>
-          {formatAmountToDisplay(
-            (spendingThisMonth / dayOfMonth) * daysInMonth
-          )}
+          {formatAmountToDisplay(estimatedSpendingPerDay * daysInMonth)}
         </Text>
         <Text
           style={{
@@ -81,11 +87,7 @@ function SpendTracking(props) {
             marginBottom: 10,
           }}
         >
-          {`(${formatAmountToDisplay(
-            spendingThisMonth / dayOfMonth,
-            false,
-            0
-          )}/day)`}
+          {`(${formatAmountToDisplay(estimatedSpendingPerDay, false, 0)}/day)`}
         </Text>
       </View>
     </View>

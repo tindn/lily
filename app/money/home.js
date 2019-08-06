@@ -26,6 +26,11 @@ class Home extends React.PureComponent {
           }
           if (t.entryType == 'debit') {
             acc.spent = acc.spent + t.amount;
+            if (t.isFixed) {
+              acc.fixedSpent = acc.fixedSpent + t.amount;
+            } else {
+              acc.variableSpent = acc.variableSpent + t.amount;
+            }
             return acc;
           }
 
@@ -35,12 +40,14 @@ class Home extends React.PureComponent {
           }
           return acc;
         },
-        { spent: 0, earned: 0 }
+        { spent: 0, earned: 0, fixedSpent: 0, variableSpent: 0 }
       );
 
       return {
         spendingThisMonth: summary.spent.toFixed(2),
         earningThisMonth: summary.earned.toFixed(2),
+        fixedSpendingThisMonth: summary.fixedSpent.toFixed(2),
+        variableSpendingThisMonth: summary.variableSpent.toFixed(2),
       };
     }
 
@@ -53,6 +60,8 @@ class Home extends React.PureComponent {
       refreshing: false,
       spendingThisMonth: 0,
       earningThisMonth: 0,
+      fixedSpendingThisMonth: 0,
+      variableSpendingThisMonth: 0,
       transactionListExpanded: false,
       transactionFormExpanded: false,
     };
@@ -107,6 +116,8 @@ class Home extends React.PureComponent {
             <SpendTracking
               spendingThisMonth={this.state.spendingThisMonth}
               earningThisMonth={this.state.earningThisMonth}
+              fixedSpendingThisMonth={this.state.fixedSpendingThisMonth}
+              variableSpendingThisMonth={this.state.variableSpendingThisMonth}
               navigation={this.props.navigation}
             />
           </Card>

@@ -39,6 +39,7 @@ class TransactionDetails extends React.Component {
     entryType: '',
     memo: '',
     vendor: '',
+    isFixed: false,
   };
 
   render() {
@@ -48,17 +49,27 @@ class TransactionDetails extends React.Component {
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="always"
         >
-          <DateInput
-            onChange={date => this.setState({ date })}
-            date={this.state.date}
-            style={[{ alignItems: 'flex-end' }, sharedStyles.inputRow]}
-          />
-          <MoneyInput
-            onChange={amount => this.setState({ amount })}
-            amount={this.state.amount}
-            style={sharedStyles.inputRow}
-            editable={true}
-          />
+          <View
+            style={[
+              sharedStyles.inputRow,
+              {
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <DateInput
+              onChange={date => this.setState({ date })}
+              date={this.state.date}
+              style={[{ alignItems: 'flex-end' }]}
+            />
+            <MoneyInput
+              onChange={amount => this.setState({ amount })}
+              amount={this.state.amount}
+              editable={true}
+            />
+          </View>
           <TextInput
             key="vendorInput"
             style={[
@@ -90,11 +101,30 @@ class TransactionDetails extends React.Component {
               sharedStyles.inputRow,
             ]}
           >
-            <Text style={{ color: theme.colors.darkGray }}>Income</Text>
+            <Text style={{ color: theme.colors.darkGray }}>Income?</Text>
             <Switch
               value={this.state.isCredit}
               onValueChange={val => {
                 this.setState({ isCredit: val });
+              }}
+            />
+          </View>
+          <View
+            key="fixedSwitch"
+            style={[
+              {
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              },
+              sharedStyles.inputRow,
+            ]}
+          >
+            <Text style={{ color: theme.colors.darkGray }}>Fixed?</Text>
+            <Switch
+              value={this.state.isFixed}
+              onValueChange={val => {
+                this.setState({ isFixed: val });
               }}
             />
           </View>
@@ -108,6 +138,7 @@ class TransactionDetails extends React.Component {
                   vendor: this.state.vendor,
                   amount: parseFloat(this.state.amount),
                   entryType: this.state.isCredit ? 'credit' : 'debit',
+                  isFixed: this.state.isFixed,
                 });
                 this.props.navigation.pop();
               }}
