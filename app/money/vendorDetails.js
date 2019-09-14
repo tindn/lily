@@ -1,3 +1,4 @@
+import geolocation from '@react-native-community/geolocation';
 import React from 'react';
 import {
   Alert,
@@ -138,8 +139,7 @@ class VendorDetails extends React.PureComponent {
           >
             <Pill
               onPress={() => {
-                // eslint-disable-next-line no-undef
-                navigator.geolocation.getCurrentPosition(
+                geolocation.getCurrentPosition(
                   position => {
                     this.addLocation(cleanCoordinate(position.coords));
                   },

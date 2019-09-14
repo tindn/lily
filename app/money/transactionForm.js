@@ -1,3 +1,4 @@
+import geolocation from '@react-native-community/geolocation';
 import React from 'react';
 import {
   LayoutAnimation,
@@ -8,7 +9,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { PreviousNextView } from 'react-native-keyboard-manager';
 import { connect } from 'react-redux';
 import { addDocument } from '../../firebaseHelper';
 import theme from '../../theme';
@@ -35,8 +35,7 @@ class TransactionForm extends React.Component {
   state = getDefaultState();
 
   componentDidMount() {
-    // eslint-disable-next-line no-undef
-    navigator.geolocation.getCurrentPosition(
+    geolocation.getCurrentPosition(
       function({ coords }) {
         this.setState({ coords });
         const nearbyVendors = this.props.vendors.filter(vendor => {
@@ -81,28 +80,27 @@ class TransactionForm extends React.Component {
   render() {
     return (
       <View style={[sharedStyles.formContainer, { top: 10 }]}>
-        <PreviousNextView>
-          <View
-            key="firstRow"
-            style={[
-              sharedStyles.formRow,
-              styles.borderBottom,
-              sharedStyles.formFirstRow,
-            ]}
-          >
-            <DateInput
-              onChange={date => this.setState({ date })}
-              date={this.state.date}
-            />
-            <MoneyInput
-              onChange={amount => this.setState({ amount })}
-              key={this.state.moneyInputKey}
-              amount={this.state.amount}
-              editable={true}
-              type={this.state.isCredit ? 'credit' : 'debit'}
-            />
-          </View>
-          {/* <View key="secondRow" style={[sharedStyles.formRow]}>
+        <View
+          key="firstRow"
+          style={[
+            sharedStyles.formRow,
+            styles.borderBottom,
+            sharedStyles.formFirstRow,
+          ]}
+        >
+          <DateInput
+            onChange={date => this.setState({ date })}
+            date={this.state.date}
+          />
+          <MoneyInput
+            onChange={amount => this.setState({ amount })}
+            key={this.state.moneyInputKey}
+            amount={this.state.amount}
+            editable={true}
+            type={this.state.isCredit ? 'credit' : 'debit'}
+          />
+        </View>
+        {/* <View key="secondRow" style={[sharedStyles.formRow]}>
             <TextInput
               key="vendorInput"
               style={[sharedStyles.formTextInput, styles.memoInput]}
@@ -111,93 +109,92 @@ class TransactionForm extends React.Component {
               onChangeText={text => this.setState({ vendor: text })}
             />
           </View> */}
-          <View
-            key="thirdRow"
-            style={[
-              sharedStyles.formRow,
-              styles.borderBottom,
-              { padding: 0, height: 160 },
-            ]}
+        <View
+          key="thirdRow"
+          style={[
+            sharedStyles.formRow,
+            styles.borderBottom,
+            { padding: 0, height: 160 },
+          ]}
+        >
+          <Picker
+            selectedValue={this.state.vendor}
+            onValueChange={text => this.setState({ vendor: text })}
+            style={{ flex: 1, height: 200, top: -20 }}
           >
-            <Picker
-              selectedValue={this.state.vendor}
-              onValueChange={text => this.setState({ vendor: text })}
-              style={{ flex: 1, height: 200, top: -20 }}
-            >
-              {this.state.vendors.map(function(item, index) {
-                return <Picker.Item key={index} label={item} value={item} />;
-              })}
-            </Picker>
-          </View>
-          <View
-            key="fourthRow"
-            style={[sharedStyles.formRow, styles.borderBottom]}
-          >
-            <TextInput
-              key="memoInput"
-              style={[sharedStyles.formTextInput, styles.memoInput]}
-              value={this.state.memo}
-              placeholder="memo"
-              onChangeText={text => this.setState({ memo: text })}
-            />
-          </View>
-          <View
-            key="fifthRow"
-            style={[
-              sharedStyles.formRow,
-              sharedStyles.formSwitchRow,
-              styles.borderBottom,
-            ]}
-          >
-            <Text style={{ color: theme.colors.darkGray }}>Income?</Text>
-            <Switch
-              value={this.state.isCredit}
-              onValueChange={val => this.setState({ isCredit: val })}
-            />
-            <Text style={{ color: theme.colors.darkGray }}>Fixed?</Text>
-            <Switch
-              value={this.state.isFixed}
-              onValueChange={val => this.setState({ isFixed: val })}
-            />
-          </View>
-          <View key="buttons" style={sharedStyles.formButtons}>
-            <OutlineButton
-              label="Cancel"
-              onPress={() => {
-                LayoutAnimation.easeInEaseOut();
-                this.setState(getDefaultState(this.state.moneyInputKey + 1));
-                this.props.collapse && this.props.collapse();
-              }}
-              style={[sharedStyles.outlineButton]}
-              color={theme.colors.darkGray}
-            />
-            <OutlineButton
-              color={theme.colors.primary}
-              disabled={
-                !this.state.amount ||
-                this.state.amount === '00.00' ||
-                (this.state.memo === '' && this.state.vendor === '')
-              }
-              label="Add"
-              onPress={() => {
-                addDocument('transactions', {
-                  date: this.state.date,
-                  memo: this.state.memo,
-                  vendor: this.state.vendor,
-                  amount: parseFloat(this.state.amount),
-                  entryType: this.state.isCredit ? 'credit' : 'debit',
-                  isFixed: this.state.isFixed,
-                  coords: this.state.coords,
-                  _addedOn: new Date(),
-                });
-                LayoutAnimation.easeInEaseOut();
-                this.setState(getDefaultState(this.state.moneyInputKey + 1));
-                this.props.collapse && this.props.collapse();
-              }}
-              style={[sharedStyles.outlineButton]}
-            />
-          </View>
-        </PreviousNextView>
+            {this.state.vendors.map(function(item, index) {
+              return <Picker.Item key={index} label={item} value={item} />;
+            })}
+          </Picker>
+        </View>
+        <View
+          key="fourthRow"
+          style={[sharedStyles.formRow, styles.borderBottom]}
+        >
+          <TextInput
+            key="memoInput"
+            style={[sharedStyles.formTextInput, styles.memoInput]}
+            value={this.state.memo}
+            placeholder="memo"
+            onChangeText={text => this.setState({ memo: text })}
+          />
+        </View>
+        <View
+          key="fifthRow"
+          style={[
+            sharedStyles.formRow,
+            sharedStyles.formSwitchRow,
+            styles.borderBottom,
+          ]}
+        >
+          <Text style={{ color: theme.colors.darkGray }}>Income?</Text>
+          <Switch
+            value={this.state.isCredit}
+            onValueChange={val => this.setState({ isCredit: val })}
+          />
+          <Text style={{ color: theme.colors.darkGray }}>Fixed?</Text>
+          <Switch
+            value={this.state.isFixed}
+            onValueChange={val => this.setState({ isFixed: val })}
+          />
+        </View>
+        <View key="buttons" style={sharedStyles.formButtons}>
+          <OutlineButton
+            label="Cancel"
+            onPress={() => {
+              LayoutAnimation.easeInEaseOut();
+              this.setState(getDefaultState(this.state.moneyInputKey + 1));
+              this.props.collapse && this.props.collapse();
+            }}
+            style={[sharedStyles.outlineButton]}
+            color={theme.colors.darkGray}
+          />
+          <OutlineButton
+            color={theme.colors.primary}
+            disabled={
+              !this.state.amount ||
+              this.state.amount === '00.00' ||
+              (this.state.memo === '' && this.state.vendor === '')
+            }
+            label="Add"
+            onPress={() => {
+              addDocument('transactions', {
+                date: this.state.date,
+                memo: this.state.memo,
+                vendor: this.state.vendor,
+                amount: parseFloat(this.state.amount),
+                entryType: this.state.isCredit ? 'credit' : 'debit',
+                isFixed: this.state.isFixed,
+                coords: this.state.coords,
+                _addedOn: new Date(),
+              });
+              LayoutAnimation.easeInEaseOut();
+              this.setState(getDefaultState(this.state.moneyInputKey + 1));
+              this.props.collapse && this.props.collapse();
+            }}
+            style={[sharedStyles.outlineButton]}
+          />
+        </View>
       </View>
     );
   }
