@@ -37,8 +37,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Transaction locations</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To retrieve location of transactions.</string>
 	<key>NSMainNibFile</key>
