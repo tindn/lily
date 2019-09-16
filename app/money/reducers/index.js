@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import accounts from './accounts';
+import currentMonthSetup from './currentMonthSetup';
 import financeSnapshots from './financeSnapshots';
 import monthlyAnalytics from './monthlyAnalytics';
 import monthTransactions from './monthTransactions';
@@ -11,4 +12,5 @@ export default combineReducers({
   accounts,
   vendors,
   financeSnapshots,
+  currentMonthSetup,
 });
