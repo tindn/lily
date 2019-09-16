@@ -40,6 +40,7 @@ class Money extends React.Component {
 }
 
 Money.navigationOptions = () => ({
+  // eslint-disable-next-line react/display-name
   tabBarIcon: ({ horizontal, tintColor }) => {
     return (
       <Icon name="barschart" size={horizontal ? 20 : 25} color={tintColor} />

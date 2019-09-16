@@ -19,8 +19,9 @@ class Misc extends React.Component {
   }
 }
 
-Misc.navigationOptions = ({ navigation }) => ({
-  tabBarIcon: ({ focused, horizontal, tintColor }) => {
+Misc.navigationOptions = () => ({
+  // eslint-disable-next-line react/display-name
+  tabBarIcon: ({ horizontal, tintColor }) => {
     return <Icon name="edit" size={horizontal ? 20 : 25} color={tintColor} />;
   },
 });
