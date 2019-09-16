@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 import { by } from '../../utils/sort';
@@ -120,17 +120,26 @@ class Home extends React.PureComponent {
               navigation={this.props.navigation}
             />
           </Card>
-          <Card
+          <View
             style={{
-              marginTop: 15,
-              paddingVertical: 15,
               flexDirection: 'row',
+              marginTop: 15,
               justifyContent: 'space-around',
             }}
-            onPress={() => this.props.navigation.navigate('MonthlyAnalytics')}
           >
-            <MonthlyAnalyticsOverview data={lastThreeMonths} />
-          </Card>
+            {lastThreeMonths &&
+              lastThreeMonths.map(month => (
+                <Card
+                  key={month.id}
+                  onPress={() => {
+                    this.props.navigation.navigate('MonthlyAnalytics');
+                  }}
+                  style={{ paddingHorizontal: 15 }}
+                >
+                  <MonthlyAnalyticsOverview month={month} />
+                </Card>
+              ))}
+          </View>
           <Card
             style={{
               paddingVertical: 15,

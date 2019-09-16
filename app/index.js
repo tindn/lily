@@ -1,13 +1,13 @@
 import firebase from 'firebase';
+import 'firebase/firestore';
+import { AsyncStorage } from 'react-native';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import config from '../config.json';
 import theme from '../theme';
-import Money from './money';
-import Misc from './misc';
 import Contact from './contact';
-import { AsyncStorage } from 'react-native';
+import Misc from './misc';
+import Money from './money';
 
-require('firebase/firestore');
 firebase.initializeApp(config.firebase);
 firebase
   .auth()
@@ -28,6 +28,9 @@ const TabNavigator = createBottomTabNavigator(
     Contact,
   },
   {
+    defaultNavigationOptions: {
+      tabBarLabel: () => null,
+    },
     tabBarOptions: {
       activeTintColor: theme.colors.primary,
       inactiveTintColor: 'gray',
