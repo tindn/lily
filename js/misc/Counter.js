@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AsyncStorage, View, Text } from 'react-native';
-import Pill from '../pill';
-import theme from '../../theme';
+import Pill from '../components/pill';
+import theme from '../theme';
 import sharedStyles from '../sharedStyles';
 
 export default function Counter(props) {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Switch, View, TextInput } from 'react-native';
 import { addDocument } from '../../firebaseHelper';
-import theme from '../../theme';
-import OutlineButton from '../outlineButton';
+import theme from '../theme';
+import OutlineButton from '../components/outlineButton';
 import sharedStyles from '../sharedStyles';
 
 function ElectricityReadingAdd() {

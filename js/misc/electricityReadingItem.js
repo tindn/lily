@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { deleteDocument, updateDocument } from '../../firebaseHelper';
-import theme from '../../theme';
-import OutlineButton from '../outlineButton';
+import theme from '../theme';
+import OutlineButton from '../components/outlineButton';
 
 class ElectricityReadingItem extends React.Component {
   constructor(props) {

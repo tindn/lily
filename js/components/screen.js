@@ -7,7 +7,7 @@ function Screen(props) {
     <SafeAreaView
       style={[
         { flex: 1, backgroundColor: theme.colors.backgroundColor },
-        props.style
+        props.style,
       ]}
     >
       <StatusBar style={props.statusBarStyle} />

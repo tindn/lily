@@ -5,7 +5,7 @@ import storage from 'redux-persist/es/storage';
 import reducers from './reducers';
 
 const persistConfig = {
-  key: 'money',
+  key: 'lily-app',
   storage,
   whitelist: ['monthlyAnalytics', 'accounts', 'monthTransactions', 'vendors'],
 };

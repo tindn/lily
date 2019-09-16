@@ -10,9 +10,9 @@ import {
   SafeAreaView,
 } from 'react-native';
 import theme from '../theme';
-import { toSimpleDateString } from '../utils/date';
+import { toSimpleDateString } from '../../utils/date';
 import OutlineButton from './outlineButton';
-import sharedStyles from './sharedStyles';
+import sharedStyles from '../sharedStyles';
 
 class DateInput extends React.PureComponent {
   state = {

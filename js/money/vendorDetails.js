@@ -14,11 +14,11 @@ import {
   deleteDocument,
   updateDocument,
 } from '../../firebaseHelper';
-import theme from '../../theme';
+import theme from '../theme';
 import { cleanCoordinate } from '../../utils/location';
 import { createMapUrl } from '../../utils/map';
-import Pill from '../pill';
-import Screen from '../screen';
+import Pill from '../components/pill';
+import Screen from '../components/screen';
 import sharedStyles from '../sharedStyles';
 import MapLocationInput from './mapLocationInput';
 

@@ -13,10 +13,10 @@ import {
   updateDocument,
   getPlaidBalance,
 } from '../../firebaseHelper';
-import theme from '../../theme';
-import DateInput from '../dateInput';
-import MoneyInput from '../moneyInput';
-import OutlineButton from '../outlineButton';
+import theme from '../theme';
+import DateInput from '../components/dateInput';
+import MoneyInput from '../components/moneyInput';
+import OutlineButton from '../components/outlineButton';
 import sharedStyles from '../sharedStyles';
 
 class AccountEntryForm extends React.PureComponent {

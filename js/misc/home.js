@@ -1,12 +1,9 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
-import theme from '../../theme';
-import Card from '../card';
-import Pill from '../pill';
-import Screen from '../screen';
+import Screen from '../components/screen';
+import Card from '../components/card';
 import ElectricityOverview from './electricityOverview';
 import ElectricityReadingAdd from './electricityReadingAdd';
-import Counter from './Counter';
 
 class Home extends React.PureComponent {
   static navigationOptions = {

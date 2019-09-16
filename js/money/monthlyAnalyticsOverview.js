@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import theme from '../../theme';
+import theme from '../theme';
 import { formatAmountToDisplay } from '../../utils/money';
 
 function MonthlyAnalyticsOverview(props) {

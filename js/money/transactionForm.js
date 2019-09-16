@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { addDocument } from '../../firebaseHelper';
-import theme from '../../theme';
+import theme from '../theme';
 import { isNearby } from '../../utils/location';
-import DateInput from '../dateInput';
-import MoneyInput from '../moneyInput';
-import OutlineButton from '../outlineButton';
+import DateInput from '../components/dateInput';
+import MoneyInput from '../components/moneyInput';
+import OutlineButton from '../components/outlineButton';
 import sharedStyles from '../sharedStyles';
 
 function getDefaultState(moneyInputKey) {

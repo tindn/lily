@@ -9,10 +9,10 @@ import {
   View,
 } from 'react-native';
 import { deleteDocument, updateDocument } from '../../firebaseHelper';
-import theme from '../../theme';
-import DateInput from '../dateInput';
-import MoneyInput from '../moneyInput';
-import Screen from '../screen';
+import theme from '../theme';
+import DateInput from '../components/dateInput';
+import MoneyInput from '../components/moneyInput';
+import Screen from '../components/screen';
 import sharedStyles from '../sharedStyles';
 
 class TransactionDetails extends React.Component {

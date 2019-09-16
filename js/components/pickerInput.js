@@ -10,7 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/AntDesign';
 import OutlineButton from './outlineButton';
 import theme from '../theme';
-import sharedStyles from './sharedStyles';
+import sharedStyles from '../sharedStyles';
 
 class PickerInput extends React.Component {
   static getDerivedStateFromProps(props) {

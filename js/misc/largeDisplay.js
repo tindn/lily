@@ -1,8 +1,8 @@
 import React from 'react';
 import { TextInput, Picker, View } from 'react-native';
-import Screen from '../screen';
-import Pill from '../pill';
-import theme from '../../theme';
+import Screen from '../components/screen';
+import Pill from '../components/pill';
+import theme from '../theme';
 
 const commonPhrases = {
   0: { text: '', preferredFontSize: 75 },

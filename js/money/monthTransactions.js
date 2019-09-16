@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { queryData } from '../../firebaseHelper';
-import theme from '../../theme';
+import theme from '../theme';
 import { toWeekDayDateString } from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
-import Screen from '../screen';
+import Screen from '../components/screen';
 
 class MonthTransactions extends React.PureComponent {
   static getDerivedStateFromProps(props) {
