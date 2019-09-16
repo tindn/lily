@@ -1,19 +1,19 @@
 import React from 'react';
 import {
-  FlatList,
+  Alert,
   RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import { connect } from 'react-redux';
-import { queryData } from '../../../firebaseHelper';
-import theme from '../../theme';
+import { deleteDocument, queryData } from '../../../firebaseHelper';
 import { toWeekDayDateString } from '../../../utils/date';
 import { formatAmountToDisplay } from '../../../utils/money';
 import Screen from '../../components/screen';
-
+import theme from '../../theme';
 class MonthTransactions extends React.PureComponent {
   static getDerivedStateFromProps(props) {
     if (props.data && props.data.length) {
@@ -49,7 +49,7 @@ class MonthTransactions extends React.PureComponent {
   render() {
     return (
       <Screen>
-        <FlatList
+        <SwipeListView
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
@@ -63,11 +63,61 @@ class MonthTransactions extends React.PureComponent {
               <Text>No transactions found.</Text>
             </View>
           }
+          renderHiddenItem={data => (
+            <View
+              style={{
+                backgroundColor: theme.colors.backgroundColor,
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <TouchableOpacity
+                onPress={function() {
+                  Alert.alert(
+                    'Confirm',
+                    'Do you want to delete this transaction?',
+                    [
+                      {
+                        text: 'Cancel',
+                      },
+                      {
+                        text: 'Delete',
+                        onPress: function() {
+                          deleteDocument('transactions', data.item.id);
+                        },
+                        style: 'destructive',
+                      },
+                    ]
+                  );
+                }}
+                style={{
+                  alignItems: 'center',
+                  backgroundColor: theme.colors.red,
+
+                  justifyContent: 'center',
+                  width: 100,
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 15,
+                    color: theme.colors.white,
+                  }}
+                >
+                  Delete
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          rightOpenValue={-100}
           renderItem={({ item }) => {
             let dateDisplay = toWeekDayDateString(item.date);
             const color = item.isCredit ? theme.colors.green : theme.colors.red;
             return (
               <TouchableOpacity
+                delayPressIn={100}
                 style={styles.transactionItem}
                 onPress={() => {
                   this.props.navigation.navigate('TransactionDetails', {
