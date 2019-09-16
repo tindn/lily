@@ -9,85 +9,50 @@ const dayOfMonth = today.date();
 const daysInMonth = today.daysInMonth();
 
 function SpendTracking(props) {
-  const {
+  var {
     spendingThisMonth,
-    earningThisMonth,
     fixedSpendingThisMonth,
     variableSpendingThisMonth,
   } = props;
-  let diff = undefined;
-  if (earningThisMonth !== undefined && spendingThisMonth !== undefined) {
-    diff = earningThisMonth - spendingThisMonth;
-  }
-  const estimatedSpendingPerDay =
-    variableSpendingThisMonth / dayOfMonth +
-    fixedSpendingThisMonth / daysInMonth;
+
+  var estimatedSpendingPerDay = variableSpendingThisMonth / dayOfMonth;
+  var estimatedEarning = 8400;
+  var estimatedSpending =
+    estimatedSpendingPerDay * daysInMonth + fixedSpendingThisMonth;
+  var estimatedNet = estimatedEarning - estimatedSpending;
 
   return (
     <View style={styles.row}>
-      <View style={{ justifyContent: 'space-between' }}>
+      <View style={{}}>
         <Text
-          style={{
-            textAlign: 'center',
-            marginBottom: 10,
-            color: theme.colors.darkGray,
-          }}
+          style={[
+            styles.mainNumber,
+            { color: theme.colors.red, marginBottom: 10 },
+          ]}
         >
-          {new Date().toLocaleDateString('en-US', { month: 'long' })}
-        </Text>
-        <Text style={styles.earnAmount}>
-          {formatAmountToDisplay(earningThisMonth)}
-        </Text>
-        <Text style={styles.spendAmount}>
           {formatAmountToDisplay(spendingThisMonth)}
+        </Text>
+        <Text style={styles.supportive}>
+          {`(${formatAmountToDisplay(estimatedSpendingPerDay, false, 0)}/day)`}
         </Text>
       </View>
       <View>
-        <Text
-          style={{
-            textAlign: 'center',
-            marginBottom: 10,
-            color: theme.colors.darkGray,
-          }}
-        >
-          Net
-        </Text>
+        <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+          <Text style={[styles.supportive]}>
+            {formatAmountToDisplay(estimatedEarning, false, 0)}
+          </Text>
+          <Text style={[styles.supportive]}>{` -  `}</Text>
+          <Text style={[styles.supportive]}>
+            {formatAmountToDisplay(estimatedSpending, false, 0)}
+          </Text>
+        </View>
         <Text
           style={[
-            styles.net,
-            {
-              color: diff < 0 ? theme.colors.red : theme.colors.green,
-              marginBottom: 10,
-            },
+            styles.mainNumber,
+            { color: estimatedNet > 0 ? theme.colors.green : theme.colors.red },
           ]}
         >
-          {formatAmountToDisplay(diff, true)}
-        </Text>
-      </View>
-      <View style={{ justifyContent: 'space-between' }}>
-        <Text
-          style={{
-            alignSelf: 'flex-start',
-            textAlign: 'center',
-            marginBottom: 10,
-            color: theme.colors.darkGray,
-          }}
-        >
-          Est. spend
-        </Text>
-        <Text style={[styles.spendAmount]}>
-          {formatAmountToDisplay(estimatedSpendingPerDay * daysInMonth)}
-        </Text>
-        <Text
-          style={{
-            color: theme.colors.lightGray,
-            textAlign: 'center',
-            fontWeight: '600',
-            fontSize: 14,
-            marginBottom: 10,
-          }}
-        >
-          {`(${formatAmountToDisplay(estimatedSpendingPerDay, false, 0)}/day)`}
+          {formatAmountToDisplay(estimatedNet, false, 0)}
         </Text>
       </View>
     </View>
@@ -95,27 +60,19 @@ function SpendTracking(props) {
 }
 
 const styles = StyleSheet.create({
-  earnAmount: {
-    color: theme.colors.green,
-    fontSize: 15,
-    fontWeight: '600',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  net: {
+  mainNumber: {
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
-  spendAmount: {
-    color: theme.colors.red,
-    fontSize: 15,
+  supportive: {
+    color: theme.colors.darkGray,
+    fontSize: 14,
     fontWeight: '600',
-    marginBottom: 10,
     textAlign: 'center',
   },
 });

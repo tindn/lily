@@ -1,21 +1,18 @@
 import React from 'react';
 import {
   FlatList,
-  LayoutAnimation,
   RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import { connect } from 'react-redux';
 import { queryData } from '../../firebaseHelper';
 import theme from '../../theme';
 import { toWeekDayDateString } from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../screen';
-import PlaidTransactionsCarousel from './plaidTransactionsCarousel';
 
 class MonthTransactions extends React.PureComponent {
   static getDerivedStateFromProps(props) {
@@ -32,7 +29,6 @@ class MonthTransactions extends React.PureComponent {
     this.state = {
       refreshing: false,
       data: [],
-      showPlaidTransactions: false,
     };
   }
 
@@ -48,13 +44,6 @@ class MonthTransactions extends React.PureComponent {
           refreshing: false,
         });
       });
-  };
-
-  togglePlaidTransactions = () => {
-    this.setState(function(state) {
-      return { showPlaidTransactions: !state.showPlaidTransactions };
-    });
-    LayoutAnimation.easeInEaseOut();
   };
 
   render() {
@@ -100,37 +89,6 @@ class MonthTransactions extends React.PureComponent {
             );
           }}
         />
-        <View
-          style={{
-            backgroundColor: '#fff',
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 3,
-            },
-            shadowOpacity: 0.29,
-            shadowRadius: 4.65,
-            elevation: 7,
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-          }}
-        >
-          <TouchableOpacity
-            onPress={this.togglePlaidTransactions}
-            style={{
-              paddingVertical: 20,
-              alignItems: 'center',
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              borderBottomColor: theme.colors.lighterGray,
-            }}
-          >
-            <Icon
-              name={this.state.showPlaidTransactions ? 'caretdown' : 'caretup'}
-              size={16}
-            />
-          </TouchableOpacity>
-          {this.state.showPlaidTransactions && <PlaidTransactionsCarousel />}
-        </View>
       </Screen>
     );
   }

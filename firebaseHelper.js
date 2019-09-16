@@ -204,22 +204,3 @@ function accountsSnapshotsDeserialize(doc) {
   }
   return snapshot;
 }
-
-export function getPlaidTransactions(data) {
-  if (
-    !data.accessToken ||
-    !data.accountId ||
-    !data.startDate ||
-    !data.endDate
-  ) {
-    return null;
-  }
-  return firebase.functions().httpsCallable('plaidTransactions')(data);
-}
-
-export function getPlaidBalance(data) {
-  if (!data.accessToken || !data.accountId) {
-    return null;
-  }
-  return firebase.functions().httpsCallable('plaidBalance')(data);
-}

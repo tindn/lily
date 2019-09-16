@@ -44,10 +44,10 @@ class Home extends React.PureComponent {
       );
 
       return {
-        spendingThisMonth: summary.spent.toFixed(2),
-        earningThisMonth: summary.earned.toFixed(2),
-        fixedSpendingThisMonth: summary.fixedSpent.toFixed(2),
-        variableSpendingThisMonth: summary.variableSpent.toFixed(2),
+        spendingThisMonth: summary.spent,
+        earningThisMonth: summary.earned,
+        fixedSpendingThisMonth: summary.fixedSpent,
+        variableSpendingThisMonth: summary.variableSpent,
       };
     }
 
@@ -111,11 +111,10 @@ class Home extends React.PureComponent {
             onPress={() => {
               this.props.navigation.navigate('MonthTransactions');
             }}
-            style={{ padding: 15 }}
+            style={{ marginTop: 10, padding: 15 }}
           >
             <SpendTracking
               spendingThisMonth={this.state.spendingThisMonth}
-              earningThisMonth={this.state.earningThisMonth}
               fixedSpendingThisMonth={this.state.fixedSpendingThisMonth}
               variableSpendingThisMonth={this.state.variableSpendingThisMonth}
               navigation={this.props.navigation}

@@ -3,7 +3,6 @@ import accounts from './accounts';
 import financeSnapshots from './financeSnapshots';
 import monthlyAnalytics from './monthlyAnalytics';
 import monthTransactions from './monthTransactions';
-import plaidTransactions from './plaidTransactions';
 import vendors from './vendors';
 
 export default combineReducers({
@@ -11,6 +10,5 @@ export default combineReducers({
   monthlyAnalytics,
   accounts,
   vendors,
-  plaidTransactions,
   financeSnapshots,
 });
