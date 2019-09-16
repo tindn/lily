@@ -1,9 +1,8 @@
-/** @format */
-import { YellowBox } from 'react-native';
+import { AppRegistry, YellowBox } from 'react-native';
+import App from './js/app';
+
 if (__DEV__) {
   YellowBox.ignoreWarnings(['Remote debugger']);
 }
-import { AppRegistry } from 'react-native';
-import App from './app';
 
 AppRegistry.registerComponent('lily', () => App);
