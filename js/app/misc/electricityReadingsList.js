@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import Screen from '../components/screen';
+import Screen from '../../components/screen';
 import ElectricityReadingItem from './electricityReadingItem';
 
 class ElectricityReadingsList extends React.Component {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View, Modal } from 'react-native';
-import theme from '../theme';
+import theme from '../../theme';
 import TransactionForm from './transactionForm';
 
 class TransactionAdd extends React.Component {

@@ -10,13 +10,13 @@ import {
   View,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { addDocument } from '../../firebaseHelper';
-import theme from '../theme';
-import { isNearby } from '../../utils/location';
-import DateInput from '../components/dateInput';
-import MoneyInput from '../components/moneyInput';
-import OutlineButton from '../components/outlineButton';
-import sharedStyles from '../sharedStyles';
+import { addDocument } from '../../../firebaseHelper';
+import theme from '../../theme';
+import { isNearby } from '../../../utils/location';
+import DateInput from '../../components/dateInput';
+import MoneyInput from '../../components/moneyInput';
+import OutlineButton from '../../components/outlineButton';
+import sharedStyles from '../../sharedStyles';
 
 function getDefaultState(moneyInputKey) {
   return {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/AntDesign';
-import theme from '../theme';
+import theme from '../../theme';
 
 function MapLocationInput(props) {
   const {

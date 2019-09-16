@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import { watchData } from '../../firebaseHelper';
-import theme from '../theme';
-import MoneyDisplay from '../components/moneyDisplay';
-import Pill from '../components/pill';
-import Screen from '../components/screen';
+import { watchData } from '../../../firebaseHelper';
+import theme from '../../theme';
+import MoneyDisplay from '../../components/moneyDisplay';
+import Pill from '../../components/pill';
+import Screen from '../../components/screen';
 import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
-import { by } from '../../utils/sort';
+import { by } from '../../../utils/sort';
 
 function AccountDetails(props) {
   const [showNewEntryForm, setForm] = useState(false);

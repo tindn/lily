@@ -5,12 +5,12 @@ import { AsyncStorage } from 'react-native';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import config from '../config.json';
-import theme from './theme';
+import config from '../../config.json';
+import theme from '../theme';
 import Contact from './contact';
 import Misc from './misc';
 import Money from './money';
-import { persistor, store } from './store';
+import { persistor, store } from '../store';
 
 firebase.initializeApp(config.firebase);
 firebase

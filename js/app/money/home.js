@@ -1,11 +1,11 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import { watchData } from '../../firebaseHelper';
-import theme from '../theme';
-import { by } from '../../utils/sort';
-import Screen from '../components/screen';
-import Card from '../components/card';
+import { watchData } from '../../../firebaseHelper';
+import theme from '../../theme';
+import { by } from '../../../utils/sort';
+import Screen from '../../components/screen';
+import Card from '../../components/card';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';

@@ -8,9 +8,9 @@ import {
   View,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { queryData } from '../../firebaseHelper';
-import theme from '../theme';
-import Screen from '../components/screen';
+import { queryData } from '../../../firebaseHelper';
+import theme from '../../theme';
+import Screen from '../../components/screen';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 class Vendors extends React.Component {

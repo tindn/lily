@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Screen from '../components/screen';
+import Screen from '../../components/screen';
 
 function Contact() {
   return (

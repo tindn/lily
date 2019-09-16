@@ -1,10 +1,10 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import theme from '../theme';
-import { toWeekDayDateString } from '../../utils/date';
-import MoneyDisplay from '../components/moneyDisplay';
-import Screen from '../components/screen';
+import theme from '../../theme';
+import { toWeekDayDateString } from '../../../utils/date';
+import MoneyDisplay from '../../components/moneyDisplay';
+import Screen from '../../components/screen';
 
 function SnapshotList(props) {
   return (

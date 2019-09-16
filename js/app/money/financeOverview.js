@@ -2,12 +2,12 @@ import moment from 'moment';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import { watchData } from '../../firebaseHelper';
-import theme from '../theme';
-import { calculateFinanceOverview } from '../../utils/money';
-import MoneyDisplay from '../components/moneyDisplay';
-import Screen from '../components/screen';
-import Card from '../components/card';
+import { watchData } from '../../../firebaseHelper';
+import theme from '../../theme';
+import { calculateFinanceOverview } from '../../../utils/money';
+import MoneyDisplay from '../../components/moneyDisplay';
+import Screen from '../../components/screen';
+import Card from '../../components/card';
 class FinanceOverview extends React.PureComponent {
   static getDerivedStateFromProps(props) {
     if (props.accounts) {

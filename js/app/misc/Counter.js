@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AsyncStorage, View, Text } from 'react-native';
-import Pill from '../components/pill';
-import theme from '../theme';
-import sharedStyles from '../sharedStyles';
+import Pill from '../../components/pill';
+import theme from '../../theme';
+import sharedStyles from '../../sharedStyles';
 
 export default function Counter(props) {
   const [count, setCount] = useState('');

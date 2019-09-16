@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import theme from '../theme';
-import DateInput from '../components/dateInput';
-import MoneyInput from '../components/moneyInput';
+import theme from '../../theme';
+import DateInput from '../../components/dateInput';
+import MoneyInput from '../../components/moneyInput';
 import AccountEntryForm from './accountEntryForm';
 
 function AccountEntry(props) {

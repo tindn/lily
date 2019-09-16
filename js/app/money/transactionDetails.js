@@ -8,12 +8,12 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { deleteDocument, updateDocument } from '../../firebaseHelper';
-import theme from '../theme';
-import DateInput from '../components/dateInput';
-import MoneyInput from '../components/moneyInput';
-import Screen from '../components/screen';
-import sharedStyles from '../sharedStyles';
+import { deleteDocument, updateDocument } from '../../../firebaseHelper';
+import theme from '../../theme';
+import DateInput from '../../components/dateInput';
+import MoneyInput from '../../components/moneyInput';
+import Screen from '../../components/screen';
+import sharedStyles from '../../sharedStyles';
 
 class TransactionDetails extends React.Component {
   static navigationOptions = ({ navigation }) => {

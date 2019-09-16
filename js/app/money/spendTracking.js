@@ -1,8 +1,8 @@
 import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import theme from '../theme';
-import { formatAmountToDisplay } from '../../utils/money';
+import theme from '../../theme';
+import { formatAmountToDisplay } from '../../../utils/money';
 
 const today = moment();
 const dayOfMonth = today.date();
