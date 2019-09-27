@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import theme from '../../theme';
 import { formatAmountToDisplay } from '../../../utils/money';
+import { connect } from 'react-redux';
 
 const today = moment();
 const dayOfMonth = today.date();
@@ -11,19 +12,18 @@ const daysInMonth = today.daysInMonth();
 function SpendTracking(props) {
   var {
     spendingThisMonth,
-    fixedSpendingThisMonth,
     variableSpendingThisMonth,
+    earning,
+    fixedSpending,
   } = props;
 
   var estimatedSpendingPerDay = variableSpendingThisMonth / dayOfMonth;
-  var estimatedEarning = 8400;
-  var estimatedSpending =
-    estimatedSpendingPerDay * daysInMonth + fixedSpendingThisMonth;
-  var estimatedNet = estimatedEarning - estimatedSpending;
+  var estimatedSpending = estimatedSpendingPerDay * daysInMonth + fixedSpending;
+  var estimatedNet = earning - estimatedSpending;
 
   return (
     <View style={styles.row}>
-      <View style={{}}>
+      <View>
         <Text
           style={[
             styles.mainNumber,
@@ -39,7 +39,7 @@ function SpendTracking(props) {
       <View>
         <View style={{ flexDirection: 'row', marginBottom: 10 }}>
           <Text style={[styles.supportive]}>
-            {formatAmountToDisplay(estimatedEarning, false, 0)}
+            {formatAmountToDisplay(earning, false, 0)}
           </Text>
           <Text style={[styles.supportive]}>{` -  `}</Text>
           <Text style={[styles.supportive]}>
@@ -77,4 +77,20 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(SpendTracking);
+function mapStateToProps(state) {
+  return {
+    earning: state.currentMonthSetup.earnings.reduce((acc, earning) => {
+      acc = acc + earning.amount;
+      return acc;
+    }, 0),
+    fixedSpending: state.currentMonthSetup.fixedSpendings.reduce(
+      (acc, spend) => {
+        acc = acc + spend.amount;
+        return acc;
+      },
+      0
+    ),
+  };
+}
+
+export default connect(mapStateToProps)(SpendTracking);

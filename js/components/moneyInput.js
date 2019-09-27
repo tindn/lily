@@ -30,7 +30,7 @@ class MoneyInput extends React.PureComponent {
           style={{ display: 'none' }}
           keyboardType="number-pad"
           onChangeText={this.onChangeText}
-          autoFocus={true}
+          autoFocus={this.props.autoFocus}
           editable={this.props.editable}
         />
         <TouchableOpacity

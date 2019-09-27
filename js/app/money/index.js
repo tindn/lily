@@ -6,6 +6,7 @@ import Accounts from './accounts';
 import FinanceOverview from './financeOverview';
 import Home from './home';
 import MonthlyAnalytics from './monthlyAnalytics';
+import MonthSetup from './monthSetup';
 import MonthTransactions from './monthTransactions';
 import SnapshotList from './snapshotList';
 import TransactionDetails from './transactionDetails';
@@ -15,14 +16,7 @@ import Vendors from './vendors';
 const MoneyStack = createStackNavigator({
   Home,
   TransactionDetails,
-  MonthTransactions: {
-    screen: MonthTransactions,
-    navigationOptions: {
-      title: new Date().toLocaleDateString('en-US', {
-        month: 'long',
-      }),
-    },
-  },
+  MonthTransactions,
   MonthlyAnalytics,
   Accounts,
   AccountDetails,
@@ -30,6 +24,7 @@ const MoneyStack = createStackNavigator({
   VendorDetails,
   SnapshotList,
   FinanceOverview,
+  MonthSetup,
 });
 
 class Money extends React.Component {

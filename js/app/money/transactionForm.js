@@ -96,19 +96,11 @@ class TransactionForm extends React.Component {
             onChange={amount => this.setState({ amount })}
             key={this.state.moneyInputKey}
             amount={this.state.amount}
-            editable={true}
+            editable
             type={this.state.isCredit ? 'credit' : 'debit'}
+            autoFocus
           />
         </View>
-        {/* <View key="secondRow" style={[sharedStyles.formRow]}>
-            <TextInput
-              key="vendorInput"
-              style={[sharedStyles.formTextInput, styles.memoInput]}
-              value={this.state.vendor}
-              placeholder="vendor"
-              onChangeText={text => this.setState({ vendor: text })}
-            />
-          </View> */}
         <View
           key="thirdRow"
           style={[

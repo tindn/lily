@@ -16,12 +16,6 @@ import Screen from '../../components/screen';
 import sharedStyles from '../../sharedStyles';
 
 class TransactionDetails extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.getParam('title', 'Transaction Details'),
-    };
-  };
-
   static getDerivedStateFromProps(props, state) {
     if (state.date) {
       return null;
