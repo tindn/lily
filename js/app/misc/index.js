@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import ElectricityReadingsList from './electricityReadingsList';
 import Home from './home';
 import LargeDisplay from './largeDisplay';

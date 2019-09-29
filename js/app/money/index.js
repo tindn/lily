@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import AccountDetails from './accountDetails';
 import Accounts from './accounts';
 import FinanceOverview from './financeOverview';
