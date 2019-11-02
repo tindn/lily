@@ -114,8 +114,8 @@ class Home extends React.PureComponent {
             style={{ marginTop: 10, padding: 15 }}
           >
             <SpendTracking
+              earningThisMonth={this.state.earningThisMonth}
               spendingThisMonth={this.state.spendingThisMonth}
-              fixedSpendingThisMonth={this.state.fixedSpendingThisMonth}
               variableSpendingThisMonth={this.state.variableSpendingThisMonth}
               navigation={this.props.navigation}
             />

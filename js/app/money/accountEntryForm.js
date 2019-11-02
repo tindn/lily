@@ -11,7 +11,6 @@ import {
   addDocument,
   deleteDocument,
   updateDocument,
-  getPlaidBalance,
 } from '../../../firebaseHelper';
 import theme from '../../theme';
 import DateInput from '../../components/dateInput';
@@ -41,38 +40,6 @@ class AccountEntryForm extends React.PureComponent {
   }
 
   onBalancePressed = () => {
-    if (!this.state.isBalanceUpdate && this.props.account.plaidAccessToken) {
-      this.setState(
-        function() {
-          return { fetchingPlaidBalance: true };
-        },
-        function() {
-          getPlaidBalance({
-            accessToken: this.props.account.plaidAccessToken,
-            accountId: this.props.account.plaidAccountId,
-          })
-            .then(
-              function(result) {
-                const currentBalance = result.data.accounts[0].balances.current;
-                let diff = currentBalance - this.props.account.balance;
-
-                this.setState({
-                  balance: currentBalance,
-                  amount: Math.abs(diff),
-                  type: diff < 0 ? 'debit' : 'credit',
-                  fetchingPlaidBalance: false,
-                });
-              }.bind(this)
-            )
-            .catch(
-              function() {
-                this.setState({ fetchingPlaidBalance: false });
-              }.bind(this)
-            );
-        }.bind(this)
-      );
-    }
-
     this.setState(function(state) {
       return {
         isBalanceUpdate: !state.isBalanceUpdate,
