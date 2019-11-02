@@ -29,10 +29,10 @@ function SpendTracking(props) {
     <View style={styles.row}>
       <View>
         <Text style={[styles.mainNumber, { color: theme.colors.green }]}>
-          {formatAmountToDisplay(earningThisMonth)}
+          {formatAmountToDisplay(earningThisMonth, false, 0)}
         </Text>
         <Text style={[styles.mainNumber, { color: theme.colors.red }]}>
-          {formatAmountToDisplay(spendingThisMonth)}
+          {formatAmountToDisplay(spendingThisMonth, false, 0)}
         </Text>
         <View style={styles.netLine}>
           <Text
@@ -55,10 +55,10 @@ function SpendTracking(props) {
       </View>
       <View>
         <Text style={[styles.mainNumber, { color: theme.colors.green }]}>
-          {formatAmountToDisplay(estimatedEarning)}
+          {formatAmountToDisplay(estimatedEarning, false, 0)}
         </Text>
         <Text style={[styles.mainNumber, { color: theme.colors.red }]}>
-          {formatAmountToDisplay(estimatedSpending)}
+          {formatAmountToDisplay(estimatedSpending, false, 0)}
         </Text>
         <View style={styles.netLine}>
           <Text

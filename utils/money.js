@@ -14,11 +14,16 @@ export function formatAmountToDisplay(
   if (arr[0] === '-') {
     sign = arr.shift();
   }
+
+  var thousandPosition = 3;
+  if (toFixed && toFixed > 0) {
+    thousandPosition = 3 + toFixed + 1;
+  }
   // adding thousand (,) separator.
   // this doesn't add the million (or more) separator,
   // as it's unlikely for expenses to be that high.
-  if (arr.length > 6) {
-    arr.splice(arr.length - 6, 0, ',');
+  if (arr.length > thousandPosition) {
+    arr.splice(arr.length - thousandPosition, 0, ',');
   }
 
   let display = `$ ${arr.join('')}`;

@@ -15,13 +15,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		26A8F6FD222A298D00E3EC2D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DDFEEC47F29C42C68E141271 /* AirMaps.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 11FA5C511C4A1296003AC2EE;
-			remoteInfo = AirMaps;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -52,7 +45,6 @@
 		87F339EADF13C397911DE6F3 /* Pods-lily.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lily.debug.xcconfig"; path = "Target Support Files/Pods-lily/Pods-lily.debug.xcconfig"; sourceTree = "<group>"; };
 		9CC5660114FDF91FE56CE4DE /* Pods-lily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lily.release.xcconfig"; path = "Target Support Files/Pods-lily/Pods-lily.release.xcconfig"; sourceTree = "<group>"; };
 		C3BF58CD2304552100944C3F /* lily.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = lily.entitlements; path = lily/lily.entitlements; sourceTree = "<group>"; };
-		DDFEEC47F29C42C68E141271 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -123,14 +115,6 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		26A8F6FA222A298D00E3EC2D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				26A8F6FE222A298D00E3EC2D /* libAirMaps.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -143,7 +127,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				DDFEEC47F29C42C68E141271 /* AirMaps.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -235,10 +218,6 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
-				{
-					ProductGroup = 26A8F6FA222A298D00E3EC2D /* Products */;
-					ProjectRef = DDFEEC47F29C42C68E141271 /* AirMaps.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -248,13 +227,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		26A8F6FE222A298D00E3EC2D /* libAirMaps.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libAirMaps.a;
-			remoteRef = 26A8F6FD222A298D00E3EC2D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -393,7 +365,6 @@
 				DEVELOPMENT_TEAM = MANXVB8K2R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keyboard-manager/ios/**",
 				);
 				INFOPLIST_FILE = lily/Info.plist;
@@ -426,7 +397,6 @@
 				DEVELOPMENT_TEAM = MANXVB8K2R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-keyboard-manager/ios/**",
 				);
 				INFOPLIST_FILE = lily/Info.plist;
