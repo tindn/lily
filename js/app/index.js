@@ -1,29 +1,35 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import React from 'react';
-import { AsyncStorage } from 'react-native';
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_DATABASE_URL,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_EMAIL,
+  FIREBASE_PASSWORD,
+} from 'react-native-dotenv';
 import 'react-native-gesture-handler';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import config from '../../config.json';
+import { persistor, store } from '../store';
 import theme from '../theme';
 import Contact from './contact';
 import Misc from './misc';
 import Money from './money';
-import { persistor, store } from '../store';
 
-firebase.initializeApp(config.firebase);
+firebase.initializeApp({
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  databaseURL: FIREBASE_DATABASE_URL,
+  projectId: FIREBASE_PROJECT_ID,
+});
 firebase
   .auth()
-  .signInWithEmailAndPassword(
-    config.firebaseAccount.email,
-    config.firebaseAccount.password
-  )
-  .catch(function(error) {
-    AsyncStorage.setItem('lily-firebase-init-error', JSON.stringify(error));
-  });
+  .signInWithEmailAndPassword(FIREBASE_EMAIL, FIREBASE_PASSWORD)
+  .catch(console.log);
 
 firebase.firestore();
 
