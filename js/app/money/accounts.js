@@ -7,27 +7,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import { connect } from 'react-redux';
-import theme from '../../theme';
 import Pill from '../../components/pill';
 import Screen from '../../components/screen';
+import theme from '../../theme';
 import Category from './category';
 import LineItem from './lineItem';
 
 class Accounts extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     headerTitle: 'Accounts',
-    headerRight: (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('SnapshotList');
-        }}
-        style={{ marginRight: 10 }}
-      >
-        <Icon name="barschart" size={25} color={theme.colors.primary} />
-      </TouchableOpacity>
-    ),
   });
 
   static getDerivedStateFromProps(props) {
