@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Alert,
   FlatList,
-  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,7 +10,7 @@ import {
 import Swipeable from 'react-native-swipeable-row';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { connect } from 'react-redux';
-import { deleteDocument, queryData } from '../../../firebaseHelper';
+import { deleteDocument } from '../../../firebaseHelper';
 import { toWeekDayDateString } from '../../../utils/date';
 import { formatAmountToDisplay } from '../../../utils/money';
 import Screen from '../../components/screen';
@@ -51,30 +50,10 @@ class MonthTransactions extends React.PureComponent {
     };
   }
 
-  fetchData = () => {
-    this.setState({ refreshing: true });
-    queryData('transactions', [
-      ['where', 'date', '>=', this.startOfMonth],
-      ['orderBy', 'date', 'desc'],
-    ])
-      .then(this.props.updateMonthTransactions)
-      .finally(() => {
-        this.setState({
-          refreshing: false,
-        });
-      });
-  };
-
   render() {
     return (
       <Screen>
         <FlatList
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.fetchData}
-            />
-          }
           data={this.state.data}
           keyExtractor={item => item.id}
           ListEmptyComponent={

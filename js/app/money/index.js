@@ -10,7 +10,7 @@ import MonthSetup from './monthSetup';
 import MonthTransactions from './monthTransactions';
 import SnapshotList from './snapshotList';
 import TransactionDetails from './transactionDetails';
-import VendorDetails from './vendorDetails';
+import VendorDetails from './vendors/vendorDetails';
 import Vendors from './vendors';
 
 const MoneyStack = createStackNavigator({
