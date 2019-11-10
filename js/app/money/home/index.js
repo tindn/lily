@@ -26,9 +26,7 @@ class Home extends React.PureComponent {
           }
           if (t.entryType == 'debit') {
             acc.spent = acc.spent + t.amount;
-            if (t.isFixed) {
-              acc.fixedSpent = acc.fixedSpent + t.amount;
-            } else {
+            if (!t.isFixed) {
               acc.variableSpent = acc.variableSpent + t.amount;
             }
             return acc;
@@ -46,7 +44,6 @@ class Home extends React.PureComponent {
       return {
         spendingThisMonth: summary.spent,
         earningThisMonth: summary.earned,
-        fixedSpendingThisMonth: summary.fixedSpent,
         variableSpendingThisMonth: summary.variableSpent,
       };
     }
@@ -60,7 +57,6 @@ class Home extends React.PureComponent {
       refreshing: false,
       spendingThisMonth: 0,
       earningThisMonth: 0,
-      fixedSpendingThisMonth: 0,
       variableSpendingThisMonth: 0,
       transactionListExpanded: false,
       transactionFormExpanded: false,

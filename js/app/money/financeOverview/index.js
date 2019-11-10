@@ -3,12 +3,12 @@ import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { connect } from 'react-redux';
-import { watchData } from '../../../firebaseHelper';
-import { calculateFinanceOverview } from '../../../utils/money';
-import Card from '../../components/card';
-import MoneyDisplay from '../../components/moneyDisplay';
-import Screen from '../../components/screen';
-import theme from '../../theme';
+import { watchData } from '../../../../firebaseHelper';
+import { calculateFinanceOverview } from '../../../../utils/money';
+import Card from '../../../components/card';
+import MoneyDisplay from '../../../components/moneyDisplay';
+import Screen from '../../../components/screen';
+import theme from '../../../theme';
 
 class FinanceOverview extends React.PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -71,7 +71,7 @@ class FinanceOverview extends React.PureComponent {
         <ScrollView>
           <Card
             style={{
-              marginTop: 20,
+              marginTop: 5,
             }}
             onPress={() => this.props.navigation.navigate('Accounts')}
           >

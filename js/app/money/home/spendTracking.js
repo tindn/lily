@@ -48,10 +48,10 @@ function SpendTracking(props) {
         </View>
       </View>
       <View>
+        <Text style={styles.supportive}>{daysLeftText}</Text>
         <Text style={styles.supportive}>
           {`(${formatAmountToDisplay(estimatedSpendingPerDay, false, 0)}/day)`}
         </Text>
-        <Text style={styles.supportive}>{daysLeftText}</Text>
       </View>
       <View>
         <Text style={[styles.mainNumber, { color: theme.colors.green }]}>
