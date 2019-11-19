@@ -31,7 +31,7 @@ firebase
   .signInWithEmailAndPassword(FIREBASE_EMAIL, FIREBASE_PASSWORD)
   .catch(console.log);
 
-firebase.firestore().enablePersistence();
+firebase.firestore();
 
 const TabNavigator = createBottomTabNavigator(
   {
