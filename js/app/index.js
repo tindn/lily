@@ -5,20 +5,23 @@ import {
   FIREBASE_API_KEY,
   FIREBASE_AUTH_DOMAIN,
   FIREBASE_DATABASE_URL,
-  FIREBASE_PROJECT_ID,
   FIREBASE_EMAIL,
   FIREBASE_PASSWORD,
+  FIREBASE_PROJECT_ID,
 } from 'react-native-dotenv';
+import DropdownAlert from 'react-native-dropdownalert';
 import 'react-native-gesture-handler';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { setRef } from '../log';
 import { persistor, store } from '../store';
 import theme from '../theme';
 import Contact from './contact';
 import Misc from './misc';
 import Money from './money';
+import Playground from './Playground';
 
 firebase.initializeApp({
   apiKey: FIREBASE_API_KEY,
@@ -57,7 +60,9 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <AppContainer />
+          <Playground />
+          {/* <AppContainer /> */}
+          <DropdownAlert ref={ref => setRef(ref)} />
         </PersistGate>
       </Provider>
     );
