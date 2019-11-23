@@ -1,14 +1,23 @@
+import firebase from 'firebase';
 import React from 'react';
-import { Button, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Button, Layout, Text } from 'react-native-ui-kitten';
 import { runMigrations } from '../db';
 
 export default function Playground() {
   return (
-    <View style={{ marginTop: 20 }}>
+    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <View>
         <Text>This is playground</Text>
       </View>
-      <Button title="Custom Action" onPress={() => runMigrations()} />
-    </View>
+      <Button onPress={() => runMigrations()}>Run Migrations</Button>
+      <Button
+        onPress={() => {
+          firebase.auth().signOut();
+        }}
+      >
+        Sign out
+      </Button>
+    </Layout>
   );
 }

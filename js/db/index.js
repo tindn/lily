@@ -7,9 +7,10 @@ SQLite.enablePromise(true);
 
 export var db;
 
-export function openDatabaseConnection() {
+export function openDatabaseConnection(uid) {
+  var userDatabaseFileName = 'lily-user-' + uid + '.db';
   db = SQLite.openDatabase({
-    name: 'lily.db',
+    name: userDatabaseFileName,
     location: 'Documents',
   }).then(DB => {
     db = DB;
