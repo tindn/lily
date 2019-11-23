@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { NavigationEvents } from 'react-navigation';
 import Screen from '../../../components/screen';
 import { getAllVendors } from '../../../db';
 import theme from '../../../theme';
@@ -16,26 +17,24 @@ function Vendors(props) {
   var [refreshing, setRefreshing] = useState(false);
   var [vendors, setVendors] = useState([]);
   var fetchData = useCallback(
-    function(useLoadingIndicator) {
-      if (useLoadingIndicator == undefined) {
-        useLoadingIndicator = true;
-      }
-      useLoadingIndicator && setRefreshing(true);
+    function(params = { useLoadingIndicator: true }) {
+      params.useLoadingIndicator && setRefreshing(true);
       getAllVendors()
         .then(setVendors)
         .finally(() => {
-          useLoadingIndicator && setRefreshing(false);
+          params.useLoadingIndicator && setRefreshing(false);
         });
     },
     [props.updateVendors]
   );
 
-  useEffect(function() {
-    fetchData(false);
-  }, []);
-
   return (
     <Screen>
+      <NavigationEvents
+        onWillFocus={function() {
+          fetchData({ useLocadingIndicator: false });
+        }}
+      />
       <FlatList
         data={vendors}
         refreshControl={
