@@ -11,7 +11,6 @@ const persistConfig = {
     'monthlyAnalytics',
     'accounts',
     'monthTransactions',
-    'vendors',
     'currentMonthSetup',
   ],
 };

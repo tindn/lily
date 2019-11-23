@@ -1,5 +1,5 @@
 import geolocation from '@react-native-community/geolocation';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Alert,
   Button,
@@ -8,216 +8,201 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { connect } from 'react-redux';
-import {
-  addDocument,
-  deleteDocument,
-  updateDocument,
-} from '../../../../firebaseHelper';
-import theme from '../../../theme';
 import { cleanCoordinate } from '../../../../utils/location';
 import { createMapUrl } from '../../../../utils/map';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
+import { addVendor, deleteVendor, saveVendor } from '../../../db/vendors';
 import sharedStyles from '../../../sharedStyles';
+import theme from '../../../theme';
 import MapLocationInput from '../mapLocationInput';
 
-class VendorDetails extends React.PureComponent {
-  static navigationOptions = ({ navigation }) => {
-    const { params } = navigation.state;
-    return {
-      title:
-        params && params.vendorId ? unescape(params.vendorId) : 'New Vendor',
-    };
-  };
-
-  static getDerivedStateFromProps(props, state) {
-    if (!state.id && props.vendor) {
-      return {
-        ...props.vendor,
-      };
+function VendorDetails(props) {
+  var [name, setName] = useState();
+  var [id, setId] = useState();
+  var [locations, setLocations] = useState([]);
+  useState(function() {
+    var vendor = props.navigation.getParam('vendor');
+    if (vendor) {
+      setName(unescape(vendor.name));
+      setLocations(vendor.locations);
+      setId(vendor.id);
     }
-    return null;
-  }
+  });
 
-  state = {
-    locations: [],
-  };
+  var addLocation = useCallback(
+    coord => {
+      setLocations([...locations, coord]);
+    },
+    [setLocations]
+  );
 
-  addLocation = coord => {
-    const newLocations = [...this.state.locations];
-    newLocations.push(coord);
-    this.setState({ locations: newLocations });
-  };
-
-  removeLocation = index => {
-    const newLocations = [...this.state.locations];
+  var removeLocation = useCallback(index => {
+    const newLocations = [...locations];
     newLocations.splice(index, 1);
-    this.setState({ locations: newLocations });
-  };
+    setLocations(newLocations);
+  }, []);
 
-  updateLocation = (index, coord) => {
-    const newLocations = [...this.state.locations];
+  var updateLocation = useCallback((index, coord) => {
+    const newLocations = [...locations];
     newLocations[index] = coord;
-    this.setState({ locations: newLocations });
-  };
+    setLocations(newLocations);
+  }, []);
 
-  render() {
-    return (
-      <Screen style={{ alignContent: 'space-around' }}>
-        <ScrollView keyboardShouldPersistTaps="always">
-          {!this.state.id && (
-            <View
-              style={[
-                sharedStyles.formRow,
-                sharedStyles.borderBottom,
-                sharedStyles.formFirstRow,
-                { paddingVertical: 20 },
-              ]}
-            >
-              <TextInput
-                value={this.state.newId}
-                placeholder="Name"
-                onChangeText={text => this.setState({ newId: text })}
-                style={{ fontSize: 18 }}
-                autoFocus={true}
-              />
-            </View>
-          )}
-          <View style={{ marginTop: 10, paddingLeft: 20 }}>
-            {this.state.locations &&
-              this.state.locations.map((location, index) => (
-                <View
-                  key={index}
-                  style={{
-                    height: 220,
-                    marginBottom: 20,
-                    flexDirection: 'row',
-                    alignItems: 'center',
+  return (
+    <Screen style={{ alignContent: 'space-around' }}>
+      <ScrollView keyboardShouldPersistTaps="always">
+        <View
+          style={[
+            sharedStyles.formRow,
+            sharedStyles.borderBottom,
+            sharedStyles.formFirstRow,
+            { paddingVertical: 20 },
+          ]}
+        >
+          <TextInput
+            value={name}
+            placeholder="Name"
+            onChangeText={setName}
+            style={{ fontSize: 18 }}
+            autoFocus={true}
+          />
+        </View>
+        <View style={{ marginTop: 10, paddingLeft: 20 }}>
+          {locations &&
+            locations.map((location, index) => (
+              <View
+                key={index}
+                style={{
+                  height: 220,
+                  marginBottom: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <MapLocationInput
+                  coord={location}
+                  title={name}
+                  style={[sharedStyles.shadow2, { flex: 1 }]}
+                  mapStyle={{ borderRadius: 10 }}
+                  removeLocation={() => {
+                    removeLocation(index);
                   }}
-                >
-                  <MapLocationInput
-                    coord={location}
-                    title={unescape(this.state.id)}
-                    style={[sharedStyles.shadow2, { flex: 1 }]}
-                    mapStyle={{ borderRadius: 10 }}
-                    removeLocation={() => {
-                      this.removeLocation(index);
-                    }}
-                    updateLocation={e => {
-                      this.updateLocation(
-                        index,
-                        cleanCoordinate(e.nativeEvent.coordinate)
-                      );
-                    }}
-                    markerDraggable={true}
-                  />
-                  <Pill
-                    label="Go"
-                    onPress={() => {
-                      Linking.openURL(
-                        createMapUrl({
-                          travelMode: 'd',
-                          q: unescape(this.state.id),
-                          latitude: location.latitude,
-                          longitude: location.longitude,
-                        })
-                      );
-                    }}
-                    style={{ padding: 12, marginHorizontal: 10 }}
-                    color={theme.colors.secondary}
-                    backgroundColor={theme.colors.primary}
-                  />
-                </View>
-              ))}
-          </View>
-          <View
-            style={{
-              paddingLeft: 40,
-              paddingRight: 100,
+                  updateLocation={e => {
+                    updateLocation(
+                      index,
+                      cleanCoordinate(e.nativeEvent.coordinate)
+                    );
+                  }}
+                  markerDraggable={true}
+                />
+                <Pill
+                  label="Go"
+                  onPress={() => {
+                    Linking.openURL(
+                      createMapUrl({
+                        travelMode: 'd',
+                        q: name,
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                      })
+                    );
+                  }}
+                  style={{ padding: 12, marginHorizontal: 10 }}
+                  color={theme.colors.secondary}
+                  backgroundColor={theme.colors.primary}
+                />
+              </View>
+            ))}
+        </View>
+        <View
+          style={{
+            paddingLeft: 40,
+            paddingRight: 100,
+          }}
+        >
+          <Pill
+            onPress={() => {
+              geolocation.getCurrentPosition(
+                position => {
+                  addLocation(cleanCoordinate(position.coords));
+                },
+                null,
+                { enableHighAccuracy: false }
+              );
             }}
-          >
-            <Pill
+            label="Add location"
+            style={{ padding: 12 }}
+            color={theme.colors.secondary}
+            backgroundColor={theme.colors.primary}
+            textStyle={{ textAlign: 'center' }}
+          />
+        </View>
+        <View style={[{ marginTop: 40 }, sharedStyles.actionButton]}>
+          {id ? (
+            <Button
+              title="Save"
               onPress={() => {
-                geolocation.getCurrentPosition(
-                  position => {
-                    this.addLocation(cleanCoordinate(position.coords));
-                  },
-                  null,
-                  { enableHighAccuracy: false }
+                saveVendor({
+                  id,
+                  name,
+                  locations,
+                });
+                props.navigation.pop();
+              }}
+            />
+          ) : (
+            <Button
+              title="Add"
+              onPress={() => {
+                addVendor({
+                  name,
+                  locations,
+                });
+                props.navigation.pop();
+              }}
+            />
+          )}
+        </View>
+        {id && (
+          <View style={[sharedStyles.actionButton, { borderBottomWidth: 0 }]}>
+            <Button
+              title="Delete"
+              onPress={() => {
+                Alert.alert(
+                  'Confirm',
+                  'Do you want to delete this transaction?',
+                  [
+                    {
+                      text: 'Cancel',
+                      onPress: function() {},
+                    },
+                    {
+                      text: 'Delete',
+                      onPress: () => {
+                        deleteVendor(id);
+                        props.navigation.pop();
+                      },
+                      style: 'destructive',
+                    },
+                  ]
                 );
               }}
-              label="Add location"
-              style={{ padding: 12 }}
-              color={theme.colors.secondary}
-              backgroundColor={theme.colors.primary}
-              textStyle={{ textAlign: 'center' }}
+              color={theme.colors.red}
             />
           </View>
-          <View style={[{ marginTop: 40 }, sharedStyles.actionButton]}>
-            {this.state.id ? (
-              <Button
-                title="Save"
-                onPress={() => {
-                  updateDocument('vendors', this.state.id, {
-                    locations: this.state.locations,
-                  });
-                  this.props.navigation.pop();
-                }}
-              />
-            ) : (
-              <Button
-                title="Add"
-                onPress={() => {
-                  addDocument(
-                    'vendors',
-                    { locations: this.state.locations },
-                    escape(this.state.newId)
-                  );
-                  this.props.navigation.pop();
-                }}
-              />
-            )}
-          </View>
-          {this.state.id && (
-            <View style={[sharedStyles.actionButton, { borderBottomWidth: 0 }]}>
-              <Button
-                title="Delete"
-                onPress={() => {
-                  Alert.alert(
-                    'Confirm',
-                    'Do you want to delete this transaction?',
-                    [
-                      {
-                        text: 'Cancel',
-                        onPress: function() {},
-                      },
-                      {
-                        text: 'Delete',
-                        onPress: () => {
-                          deleteDocument('vendors', this.state.id);
-                          this.props.navigation.pop();
-                        },
-                        style: 'destructive',
-                      },
-                    ]
-                  );
-                }}
-                color={theme.colors.red}
-              />
-            </View>
-          )}
-        </ScrollView>
-      </Screen>
-    );
-  }
+        )}
+      </ScrollView>
+    </Screen>
+  );
 }
 
-function mapStateToProps(state, ownProps) {
-  const vendor = state.vendors[ownProps.navigation.state.params.vendorId];
+VendorDetails.navigationOptions = function({ navigation }) {
+  const { params } = navigation.state;
   return {
-    vendor,
+    title:
+      params && params.vendor ? unescape(params.vendor.name) : 'New Vendor',
   };
-}
+};
 
-export default connect(mapStateToProps)(VendorDetails);
+export default VendorDetails;

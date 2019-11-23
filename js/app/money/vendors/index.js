@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -7,79 +7,80 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { queryData } from '../../../../firebaseHelper';
-import theme from '../../../theme';
-import Screen from '../../../components/screen';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Screen from '../../../components/screen';
+import { getAllVendors } from '../../../db';
+import theme from '../../../theme';
 
-class Vendors extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Vendors',
-    headerRight: (
-      <TouchableOpacity
-        onPress={() => navigation.navigate('VendorDetails', {})}
-        style={{ marginRight: 10 }}
-      >
-        <Icon name="plus" size={25} color={theme.colors.iosBlue} />
-      </TouchableOpacity>
-    ),
-  });
-  state = {
-    refreshing: false,
-  };
-
-  fetchData = () => {
-    this.setState({ refreshing: true });
-    queryData('vendors', [])
-      .then(this.props.updateVendors)
-      .finally(() => {
-        this.setState({
-          refreshing: false,
+function Vendors(props) {
+  var [refreshing, setRefreshing] = useState(false);
+  var [vendors, setVendors] = useState([]);
+  var fetchData = useCallback(
+    function(useLoadingIndicator) {
+      if (useLoadingIndicator == undefined) {
+        useLoadingIndicator = true;
+      }
+      useLoadingIndicator && setRefreshing(true);
+      getAllVendors()
+        .then(setVendors)
+        .finally(() => {
+          useLoadingIndicator && setRefreshing(false);
         });
-      });
-  };
+    },
+    [props.updateVendors]
+  );
 
-  render() {
-    return (
-      <Screen>
-        <FlatList
-          data={this.props.vendors}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.fetchData}
-            />
-          }
-          keyExtractor={item => item}
-          ListEmptyComponent={
-            <View style={styles.emptyComponent}>
-              <Text>No vendors found.</Text>
-            </View>
-          }
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
-                style={styles.item}
-                onPress={() => {
-                  this.props.navigation.navigate('VendorDetails', {
-                    vendorId: item,
-                  });
-                }}
-              >
-                <View>
-                  <Text style={styles.transactionItemMemo}>
-                    {unescape(item)}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </Screen>
-    );
-  }
+  useEffect(function() {
+    fetchData(false);
+  }, []);
+
+  return (
+    <Screen>
+      <FlatList
+        data={vendors}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+        }
+        keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={
+          <View style={styles.emptyComponent}>
+            <Text>No vendors found.</Text>
+          </View>
+        }
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => {
+                props.navigation.navigate('VendorDetails', {
+                  vendor: item,
+                });
+              }}
+            >
+              <View>
+                <Text style={styles.transactionItemMemo}>
+                  {unescape(item.name)}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
+    </Screen>
+  );
 }
+
+Vendors.navigationOptions = ({ navigation }) => ({
+  title: 'Vendors',
+  headerRight: (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('VendorDetails', {})}
+      style={{ marginRight: 10 }}
+    >
+      <Icon name="plus" size={25} color={theme.colors.iosBlue} />
+    </TouchableOpacity>
+  ),
+});
 
 const styles = StyleSheet.create({
   emptyComponent: {
@@ -103,24 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapStateToProps(state) {
-  return {
-    vendors: Object.keys(state.vendors).sort(),
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    updateVendors(vendors) {
-      dispatch({
-        type: 'UPDATE_VENDORS',
-        payload: vendors,
-      });
-    },
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Vendors);
+export default Vendors;

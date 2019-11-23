@@ -1,4 +1,4 @@
-export default function Vendors(state = {}, action) {
+export default function vendors(state = {}, action) {
   switch (action.type) {
     case 'UPDATE_VENDORS':
       return action.payload;

@@ -79,7 +79,7 @@ class Home extends React.PureComponent {
       this.props.updateMonthTransactions
     );
 
-    this.unsubscribe2 = watchData('vendors', [], this.props.updateVendors);
+    // this.unsubscribe2 = watchData('vendors', [], this.props.updateVendors);
     this.unsubscribe3 = watchData(
       'monthlyAnalytics',
       [],
@@ -89,7 +89,7 @@ class Home extends React.PureComponent {
 
   componentWillUnmount() {
     this.unsubscribe();
-    this.unsubscribe2();
+    // this.unsubscribe2();
     this.unsubscribe3();
   }
 
@@ -194,7 +194,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
