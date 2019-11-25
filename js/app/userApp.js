@@ -6,7 +6,11 @@ import Misc from './misc';
 import Money from './money';
 import Playground from './Playground';
 import CurrentUserContext from './currentUserContext';
-import { openDatabaseConnection, closeDatabaseConnection } from '../db';
+import {
+  openDatabaseConnection,
+  closeDatabaseConnection,
+  runMigrations,
+} from '../db';
 
 const TabNavigator = createBottomTabNavigator(
   {
@@ -31,7 +35,7 @@ export default function UserApp(props) {
   var currentUser = useContext(CurrentUserContext);
   useEffect(
     function() {
-      openDatabaseConnection(currentUser.user.uid);
+      openDatabaseConnection(currentUser.user.uid).then(runMigrations);
       return function() {
         closeDatabaseConnection();
       };

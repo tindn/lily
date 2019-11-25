@@ -1,18 +1,17 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react';
 import {
-  // eslint-disable-next-line react-native/split-platform-components
-  DatePickerIOS,
   Modal,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  SafeAreaView,
 } from 'react-native';
-import theme from '../theme';
 import { toSimpleDateString } from '../../utils/date';
-import OutlineButton from './outlineButton';
 import sharedStyles from '../sharedStyles';
+import theme from '../theme';
+import OutlineButton from './outlineButton';
 
 class DateInput extends React.PureComponent {
   state = {
@@ -42,11 +41,13 @@ class DateInput extends React.PureComponent {
           visible={this.state.dateModalVisible}
         >
           <SafeAreaView style={sharedStyles.modalContainer}>
-            <DatePickerIOS
+            <DateTimePicker
               mode={this.props.mode || 'datetime'}
               minuteInterval={15}
-              date={this.props.date}
-              onDateChange={this.props.onChange}
+              value={this.props.date}
+              onChange={(event, date) => {
+                this.props.onChange(date);
+              }}
             />
             <OutlineButton
               onPress={this.toggleModal}

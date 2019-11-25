@@ -5,6 +5,10 @@ import { Button, Layout, Text } from 'react-native-ui-kitten';
 import Icon from 'react-native-vector-icons/AntDesign';
 import uuid from 'uuid/v1';
 import { db, runMigrations } from '../db';
+import transactions from '../db/transactions.json';
+import accounts from '../db/accounts.json';
+import accountEntries from '../db/accountEntries.json';
+import { getAllFromTable } from '../db/shared';
 
 export default function Playground() {
   return (
@@ -32,8 +36,45 @@ export default function Playground() {
               res.forEach(processVendor);
             });
         }}
+        disabled
       >
-        Sync Vendors
+        Import Vendors
+      </Button>
+      <Button
+        style={{ marginVertical: 5 }}
+        onPress={importTransactions}
+        disabled
+      >
+        Import Transactions
+      </Button>
+      <Button
+        style={{ marginVertical: 5 }}
+        onPress={() => {
+          fetch('http://localhost:5000/lily-cc62d/us-central1/monthly')
+            .then(res => res.json())
+            .then(async res => {
+              processMonthlies(res);
+            });
+        }}
+        disabled
+      >
+        Import Monthly Analytics
+      </Button>
+      <Button style={{ marginVertical: 5 }} onPress={importAccounts} disabled>
+        Import Accounts
+      </Button>
+      <Button
+        style={{ marginVertical: 5 }}
+        onPress={() => {
+          fetch('http://localhost:5000/lily-cc62d/us-central1/accountSnapshots')
+            .then(res => res.json())
+            .then(async res => {
+              processSnapshots(res);
+            });
+        }}
+        disabled
+      >
+        Import Account Snapshots
       </Button>
     </Layout>
   );
@@ -50,12 +91,14 @@ function processVendor(vendor) {
   var vendorId = uuid();
   var sqlBatch = [];
 
-  var updated_script = 'datetime()';
+  var updated_script = Date.now().toString();
   if (vendor._updatedOn) {
-    updated_script = `datetime(${vendor._updatedOn._seconds}, 'unixepoch')`;
+    var ms = vendor._updatedOn._nanoseconds / 1000000;
+    var timestamp = vendor._updatedOn._seconds * 1000 + ms;
+    updated_script = timestamp.toString();
   }
 
-  var insertVendorScript = `INSERT INTO vendors (id, name, updated_on_utc) VALUES ('${vendorId}','${vendor.id}', ${updated_script})`;
+  var insertVendorScript = `INSERT INTO vendors (id, name, updated_on) VALUES ('${vendorId}','${vendor.id}', ${updated_script})`;
   sqlBatch.push(insertVendorScript);
 
   if (vendor.locations && vendor.locations.length) {
@@ -65,7 +108,7 @@ function processVendor(vendor) {
         return `('${coordinateId}',${l.latitude},${l.longitude},'${vendorId}')`;
       })
       .join(',');
-    var coordinatesScript = `INSERT INTO coordinates (id, latitude, longitude, vendor_id) VALUES ${coordinates}`;
+    var coordinatesScript = `INSERT INTO vendor_coordinates (id, latitude, longitude, vendor_id) VALUES ${coordinates}`;
     sqlBatch.push(coordinatesScript);
   }
   db.sqlBatch(sqlBatch).catch(e => {
@@ -74,4 +117,113 @@ function processVendor(vendor) {
       e.message
     );
   });
+}
+
+async function importTransactions() {
+  var allVendors = await getAllFromTable('vendors');
+  var vendorLookup = allVendors.reduce((acc, v) => {
+    acc[v.name] = v.id;
+    return acc;
+  }, {});
+
+  var scripts = transactions.map(t => {
+    var ms = t.date._nanoseconds / 1000000;
+    var timestamp = t.date._seconds * 1000 + ms;
+    var addon_ms = t._addedOn._nanoseconds / 1000000;
+    var addon_timestamp = t._addedOn._seconds * 1000 + addon_ms;
+    var update_timestamp = 'NULL';
+    if (t._updatedOn) {
+      var update_ms = t._updatedOn._nanoseconds / 1000000;
+      update_timestamp = t._updatedOn._seconds * 1000 + update_ms;
+    }
+    var vendorId = 'NULL';
+
+    if (vendorLookup[escape(t.vendor)]) {
+      vendorId = `'${vendorLookup[escape(t.vendor)]}'`;
+    }
+    var discretionary = t.isFixed ? 0 : 1;
+    var transaction_id = uuid();
+    return `
+    INSERT INTO transactions VALUES ('${transaction_id}', '${t.entryType}', ${
+      t.amount
+    }, ${timestamp}, ${addon_timestamp}, ${update_timestamp}, '${JSON.stringify(
+      t.coords
+    )}', '${escape(t.memo)}', ${vendorId}, ${discretionary})
+            `;
+  });
+  return db.sqlBatch(scripts);
+}
+
+function processMonthlies(monthlies) {
+  var scripts = monthlies.map(function(m) {
+    var id = uuid();
+    var startDate =
+      m.startDate._seconds * 1000 + m.startDate._nanoseconds / 1000000;
+    var endDate = m.endDate._seconds * 1000 + m.endDate._nanoseconds / 1000000;
+    return `
+    INSERT INTO monthly_analytics VALUES ('${id}', '${m.id}', ${startDate}, ${endDate}, '${m.earned}', '${m.spent}');
+    `;
+  });
+  return db.sqlBatch(scripts);
+}
+
+function importAccounts() {
+  var accountMap = accounts.reduce(function(acc, a) {
+    a.entries = [];
+    acc[a.id] = a;
+    return acc;
+  }, {});
+  accountEntries.forEach(function(e) {
+    if (accountMap[e.accountId]) {
+      accountMap[e.accountId].entries.push(e);
+    } else {
+      // console.log('no account found for ', e);
+    }
+  });
+  var scripts = Object.values(accountMap).reduce(function(acc, a) {
+    var account_id = uuid();
+    var account_updated_on = Date.now().toString();
+    if (a._updatedOn) {
+      account_updated_on = a._updatedOn._seconds * 1000;
+    }
+    acc.push(
+      `
+      INSERT INTO accounts VALUES ('${account_id}','${a.name}','${a.type}', '${a.category}',${a.balance},${account_updated_on});`
+    );
+    if (a.entries && a.entries.length) {
+      a.entries.forEach(function(e) {
+        var entry_id = uuid();
+        var entry_date = e.date._seconds * 1000 + e.date._nanoseconds / 1000000;
+        var entry_updated = e._updatedOn._seconds * 1000;
+        acc.push(
+          `
+          INSERT INTO account_entries VALUES ('${entry_id}',${e.amount},'${e.memo}','${e.type}',${entry_date},${entry_updated},NULL,'${account_id}');`
+        );
+      });
+    }
+    return acc;
+  }, []);
+  // console.log(scripts);
+  db.sqlBatch(scripts);
+}
+
+async function processSnapshots(snapshots) {
+  var accounts = await getAllFromTable('accounts');
+  var accountLookupByName = accounts.reduce(function(acc, a) {
+    acc[a.name] = a.id;
+    return acc;
+  }, {});
+  var scripts = snapshots.reduce(function(acc, snap) {
+    var snapshot_date =
+      snap._updatedOn._seconds * 1000 + snap._updatedOn._nanoseconds / 1000000;
+    Object.values(snap)
+      .filter(a => a.name)
+      .forEach(function(a) {
+        var snapshot_id = uuid();
+        acc.push(`
+      INSERT INTO account_snapshots VALUES ('${snapshot_id}', ${a.balance}, ${snapshot_date},'${accountLookupByName[a.name]}');`);
+      });
+    return acc;
+  }, []);
+  db.sqlBatch(scripts);
 }

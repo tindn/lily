@@ -2,13 +2,14 @@ import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../../../firebaseHelper';
-import theme from '../../../theme';
 import { by } from '../../../../utils/sort';
-import Screen from '../../../components/screen';
 import Card from '../../../components/card';
+import Screen from '../../../components/screen';
+import theme from '../../../theme';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import SpendTracking from './spendTracking';
-import TransactionAdd from '../transactionAdd';
+import TransactionAdd from './transactionAdd';
+import TransactionForm from './transactionForm';
 
 class Home extends React.PureComponent {
   static navigationOptions = {
@@ -60,6 +61,7 @@ class Home extends React.PureComponent {
       variableSpendingThisMonth: 0,
       transactionListExpanded: false,
       transactionFormExpanded: false,
+      showTransactionForm: false,
     };
   }
 
@@ -79,7 +81,6 @@ class Home extends React.PureComponent {
       this.props.updateMonthTransactions
     );
 
-    // this.unsubscribe2 = watchData('vendors', [], this.props.updateVendors);
     this.unsubscribe3 = watchData(
       'monthlyAnalytics',
       [],
@@ -89,7 +90,6 @@ class Home extends React.PureComponent {
 
   componentWillUnmount() {
     this.unsubscribe();
-    // this.unsubscribe2();
     this.unsubscribe3();
   }
 
@@ -101,7 +101,8 @@ class Home extends React.PureComponent {
       <Screen>
         <ScrollView
           keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="always"
+          keyboardShuldPersistTaps="always"
+          ref={ref => (this.scrollviewRef = ref)}
         >
           <Card
             onPress={() => {
@@ -160,8 +161,27 @@ class Home extends React.PureComponent {
               Overview
             </Text>
           </Card>
+
+          {this.state.showTransactionForm ? (
+            <TransactionForm
+              collapse={() => {
+                this.setState({ showTransactionForm: false });
+              }}
+              style={{ marginBottom: 30, marginTop: 20 }}
+            />
+          ) : null}
         </ScrollView>
-        <TransactionAdd />
+        {!this.state.showTransactionForm ? (
+          <TransactionAdd
+            onPress={() => {
+              this.setState({ showTransactionForm: true });
+              // eslint-disable-next-line no-undef
+              setTimeout(() => {
+                this.scrollviewRef.scrollToEnd({ animated: true });
+              }, 100);
+            }}
+          />
+        ) : null}
       </Screen>
     );
   }
@@ -176,12 +196,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    updateVendors(vendors) {
-      dispatch({
-        type: 'UPDATE_VENDORS',
-        payload: vendors,
-      });
-    },
     updateMonthTransactions(transactions) {
       dispatch({ type: 'UPDATE_MONTH_TRANSACTIONS', transactions });
     },
