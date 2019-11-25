@@ -3,7 +3,7 @@ import { db, getAllFromTable } from './shared';
 
 export async function getAllVendors() {
   var vendors = await getAllFromTable('vendors');
-  var coordinates = await getAllFromTable('coordinates');
+  var coordinates = await getAllFromTable('vendor_coordinates');
   var coordinatesByVendor = coordinates.reduce(function(acc, coord) {
     if (acc[coord.vendor_id] != undefined) {
       acc[coord.vendor_id].push(coord);

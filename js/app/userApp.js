@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import theme from '../theme';
 import Contact from './contact';
@@ -20,7 +20,7 @@ const TabNavigator = createBottomTabNavigator(
     Playground,
   },
   {
-    initialRouteName: 'Playground',
+    initialRouteName: 'Money',
     defaultNavigationOptions: {
       tabBarLabel: () => null,
     },
@@ -33,9 +33,14 @@ const TabNavigator = createBottomTabNavigator(
 
 export default function UserApp(props) {
   var currentUser = useContext(CurrentUserContext);
+  var [isDbReady, setIsDbReady] = useState(false);
   useEffect(
     function() {
-      openDatabaseConnection(currentUser.user.uid).then(runMigrations);
+      openDatabaseConnection(currentUser.user.uid)
+        .then(runMigrations)
+        .then(function() {
+          setIsDbReady(true);
+        });
       return function() {
         closeDatabaseConnection();
       };
@@ -43,7 +48,7 @@ export default function UserApp(props) {
     [currentUser.user.uid]
   );
 
-  return <TabNavigator navigation={props.navigation} />;
+  return isDbReady ? <TabNavigator navigation={props.navigation} /> : null;
 }
 
 UserApp.router = TabNavigator.router;

@@ -1,8 +1,5 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { connect } from 'react-redux';
-import { watchData } from '../../../../firebaseHelper';
-import { by } from '../../../../utils/sort';
 import Card from '../../../components/card';
 import Screen from '../../../components/screen';
 import theme from '../../../theme';
@@ -10,24 +7,38 @@ import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
 import TransactionForm from './transactionForm';
+import { getAllFromTable } from '../../../db/shared';
 
-class Home extends React.PureComponent {
+class Home extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
-  static getDerivedStateFromProps(props) {
-    if (props.monthTransactions) {
-      const today = new Date();
-      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-      const summary = props.monthTransactions.reduce(
+  constructor(props) {
+    super(props);
+    this.state = {
+      spendingThisMonth: 0,
+      earningThisMonth: 0,
+      variableSpendingThisMonth: 0,
+      showTransactionForm: false,
+      lastThreeMonths: [],
+    };
+  }
+
+  componentDidMount() {
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    var fourthMonthsAgo = new Date(Date.now() - 3600000 * 24 * 120).getTime();
+
+    getAllFromTable(
+      'transactions',
+      ` WHERE date_time > ${startOfMonth.getTime()} ORDER BY date_time DESC `
+    ).then(data => {
+      var summary = data.reduce(
         function(acc, t) {
-          if (t.date < startOfMonth) {
-            return acc;
-          }
-          if (t.entryType == 'debit') {
+          if (t.entry_type == 'debit') {
             acc.spent = acc.spent + t.amount;
-            if (!t.isFixed) {
+            if (t.is_discretionary) {
               acc.variableSpent = acc.variableSpent + t.amount;
             }
             return acc;
@@ -39,64 +50,23 @@ class Home extends React.PureComponent {
           }
           return acc;
         },
-        { spent: 0, earned: 0, fixedSpent: 0, variableSpent: 0 }
+        { spent: 0, earned: 0, variableSpent: 0 }
       );
-
-      return {
+      this.setState({
         spendingThisMonth: summary.spent,
         earningThisMonth: summary.earned,
         variableSpendingThisMonth: summary.variableSpent,
-      };
-    }
-
-    return null;
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      refreshing: false,
-      spendingThisMonth: 0,
-      earningThisMonth: 0,
-      variableSpendingThisMonth: 0,
-      transactionListExpanded: false,
-      transactionFormExpanded: false,
-      showTransactionForm: false,
-    };
-  }
-
-  currentMonthAnalyticsId = new Date().toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-  });
-
-  componentDidMount() {
-    const transactionsStartDate = new Date(Date.now() - 3600000 * 24 * 35);
-    this.unsubscribe = watchData(
-      'transactions',
-      [
-        ['where', 'date', '>=', transactionsStartDate],
-        ['orderBy', 'date', 'desc'],
-      ],
-      this.props.updateMonthTransactions
-    );
-
-    this.unsubscribe3 = watchData(
-      'monthlyAnalytics',
-      [],
-      this.props.updateMonthlyAnalytics
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-    this.unsubscribe3();
+      });
+    });
+    getAllFromTable(
+      'monthly_analytics',
+      ` WHERE start_date > ${fourthMonthsAgo} AND end_date < ${today.getTime()} ORDER BY start_date DESC `
+    ).then(data => {
+      this.setState({ lastThreeMonths: data });
+    });
   }
 
   render() {
-    const lastThreeMonths = Object.values(this.props.monthlyAnalytics)
-      .sort(by('startDate', 'desc'))
-      .slice(1, 4);
     return (
       <Screen>
         <ScrollView
@@ -124,18 +94,19 @@ class Home extends React.PureComponent {
               justifyContent: 'space-around',
             }}
           >
-            {lastThreeMonths &&
-              lastThreeMonths.map(month => (
-                <Card
-                  key={month.id}
-                  onPress={() => {
-                    this.props.navigation.navigate('MonthlyAnalytics');
-                  }}
-                  style={{ paddingHorizontal: 15 }}
-                >
-                  <MonthlyAnalyticsOverview month={month} />
-                </Card>
-              ))}
+            {this.state.lastThreeMonths.length
+              ? this.state.lastThreeMonths.map(month => (
+                  <Card
+                    key={month.id}
+                    onPress={() => {
+                      this.props.navigation.navigate('MonthlyAnalytics');
+                    }}
+                    style={{ paddingHorizontal: 15 }}
+                  >
+                    <MonthlyAnalyticsOverview month={month} />
+                  </Card>
+                ))
+              : null}
           </View>
           <Card
             style={{
@@ -187,25 +158,4 @@ class Home extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    monthTransactions: state.monthTransactions,
-    monthlyAnalytics: state.monthlyAnalytics,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    updateMonthTransactions(transactions) {
-      dispatch({ type: 'UPDATE_MONTH_TRANSACTIONS', transactions });
-    },
-    updateMonthlyAnalytics(analytics) {
-      dispatch({
-        type: 'UPDATE_MONTHLY_ANALYTICS',
-        payload: analytics,
-      });
-    },
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

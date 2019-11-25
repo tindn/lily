@@ -19,7 +19,7 @@ function MonthlyAnalyticsOverview(props) {
           color: theme.colors.darkGray,
         }}
       >
-        {month.id}
+        {month.name}
       </Text>
       <Text
         style={{
