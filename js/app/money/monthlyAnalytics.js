@@ -1,95 +1,71 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
-import { connect } from 'react-redux';
-import { queryData } from '../../../firebaseHelper';
+import { NavigationEvents } from 'react-navigation';
 import { formatAmountToDisplay } from '../../../utils/money';
-import { by } from '../../../utils/sort';
 import Screen from '../../components/screen';
+import { getAllFromTable } from '../../db/shared';
 import theme from '../../theme';
 
-class MonthlyAnalytics extends React.PureComponent {
-  static navigationOptions = {
-    headerTitle: 'Monthly Analytics',
-  };
-
-  static getDerivedStateFromProps(props) {
-    if (props.monthlyAnalytics) {
-      const data = Object.values(props.monthlyAnalytics);
-      data.sort(by('startDate', 'desc'));
-      return { data };
-    }
-    return null;
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      isRefreshing: true,
-    };
-  }
-
-  fetchData = () => {
-    this.setState({ refreshing: true });
-    queryData('monthlyAnalytics')
-      .then(this.props.updateMonthlyAnalytics)
+function MonthlyAnalytics() {
+  const [data, setData] = useState([]);
+  var [refreshing, setRefreshing] = useState(false);
+  var fetchData = useCallback(function(params = { useLoadingIndicator: true }) {
+    params.useLoadingIndicator && setRefreshing(true);
+    getAllFromTable('monthly_analytics', 'ORDER BY start_date DESC')
+      .then(setData)
       .finally(() => {
-        this.setState({
-          refreshing: false,
-        });
+        params.useLoadingIndicator && setRefreshing(false);
       });
-  };
+  }, []);
 
-  render() {
-    return (
-      <Screen>
-        <FlatList
-          data={this.state.data}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.fetchData}
-            />
-          }
-          ListEmptyComponent={
-            <View style={styles.emptyComponent}>
-              <Text>No data.</Text>
-            </View>
-          }
-          renderItem={({ item }) => {
-            const diff = item.earned - item.spent;
-            const color = diff >= 0 ? theme.colors.green : theme.colors.red;
-            return (
-              <View style={styles.listItem}>
-                <View>
-                  <Text style={styles.month}>{item.id}</Text>
-                  <Text style={{ color: theme.colors.green }}>
-                    {` ${formatAmountToDisplay(item.earned)}`}
-                  </Text>
-                  <Text style={{ color: theme.colors.red }}>
-                    {`${formatAmountToDisplay(-item.spent, true)}`}
-                  </Text>
-                </View>
-                <Text style={[styles.amount, { color }]}>
-                  {formatAmountToDisplay(diff, true)}
+  return (
+    <Screen>
+      <NavigationEvents
+        onWillFocus={function() {
+          fetchData({ useLocadingIndicator: false });
+        }}
+      />
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyComponent}>
+            <Text>No data.</Text>
+          </View>
+        }
+        renderItem={({ item }) => {
+          const diff = item.earned - item.spent;
+          const color = diff >= 0 ? theme.colors.green : theme.colors.red;
+          return (
+            <View style={styles.listItem}>
+              <View>
+                <Text style={styles.month}>{item.name}</Text>
+                <Text style={{ color: theme.colors.green }}>
+                  {` ${formatAmountToDisplay(item.earned)}`}
+                </Text>
+                <Text style={{ color: theme.colors.red }}>
+                  {`${formatAmountToDisplay(-item.spent, true)}`}
                 </Text>
               </View>
-            );
-          }}
-        />
-      </Screen>
-    );
-  }
+              <Text style={[styles.amount, { color }]}>
+                {formatAmountToDisplay(diff, true)}
+              </Text>
+            </View>
+          );
+        }}
+      />
+    </Screen>
+  );
 }
 
-function mapStateToProps(state) {
-  return {
-    monthlyAnalytics: state.monthlyAnalytics,
-  };
-}
+MonthlyAnalytics.navigationOptions = {
+  headerTitle: 'Monthly Analytics',
+};
 
-export default connect(mapStateToProps)(MonthlyAnalytics);
+export default MonthlyAnalytics;
 
 const styles = StyleSheet.create({
   amount: {
