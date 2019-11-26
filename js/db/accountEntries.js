@@ -1,5 +1,5 @@
 import uuid from 'uuid/v1';
-import { db } from './shared';
+import { db, getById } from './shared';
 
 /**
  *
@@ -13,13 +13,22 @@ import { db } from './shared';
 export function addAccountEntry(entry) {
   var entry_id = uuid();
   var now = Date.now();
-  return db.sqlBatch([
-    `INSERT INTO account_entries VALUES('${entry_id}',${entry.amount},'${escape(
-      entry.memo
-    )}','${escape(entry.entry_type)}',${entry.date_time},${now},NULL,'${
-      entry.account_id
-    }');`,
-  ]);
+  return getById('accounts', entry.account_id).then(function([account]) {
+    var newBalance = 0;
+    if (entry.entry_type == 'credit') {
+      newBalance = account.balance + entry.amount;
+    } else {
+      newBalance = account.balance - entry.amount;
+    }
+    db.sqlBatch([
+      `INSERT INTO account_entries VALUES('${entry_id}',${
+        entry.amount
+      },'${escape(entry.memo)}','${escape(entry.entry_type)}',${
+        entry.date_time
+      },${now},NULL,'${entry.account_id}');`,
+      `UPDATE accounts SET balance=${newBalance} WHERE id = '${entry.account_id}';`,
+    ]);
+  });
 }
 
 /**
@@ -32,15 +41,47 @@ export function addAccountEntry(entry) {
  */
 export function updateAccountEntry(entry) {
   var now = Date.now();
-  return db.sqlBatch([
-    `UPDATE account_entries SET amount=${entry.amount},memo='${escape(
-      entry.memo
-    )}', entry_type='${escape(entry.entry_type)}', date_time=${
-      entry.date_time
-    }, updated_on=${now} WHERE id = '${entry.id}';`,
-  ]);
+  return getById('account_entries', entry.id)
+    .then(function([entry]) {
+      return getById('accounts', entry.account_id).then(function([account]) {
+        return [entry, account];
+      });
+    })
+    .then(function([oldEntry, account]) {
+      var newBalance = account.balance;
+      if (oldEntry.entry_type == 'credit') {
+        newBalance = newBalance - oldEntry.amount;
+      } else {
+        newBalance = newBalance + oldEntry.amount;
+      }
+      if (entry.entry_type == 'credit') {
+        newBalance = newBalance + entry.amount;
+      } else {
+        newBalance = newBalance - entry.amount;
+      }
+
+      return db.sqlBatch([
+        `UPDATE account_entries SET amount=${entry.amount},memo='${escape(
+          entry.memo
+        )}', entry_type='${escape(entry.entry_type)}', date_time=${
+          entry.date_time
+        }, updated_on=${now} WHERE id = '${entry.id}';`,
+        `UPDATE accounts SET balance=${newBalance} WHERE id = '${entry.account_id}';`,
+      ]);
+    });
 }
 
-export function removeAccountEntry(id) {
-  return db.sqlBatch([`DELETE FROM account_entries WHERE id = '${id}';`]);
+export function removeAccountEntry(entry) {
+  return getById('accounts', entry.account_id).then(function([account]) {
+    var newBalance = 0;
+    if (entry.entry_type == 'credit') {
+      newBalance = account.balance - entry.amount;
+    } else {
+      newBalance = account.balance + entry.amount;
+    }
+    db.sqlBatch([
+      `DELETE FROM account_entries WHERE id = '${entry.id}';`,
+      `UPDATE accounts SET balance=${newBalance} WHERE id = '${entry.account_id}';`,
+    ]);
+  });
 }

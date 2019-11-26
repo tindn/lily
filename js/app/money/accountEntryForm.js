@@ -63,9 +63,10 @@ function AccountEntryForm(props) {
       {
         text: 'Delete',
         onPress: () => {
-          removeAccountEntry(id);
-          props.onCancel && props.onCancel();
-          props.onEntryChange && props.onEntryChange();
+          removeAccountEntry(props.entry).then(function() {
+            props.onCancel && props.onCancel();
+            props.onEntryChange && props.onEntryChange();
+          });
         },
         style: 'destructive',
       },
@@ -81,13 +82,12 @@ function AccountEntryForm(props) {
       entry_type,
       account_id: props.accountId,
     };
-    if (id) {
-      updateAccountEntry(entry);
-    } else {
-      addAccountEntry(entry);
-    }
-    props.onCancel && props.onCancel();
-    props.onEntryChange && props.onEntryChange();
+    var saveFunction = id ? updateAccountEntry : addAccountEntry;
+
+    saveFunction(entry).then(function() {
+      props.onCancel && props.onCancel();
+      props.onEntryChange && props.onEntryChange();
+    });
   }
 
   return (
