@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Alert,
   LayoutAnimation,
@@ -7,21 +7,29 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 import Pill from '../../components/pill';
 import Screen from '../../components/screen';
+import { buildAccountSnapshot } from '../../db/accountSnapshots';
+import { getAllFromTable } from '../../db/shared';
+import { useToggle } from '../../hooks';
 import theme from '../../theme';
 import Category from './category';
 import LineItem from './lineItem';
 
-class Accounts extends React.Component {
-  static navigationOptions = () => ({
-    headerTitle: 'Accounts',
+function Accounts(props) {
+  var [showAssets, toggleShowAssets] = useToggle(true);
+  var [showLiabilities, toggleShowLiabilities] = useToggle(true);
+  var [state, setState] = useState({
+    liquidAssets: [],
+    investments: [],
+    fixedAssets: [],
+    shortTermLiabilities: [],
+    longTermLiabilities: [],
   });
-
-  static getDerivedStateFromProps(props) {
-    if (props.accounts) {
-      const accounts = Object.values(props.accounts);
+  var fetchData = useCallback(function() {
+    getAllFromTable('accounts').then(function(accounts) {
       let liquidAssets = [],
         investments = [],
         fixedAssets = [],
@@ -53,7 +61,7 @@ class Accounts extends React.Component {
             break;
         }
       });
-      return {
+      setState({
         liquidAssets,
         investments,
         fixedAssets,
@@ -61,126 +69,122 @@ class Accounts extends React.Component {
         longTermLiabilities,
         totalAssetsBalance,
         totalLiabilitiesBalance,
-      };
-    }
-    return null;
-  }
+      });
+    });
+  }, []);
 
-  state = {
-    showAssets: true,
-    showLiabilities: true,
-  };
-
-  render() {
-    return (
-      <Screen>
-        <ScrollView
+  return (
+    <Screen>
+      <NavigationEvents
+        onWillFocus={function() {
+          fetchData();
+        }}
+      />
+      <ScrollView
+        style={{
+          paddingHorizontal: 5,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            toggleShowAssets();
+            LayoutAnimation.easeInEaseOut();
+          }}
           style={{
-            paddingHorizontal: 5,
+            paddingTop: 25,
+            paddingBottom: 5,
           }}
         >
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({ showAssets: !this.state.showAssets });
-              LayoutAnimation.easeInEaseOut();
-            }}
-            style={{
-              paddingTop: 25,
-              paddingBottom: 5,
-            }}
-          >
-            <LineItem
-              text="Total Assets"
-              amount={this.state.totalAssetsBalance}
-              textStyle={styles.total}
-            />
-          </TouchableOpacity>
-          {this.state.showAssets && [
-            <Category
-              accounts={this.state.liquidAssets}
-              name="Liquid"
-              key="liquid"
-              navigation={this.props.navigation}
-            />,
-            <Category
-              accounts={this.state.investments}
-              name="Investments"
-              key="investments"
-              navigation={this.props.navigation}
-            />,
-            <Category
-              accounts={this.state.fixedAssets}
-              name="Fixed"
-              key="fixed"
-              navigation={this.props.navigation}
-            />,
-          ]}
-
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({ showLiabilities: !this.state.showLiabilities });
-              LayoutAnimation.easeInEaseOut();
-            }}
-            style={{ marginTop: 20, paddingTop: 25, paddingBottom: 5 }}
-          >
-            <LineItem
-              text="Total Liabilities"
-              amount={this.state.totalLiabilitiesBalance}
-              textStyle={styles.total}
-              negative
-            />
-          </TouchableOpacity>
-          {this.state.showLiabilities && [
-            <Category
-              accounts={this.state.shortTermLiabilities}
-              name="Short Term"
-              key="short"
-              negative
-              navigation={this.props.navigation}
-            />,
-            <Category
-              accounts={this.state.longTermLiabilities}
-              name="Long Term"
-              key="long"
-              negative
-              navigation={this.props.navigation}
-            />,
-          ]}
-          <Pill
-            onPress={() =>
-              Alert.alert('Confirm', 'Do you want to create a new snapshot?', [
-                {
-                  text: 'Cancel',
-                  onPress: function() {},
-                  style: 'cancel',
-                },
-                {
-                  text: 'Yes',
-                  onPress: () =>
-                    // eslint-disable-next-line no-undef
-                    fetch(
-                      'https://us-central1-lily-cc62d.cloudfunctions.net/buildAccountsSnapshot',
-                      { method: 'POST' }
-                    ),
-                },
-              ])
-            }
-            label="Create snapshot"
-            style={{
-              padding: 12,
-              marginTop: 25,
-              marginHorizontal: 50,
-            }}
-            color={theme.colors.secondary}
-            backgroundColor={theme.colors.primary}
-            textStyle={{ textAlign: 'center' }}
+          <LineItem
+            text="Total Assets"
+            amount={state.totalAssetsBalance}
+            textStyle={styles.total}
           />
-          <View style={{ paddingVertical: 25 }} />
-        </ScrollView>
-      </Screen>
-    );
-  }
+        </TouchableOpacity>
+        {showAssets && [
+          <Category
+            accounts={state.liquidAssets}
+            name="Liquid"
+            key="liquid"
+            navigation={props.navigation}
+          />,
+          <Category
+            accounts={state.investments}
+            name="Investments"
+            key="investments"
+            navigation={props.navigation}
+          />,
+          <Category
+            accounts={state.fixedAssets}
+            name="Fixed"
+            key="fixed"
+            navigation={props.navigation}
+          />,
+        ]}
+
+        <TouchableOpacity
+          onPress={() => {
+            toggleShowLiabilities();
+            LayoutAnimation.easeInEaseOut();
+          }}
+          style={{ marginTop: 20, paddingTop: 25, paddingBottom: 5 }}
+        >
+          <LineItem
+            text="Total Liabilities"
+            amount={state.totalLiabilitiesBalance}
+            textStyle={styles.total}
+            negative
+          />
+        </TouchableOpacity>
+        {showLiabilities && [
+          <Category
+            accounts={state.shortTermLiabilities}
+            name="Short Term"
+            key="short"
+            negative
+            navigation={props.navigation}
+          />,
+          <Category
+            accounts={state.longTermLiabilities}
+            name="Long Term"
+            key="long"
+            negative
+            navigation={props.navigation}
+          />,
+        ]}
+        <Pill
+          onPress={() =>
+            Alert.alert('Confirm', 'Do you want to create a new snapshot?', [
+              {
+                text: 'Cancel',
+                onPress: function() {},
+                style: 'cancel',
+              },
+              {
+                text: 'Yes',
+                onPress: buildAccountSnapshot,
+              },
+            ])
+          }
+          label="Create snapshot"
+          style={{
+            padding: 12,
+            marginTop: 25,
+            marginHorizontal: 50,
+          }}
+          color={theme.colors.secondary}
+          backgroundColor={theme.colors.primary}
+          textStyle={{ textAlign: 'center' }}
+        />
+        <View style={{ paddingVertical: 25 }} />
+      </ScrollView>
+    </Screen>
+  );
 }
+
+Accounts.navigationOptions = () => ({
+  headerTitle: 'Accounts',
+});
 
 const styles = StyleSheet.create({
   total: {

@@ -79,3 +79,5 @@ export function getLatestSnapshot() {
     )
     .then(queryResultToArray);
 }
+
+export function buildAccountSnapshot() {}

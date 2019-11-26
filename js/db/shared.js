@@ -52,3 +52,9 @@ export function getAllFromTable(tableName, simpleCondition = '') {
     .executeSql(`SELECT * FROM ${tableName} ${simpleCondition};`)
     .then(queryResultToArray);
 }
+
+export function getById(tableName, id) {
+  return db
+    .executeSql(`SELECT * FROM ${tableName} WHERE id = '${id}';`)
+    .then(queryResultToArray);
+}

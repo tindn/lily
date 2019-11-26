@@ -1,38 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { connect } from 'react-redux';
-import { watchData } from '../../../firebaseHelper';
-import theme from '../../theme';
+import React, { useEffect, useState, useCallback } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MoneyDisplay from '../../components/moneyDisplay';
 import Pill from '../../components/pill';
 import Screen from '../../components/screen';
+import theme from '../../theme';
 import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
-import { by } from '../../../utils/sort';
+import { getById, getAllFromTable } from '../../db/shared';
 
 function AccountDetails(props) {
   const [showNewEntryForm, setForm] = useState(false);
-  const [entries, setEntries] = useState();
+  const [entries, setEntries] = useState([]);
+  var [account, setAccount] = useState({});
+  var updateData = useCallback(
+    function() {
+      var accountId = props.navigation.getParam('accountId', undefined);
+      if (accountId) {
+        getById('accounts', accountId).then(function(data) {
+          setAccount(data[0]);
+        });
+        getAllFromTable(
+          'account_entries',
+          `WHERE account_id = '${accountId}' ORDER BY date_time DESC`
+        ).then(setEntries);
+      }
+    },
+    [props]
+  );
 
   useEffect(() => {
-    const unsubscribe = watchData(
-      'accountEntries',
-      [['where', 'accountId', '==', props.accountId]],
-      entries => setEntries(Object.values(entries).sort(by('date', 'desc')))
-    );
-    return function cleanup() {
-      unsubscribe();
-    };
-  });
+    updateData();
+  }, []);
 
   const toggleAccountEntry = () => {
     setForm(!showNewEntryForm);
   };
 
-  if (!props.account) {
-    return null;
-  }
-  const { name, balance, type, category, plaidAccessToken } = props.account;
+  const { name, balance, type, category } = account;
   return (
     <Screen>
       <ScrollView keyboardShouldPersistTaps="always">
@@ -47,12 +51,6 @@ function AccountDetails(props) {
           <Text style={{ fontSize: 17 }}>{category}</Text>
           <Text style={{ fontSize: 17 }}>{type}</Text>
         </View>
-        {plaidAccessToken && (
-          <View style={styles.row}>
-            <View />
-            <Text>Has Plaid</Text>
-          </View>
-        )}
 
         <View
           style={{
@@ -62,9 +60,9 @@ function AccountDetails(props) {
           {showNewEntryForm ? (
             <AccountEntryForm
               onCancel={toggleAccountEntry}
-              accountId={props.accountId}
               accountBalance={balance}
-              account={props.account}
+              accountId={account.id}
+              onEntryChange={updateData}
             />
           ) : (
             <Pill
@@ -77,24 +75,31 @@ function AccountDetails(props) {
             />
           )}
         </View>
-        <FlatList
-          data={entries}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => <AccountEntry entry={item} />}
+        <View
           style={{
             borderTopColor: theme.colors.lighterGray,
             borderTopWidth: 1,
             marginTop: 30,
           }}
-        />
+        >
+          {entries.map(function(item, index) {
+            return (
+              <AccountEntry
+                key={index.toString()}
+                entry={item}
+                onEntryChange={updateData}
+                accountId={account.id}
+              />
+            );
+          })}
+        </View>
       </ScrollView>
     </Screen>
   );
 }
 
 AccountDetails.navigationOptions = ({ navigation }) => {
-  const account = navigation.getParam('accountName', undefined);
-  return { title: account.name || 'Account Details' };
+  return { title: navigation.getParam('accountName', 'Account Details') };
 };
 
 const styles = StyleSheet.create({
@@ -108,12 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapStateToProps(state, ownProps) {
-  const accountId = ownProps.navigation.getParam('accountId', '');
-  return {
-    account: state.accounts[accountId],
-    accountId,
-  };
-}
-
-export default connect(mapStateToProps)(AccountDetails);
+export default AccountDetails;

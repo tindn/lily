@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   LayoutAnimation,
   StyleSheet,
@@ -6,30 +6,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import theme from '../../theme';
 import DateInput from '../../components/dateInput';
 import MoneyInput from '../../components/moneyInput';
+import { useToggle } from '../../hooks';
+import theme from '../../theme';
 import AccountEntryForm from './accountEntryForm';
 
 function AccountEntry(props) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, toggleExpanded] = useToggle();
 
   return expanded ? (
     <AccountEntryForm
       entry={props.entry}
       onCancel={() => {
         LayoutAnimation.easeInEaseOut();
-        setExpanded(!expanded);
+        toggleExpanded();
       }}
+      onEntryChange={props.onEntryChange}
+      accountId={props.accountId}
     />
   ) : (
-    <TouchableOpacity
-      onPress={() => setExpanded(!expanded)}
-      style={styles.item}
-    >
+    <TouchableOpacity onPress={toggleExpanded} style={styles.item}>
       <View key="1">
         <DateInput
-          date={props.entry.date}
+          date={new Date(props.entry.date_time)}
           style={styles.date}
           disabled={true}
         />
