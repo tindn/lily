@@ -1,5 +1,5 @@
 import uuid from 'uuid/v1';
-import { db } from './shared';
+import { db, queryResultToArray } from './shared';
 
 export function getTransactionsFromDate(timestamp) {
   return db
@@ -23,15 +23,7 @@ export function getTransactionsFromDate(timestamp) {
       date_time DESC;
   `
     )
-    .then(function([results]) {
-      var dataRows = [];
-      var len = results.rows.length;
-      for (let i = 0; i < len; i++) {
-        let row = results.rows.item(i);
-        dataRows.push(row);
-      }
-      return dataRows;
-    });
+    .then(queryResultToArray);
 }
 
 /**

@@ -37,6 +37,17 @@ export function formatAmountToDisplay(
   return display;
 }
 
+/** @typedef Overview
+ * @type {Object}
+ * @property {Number} liquidity
+ * @property {Number} networth
+ */
+
+/**
+ *
+ * @param {*} accounts
+ * @returns {Overview} overview
+ */
 export function calculateFinanceOverview(accounts) {
   let totalAssets = 0,
     totalLiabilities = 0,

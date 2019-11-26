@@ -2,6 +2,16 @@ import SQLite from 'react-native-sqlite-storage';
 
 export var db;
 
+export function queryResultToArray([results]) {
+  var dataRows = [];
+  var len = results.rows.length;
+  for (let i = 0; i < len; i++) {
+    let row = results.rows.item(i);
+    dataRows.push(row);
+  }
+  return dataRows;
+}
+
 export function openDatabaseConnection(uid) {
   var userDatabaseFileName = 'lily-user-' + uid + '.db';
   return SQLite.openDatabase({
@@ -40,13 +50,5 @@ export function getTransaction() {
 export function getAllFromTable(tableName, simpleCondition = '') {
   return db
     .executeSql(`SELECT * FROM ${tableName} ${simpleCondition};`)
-    .then(function([results]) {
-      var dataRows = [];
-      var len = results.rows.length;
-      for (let i = 0; i < len; i++) {
-        let row = results.rows.item(i);
-        dataRows.push(row);
-      }
-      return dataRows;
-    });
+    .then(queryResultToArray);
 }

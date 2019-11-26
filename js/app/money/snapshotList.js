@@ -1,17 +1,46 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { connect } from 'react-redux';
-import theme from '../../theme';
-import { toWeekDayDateString } from '../../../utils/date';
+import { NavigationEvents } from 'react-navigation';
+import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
+import { calculateFinanceOverview } from '../../../utils/money';
 import MoneyDisplay from '../../components/moneyDisplay';
 import Screen from '../../components/screen';
+import { getAccountSnapshots } from '../../db/accountSnapshots';
+import theme from '../../theme';
 
-function SnapshotList(props) {
+function SnapshotList() {
+  var [list, setList] = useState([]);
+  var getData = useCallback(
+    function() {
+      getAccountSnapshots()
+        .then(function(accountSnapshots) {
+          var snapshots = accountSnapshots.reduce(function(
+            acc,
+            accountSnapshot
+          ) {
+            if (!acc[accountSnapshot.date_time]) {
+              acc[accountSnapshot.date_time] = [];
+            }
+            acc[accountSnapshot.date_time].push(accountSnapshot);
+            return acc;
+          },
+          {});
+          return Object.entries(snapshots).map(function(snap) {
+            var overview = calculateFinanceOverview(snap[1]);
+            overview.date_time = snap[0];
+            return overview;
+          });
+        })
+        .then(setList);
+    },
+    [setList]
+  );
   return (
     <Screen>
+      <NavigationEvents onWillFocus={getData} />
       <FlatList
-        data={props.financeSnapshots}
-        keyExtractor={item => item._updatedOn.toString()}
+        data={list}
+        keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={
           <View style={styles.emptyComponent}>
             <Text>No snapshots found.</Text>
@@ -21,7 +50,9 @@ function SnapshotList(props) {
           return (
             <View style={styles.listItem}>
               <View style={{ alignSelf: 'flex-start', marginBottom: 15 }}>
-                <Text>{toWeekDayDateString(item._updatedOn)}</Text>
+                <Text>
+                  {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
+                </Text>
               </View>
               <View
                 style={{
@@ -59,10 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapStateToProps(state) {
-  return {
-    financeSnapshots: state.financeSnapshots,
-  };
-}
-
-export default connect(mapStateToProps)(SnapshotList);
+export default SnapshotList;
