@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Alert,
   FlatList,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -9,156 +10,163 @@ import {
 } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { connect } from 'react-redux';
-import { deleteDocument } from '../../../firebaseHelper';
-import { toWeekDayDateString } from '../../../utils/date';
+import { NavigationEvents } from 'react-navigation';
+import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
 import { formatAmountToDisplay } from '../../../utils/money';
 import Screen from '../../components/screen';
+import {
+  deleteTransaction,
+  getTransactionsFromDate,
+} from '../../db/transactions';
+import { error, success } from '../../log';
 import theme from '../../theme';
 
-class MonthTransactions extends React.PureComponent {
-  static navigationOptions = ({ navigation }) => ({
-    headerTitle: new Date().toLocaleDateString('en-US', {
-      month: 'long',
-    }),
-    headerRight: (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('MonthSetup');
-        }}
-        style={{ marginRight: 10 }}
-      >
-        <Icon name="profile" size={25} color={theme.colors.primary} />
-      </TouchableOpacity>
-    ),
-  });
-
-  static getDerivedStateFromProps(props) {
-    if (props.data && props.data.length) {
-      return { data: props.data };
-    }
-    return null;
-  }
-
-  constructor(props) {
-    super(props);
+function MonthTransactions(props) {
+  const [data, setData] = useState([]);
+  var [refreshing, setRefreshing] = useState(false);
+  var fetchData = useCallback(function(params = { useLoadingIndicator: true }) {
     const today = new Date();
-    this.startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    this.state = {
-      refreshing: false,
-      data: [],
-    };
-  }
+    const startOfMonth = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      1
+    ).getTime();
+    params.useLoadingIndicator && setRefreshing(true);
+    getTransactionsFromDate(startOfMonth)
+      .then(setData)
+      .finally(() => {
+        params.useLoadingIndicator && setRefreshing(false);
+      });
+  }, []);
 
-  render() {
-    return (
-      <Screen>
-        <FlatList
-          data={this.state.data}
-          keyExtractor={item => item.id}
-          ListEmptyComponent={
-            <View style={styles.emptyComponent}>
-              <Text>No transactions found.</Text>
-            </View>
-          }
-          renderItem={({ item }) => {
-            let dateDisplay = toWeekDayDateString(item.date);
-            const color = item.isCredit ? theme.colors.green : theme.colors.red;
-            return (
-              <Swipeable
-                rightButtons={[
-                  <TouchableOpacity
-                    key={`delete ${item.id}`}
-                    onPress={function() {
-                      Alert.alert(
-                        'Confirm',
-                        'Do you want to delete this transaction?',
-                        [
-                          {
-                            text: 'Cancel',
-                          },
-                          {
-                            text: 'Delete',
-                            onPress: function() {
-                              deleteDocument('transactions', item.id);
-                            },
-                            style: 'destructive',
-                          },
-                        ]
-                      );
-                    }}
-                    style={{
-                      backgroundColor: theme.colors.red,
-                      justifyContent: 'center',
-                      flex: 1,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontWeight: '500',
-                        fontSize: 18,
-                        color: theme.colors.white,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      Delete
-                    </Text>
-                  </TouchableOpacity>,
-                ]}
-              >
+  return (
+    <Screen>
+      <NavigationEvents
+        onWillFocus={function() {
+          fetchData({ useLocadingIndicator: false });
+        }}
+      />
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyComponent}>
+            <Text>No transactions found.</Text>
+          </View>
+        }
+        renderItem={({ item }) => {
+          let dateDisplay = toWeekDayDateStringFromTimestamp(item.timestamp);
+          const color =
+            item.entry_type == 'credit' ? theme.colors.green : theme.colors.red;
+          return (
+            <Swipeable
+              rightButtons={[
                 <TouchableOpacity
-                  delayPressIn={100}
-                  style={styles.transactionItem}
-                  onPress={() => {
-                    this.props.navigation.navigate('TransactionDetails', {
-                      title: item.memo,
-                      transaction: item,
-                    });
+                  key={`delete ${item.id}`}
+                  onPress={function() {
+                    Alert.alert(
+                      'Confirm',
+                      'Do you want to delete this transaction?',
+                      [
+                        {
+                          text: 'Cancel',
+                        },
+                        {
+                          text: 'Delete',
+                          onPress: function() {
+                            deleteTransaction(item.id)
+                              .then(function() {
+                                success('Transaction removed');
+                              })
+                              .catch(function(e) {
+                                error('Failed to remove transaction', e);
+                              });
+                          },
+                          style: 'destructive',
+                        },
+                      ]
+                    );
+                  }}
+                  style={{
+                    backgroundColor: theme.colors.red,
+                    justifyContent: 'center',
+                    flex: 1,
                   }}
                 >
-                  <View>
-                    <Text style={styles.transactionItemMemo}>
-                      {(item.memo || item.vendor).slice(0, 25)}
-                    </Text>
-                    <Text style={styles.transactionItemDate}>
-                      {dateDisplay}
-                    </Text>
-                  </View>
-                  {item.isFixed && (
-                    <View
-                      style={{
-                        backgroundColor: theme.colors.lighterGray,
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        borderColor: theme.colors.lightGray,
-                        padding: 5,
-                      }}
-                    >
-                      <Text style={{ color: theme.colors.lightGray }}>
-                        FIXED
-                      </Text>
-                    </View>
-                  )}
-                  <Text style={[styles.transactionItemAmount, { color }]}>
-                    {formatAmountToDisplay(item.amount)}
+                  <Text
+                    style={{
+                      fontWeight: '500',
+                      fontSize: 18,
+                      color: theme.colors.white,
+                      paddingLeft: 10,
+                    }}
+                  >
+                    Delete
                   </Text>
-                </TouchableOpacity>
-              </Swipeable>
-            );
-          }}
-        />
-      </Screen>
-    );
-  }
+                </TouchableOpacity>,
+              ]}
+            >
+              <TouchableOpacity
+                delayPressIn={100}
+                style={styles.transactionItem}
+                onPress={() => {
+                  props.navigation.navigate('TransactionDetails', {
+                    title: item.memo,
+                    transaction: item,
+                  });
+                }}
+              >
+                <View>
+                  <Text style={styles.transactionItemMemo}>
+                    {(item.memo || item.vendor).slice(0, 25)}
+                  </Text>
+                  <Text style={styles.transactionItemDate}>{dateDisplay}</Text>
+                </View>
+                {!item.is_discretionary && (
+                  <View
+                    style={{
+                      backgroundColor: theme.colors.lighterGray,
+                      borderRadius: 5,
+                      borderWidth: 1,
+                      borderColor: theme.colors.lightGray,
+                      padding: 5,
+                    }}
+                  >
+                    <Text style={{ color: theme.colors.lightGray }}>FIXED</Text>
+                  </View>
+                )}
+                <Text style={[styles.transactionItemAmount, { color }]}>
+                  {formatAmountToDisplay(item.amount)}
+                </Text>
+              </TouchableOpacity>
+            </Swipeable>
+          );
+        }}
+      />
+    </Screen>
+  );
 }
 
-function mapStateToProps(state) {
-  return {
-    data: state.monthTransactions,
-  };
-}
+MonthTransactions.navigationOptions = ({ navigation }) => ({
+  headerTitle: new Date().toLocaleDateString('en-US', {
+    month: 'long',
+  }),
+  headerRight: (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('MonthSetup');
+      }}
+      style={{ marginRight: 10 }}
+    >
+      <Icon name="profile" size={25} color={theme.colors.primary} />
+    </TouchableOpacity>
+  ),
+});
 
-export default connect(mapStateToProps)(MonthTransactions);
+export default MonthTransactions;
 
 const styles = StyleSheet.create({
   emptyComponent: {

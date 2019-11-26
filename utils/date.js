@@ -27,3 +27,7 @@ export function toWeekDayDateString(date) {
       year: 'numeric',
     });
 }
+
+export function toWeekDayDateStringFromTimestamp(timestamp) {
+  return toWeekDayDateString(new Date(timestamp));
+}

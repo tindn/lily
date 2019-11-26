@@ -148,8 +148,7 @@ async function importTransactions() {
       t.amount
     }, ${timestamp}, ${addon_timestamp}, ${update_timestamp}, '${JSON.stringify(
       t.coords
-    )}', '${escape(t.memo)}', ${vendorId}, ${discretionary})
-            `;
+    )}', '${escape(t.memo)}', ${vendorId}, ${discretionary});`;
   });
   return db.sqlBatch(scripts);
 }

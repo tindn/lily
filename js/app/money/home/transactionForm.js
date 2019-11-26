@@ -1,5 +1,5 @@
 import geolocation from '@react-native-community/geolocation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   LayoutAnimation,
   Picker,
@@ -9,38 +9,59 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { addDocument } from '../../../../firebaseHelper';
 import { isNearby } from '../../../../utils/location';
 import DateInput from '../../../components/dateInput';
 import MoneyInput from '../../../components/moneyInput';
 import OutlineButton from '../../../components/outlineButton';
 import { getAllVendors } from '../../../db';
+import { addTransaction } from '../../../db/transactions';
+import { error, success } from '../../../log';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
 
-function getDefaultState(moneyInputKey) {
-  return {
-    date: new Date(),
-    memo: '',
-    amount: '',
-    isCredit: false,
-    moneyInputKey: moneyInputKey || 0,
-    vendor: '',
-    isFixed: false,
-  };
-}
-
 function TransactionForm(props) {
-  var [formState, setFormState] = useState(getDefaultState());
+  var [date_time, setDateTime] = useState(new Date());
+  var [memo, setMemo] = useState('');
+  var [amount, setAmount] = useState('');
+  var [isCredit, setIsCredit] = useState(false);
+  var [is_discretionary, setIsDiscretionary] = useState(true);
+  var [moneyInputKey, setMoneyInputKey] = useState(0);
+  var [vendor_id, setVendorId] = useState('');
+  var [coords, setCoords] = useState();
   var [vendors, setVendors] = useState([]);
+  var resetFormState = useCallback(
+    function(moneyInputKey) {
+      setDateTime(new Date());
+      setMemo('');
+      setAmount('');
+      setIsCredit(false);
+      setIsDiscretionary(true);
+      setMoneyInputKey(moneyInputKey);
+      setVendorId('');
+      setCoords(null);
+    },
+    [
+      setDateTime,
+      setMemo,
+      setAmount,
+      setIsCredit,
+      setIsDiscretionary,
+      setMoneyInputKey,
+      setVendorId,
+      setCoords,
+    ]
+  );
 
   useEffect(function() {
     getAllVendors()
-      .then(setVendors)
+      .then(function(vendors) {
+        vendors = [{ id: '', name: '' }, ...vendors];
+        setVendors(vendors);
+      })
       .then(function() {
         geolocation.getCurrentPosition(
           function({ coords }) {
-            setFormState({ ...formState, coords });
+            setCoords(coords);
             // race conditions vendors is empty at this point
             var nearbyVendors = vendors.filter(vendor => {
               if (vendor.locations && vendor.locations.length) {
@@ -63,10 +84,6 @@ function TransactionForm(props) {
             //     )
             //   )
             // );
-            setFormState({
-              ...formState,
-              vendor: nearbyVendors.length === 1 ? nearbyVendors[0].id : '',
-            });
           },
           function() {},
           { enableHighAccuracy: true }
@@ -84,16 +101,13 @@ function TransactionForm(props) {
           sharedStyles.formFirstRow,
         ]}
       >
-        <DateInput
-          onChange={date => setFormState({ ...formState, date })}
-          date={formState.date}
-        />
+        <DateInput onChange={setDateTime} date={date_time} />
         <MoneyInput
-          onChange={amount => setFormState({ ...formState, amount })}
-          key={formState.moneyInputKey}
-          amount={formState.amount}
+          onChange={setAmount}
+          key={moneyInputKey}
+          amount={amount}
           editable
-          type={formState.isCredit ? 'credit' : 'debit'}
+          type={isCredit ? 'credit' : 'debit'}
           autoFocus
         />
       </View>
@@ -106,13 +120,13 @@ function TransactionForm(props) {
         ]}
       >
         <Picker
-          selectedValue={formState.vendor}
-          onValueChange={text => setFormState({ ...formState, vendor: text })}
+          selectedValue={vendor_id}
+          onValueChange={setVendorId}
           style={{ flex: 1, height: 200, top: -20 }}
         >
           {vendors.map(function(item, index) {
             return (
-              <Picker.Item key={index} label={item.name} value={item.name} />
+              <Picker.Item key={index} label={item.name} value={item.id} />
             );
           })}
         </Picker>
@@ -121,9 +135,9 @@ function TransactionForm(props) {
         <TextInput
           key="memoInput"
           style={[sharedStyles.formTextInput, styles.memoInput]}
-          value={formState.memo}
+          value={memo}
           placeholder="memo"
-          onChangeText={text => setFormState({ ...formState, memo: text })}
+          onChangeText={setMemo}
         />
       </View>
       <View
@@ -135,22 +149,16 @@ function TransactionForm(props) {
         ]}
       >
         <Text style={{ color: theme.colors.darkGray }}>Income?</Text>
-        <Switch
-          value={formState.isCredit}
-          onValueChange={val => setFormState({ ...formState, isCredit: val })}
-        />
-        <Text style={{ color: theme.colors.darkGray }}>Fixed?</Text>
-        <Switch
-          value={formState.isFixed}
-          onValueChange={val => setFormState({ ...formState, isFixed: val })}
-        />
+        <Switch value={isCredit} onValueChange={setIsCredit} />
+        <Text style={{ color: theme.colors.darkGray }}>Discretionary?</Text>
+        <Switch value={is_discretionary} onValueChange={setIsDiscretionary} />
       </View>
       <View key="buttons" style={sharedStyles.formButtons}>
         <OutlineButton
           label="Cancel"
           onPress={() => {
             LayoutAnimation.easeInEaseOut();
-            setFormState(getDefaultState(formState.moneyInputKey + 1));
+            resetFormState(moneyInputKey + 1);
             props.collapse && props.collapse();
           }}
           style={[sharedStyles.outlineButton]}
@@ -159,25 +167,42 @@ function TransactionForm(props) {
         <OutlineButton
           color={theme.colors.primary}
           disabled={
-            !formState.amount ||
-            formState.amount === '00.00' ||
-            (formState.memo === '' && formState.vendor === '')
+            !amount || amount === '00.00' || (memo === '' && vendor_id === '')
           }
           label="Add"
           onPress={() => {
-            addDocument('transactions', {
-              date: formState.date,
-              memo: formState.memo,
-              vendor: formState.vendor,
-              amount: parseFloat(formState.amount),
-              entryType: formState.isCredit ? 'credit' : 'debit',
-              isFixed: formState.isFixed,
-              coords: formState.coords,
-              _addedOn: new Date(),
-            });
-            LayoutAnimation.easeInEaseOut();
-            setFormState(getDefaultState(formState.moneyInputKey + 1));
-            props.collapse && props.collapse();
+            addTransaction({
+              entry_type: isCredit ? 'credit' : 'debit',
+              amount: parseFloat(amount),
+              date_time: date_time.getTime(),
+              coords,
+              memo,
+              vendor_id,
+              is_discretionary,
+            })
+              .then(function() {
+                success('Transaction added');
+                LayoutAnimation.easeInEaseOut();
+                resetFormState(moneyInputKey + 1);
+                props.collapse && props.collapse();
+              })
+              .catch(function(e) {
+                error('Could not add transaction', e);
+              });
+
+            // addDocument('transactions', {
+            //   date: formState.date,
+            //   memo: formState.memo,
+            //   vendor: formState.vendor,
+            //   amount: parseFloat(formState.amount),
+            //   entryType: formState.isCredit ? 'credit' : 'debit',
+            //   isFixed: formState.isFixed,
+            //   coords: formState.coords,
+            //   _addedOn: new Date(),
+            // });
+            // LayoutAnimation.easeInEaseOut();
+            // setFormState(getDefaultState(formState.moneyInputKey + 1));
+            // props.collapse && props.collapse();
           }}
           style={[sharedStyles.outlineButton]}
         />

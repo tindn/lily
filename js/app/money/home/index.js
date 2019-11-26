@@ -2,12 +2,12 @@ import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Card from '../../../components/card';
 import Screen from '../../../components/screen';
+import { getAllFromTable } from '../../../db/shared';
 import theme from '../../../theme';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
 import TransactionForm from './transactionForm';
-import { getAllFromTable } from '../../../db/shared';
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -138,7 +138,7 @@ class Home extends React.Component {
               collapse={() => {
                 this.setState({ showTransactionForm: false });
               }}
-              style={{ marginBottom: 30, marginTop: 20 }}
+              style={{ marginBottom: 200, marginTop: 20 }}
             />
           ) : null}
         </ScrollView>

@@ -8,6 +8,10 @@ export function info(title, message) {
   dropdownAlert.alertWithType('info', title, message);
 }
 
+export function success(title, message) {
+  dropdownAlert.alertWithType('success', title, message);
+}
+
 export function warn(title, message) {
   dropdownAlert.alertWithType('warn', title, message);
 }
