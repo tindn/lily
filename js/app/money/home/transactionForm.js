@@ -184,6 +184,7 @@ function TransactionForm(props) {
                 success('Transaction added');
                 LayoutAnimation.easeInEaseOut();
                 resetFormState(moneyInputKey + 1);
+                props.onTransactionAdded && props.onTransactionAdded();
                 props.collapse && props.collapse();
               })
               .catch(function(e) {

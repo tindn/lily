@@ -16,17 +16,14 @@ import theme from '../../../theme';
 function Vendors(props) {
   var [refreshing, setRefreshing] = useState(false);
   var [vendors, setVendors] = useState([]);
-  var fetchData = useCallback(
-    function(params = { useLoadingIndicator: true }) {
-      params.useLoadingIndicator && setRefreshing(true);
-      getAllVendors()
-        .then(setVendors)
-        .finally(() => {
-          params.useLoadingIndicator && setRefreshing(false);
-        });
-    },
-    [props.updateVendors]
-  );
+  var fetchData = useCallback(function(params = { useLoadingIndicator: true }) {
+    params.useLoadingIndicator && setRefreshing(true);
+    getAllVendors()
+      .then(setVendors)
+      .finally(() => {
+        params.useLoadingIndicator && setRefreshing(false);
+      });
+  }, []);
 
   return (
     <Screen>
