@@ -43,7 +43,7 @@ function MonthTransactions(props) {
     <Screen>
       <NavigationEvents
         onWillFocus={function() {
-          fetchData({ useLocadingIndicator: false });
+          fetchData();
         }}
       />
       <FlatList
@@ -58,7 +58,7 @@ function MonthTransactions(props) {
           </View>
         }
         renderItem={({ item }) => {
-          let dateDisplay = toWeekDayDateStringFromTimestamp(item.timestamp);
+          let dateDisplay = toWeekDayDateStringFromTimestamp(item.date_time);
           const color =
             item.entry_type == 'credit' ? theme.colors.green : theme.colors.red;
           return (
@@ -77,8 +77,9 @@ function MonthTransactions(props) {
                         {
                           text: 'Delete',
                           onPress: function() {
-                            deleteTransaction(item.id)
+                            deleteTransaction(item)
                               .then(function() {
+                                fetchData();
                                 success('Transaction removed');
                               })
                               .catch(function(e) {
@@ -121,7 +122,7 @@ function MonthTransactions(props) {
               >
                 <View>
                   <Text style={styles.transactionItemMemo}>
-                    {(item.memo || item.vendor).slice(0, 25)}
+                    {unescape(item.memo || item.vendor).slice(0, 25)}
                   </Text>
                   <Text style={styles.transactionItemDate}>{dateDisplay}</Text>
                 </View>

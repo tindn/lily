@@ -39,8 +39,8 @@ export default [
       name TEXT NOT NULL,
       start_date INTEGER NOT NULL,
       end_date INTEGER NOT NULL,
-      earned TEXT NOT NULL,
-      spent TEXT NOT NULL
+      earned REAL NOT NULL,
+      spent REAL NOT NULL
     );
     `,
   ],

@@ -28,12 +28,12 @@ export default function TransactionDetails(props) {
     function() {
       var transactionFromParam = props.navigation.getParam('transaction');
       setTransaction(transactionFromParam);
-      setDateTime(new Date(transactionFromParam.timestamp));
-      setMemo(transactionFromParam.memo);
+      setDateTime(new Date(transactionFromParam.date_time));
+      setMemo(unescape(transactionFromParam.memo));
       setAmount(transactionFromParam.amount.toString());
       setIsCredit(transactionFromParam.entry_type == 'credit');
       setIsDiscretionary(!!transactionFromParam.is_discretionary);
-      setVendor(transactionFromParam.vendor);
+      setVendor(unescape(transactionFromParam.vendor));
     },
     [props]
   );
@@ -114,13 +114,14 @@ export default function TransactionDetails(props) {
             onPress={() => {
               updateTransaction({
                 ...transaction,
-                date_time: date_time.getTime(),
+                date_time: date_time,
                 memo: memo,
                 amount: parseFloat(amount),
                 entry_type: isCredit ? 'credit' : 'debit',
                 is_discretionary,
+              }).then(function() {
+                props.navigation.pop();
               });
-              props.navigation.pop();
             }}
           />
         </View>
@@ -139,8 +140,9 @@ export default function TransactionDetails(props) {
                   {
                     text: 'Delete',
                     onPress: () => {
-                      deleteTransaction(transaction.id);
-                      props.navigation.pop();
+                      deleteTransaction(transaction).then(function() {
+                        props.navigation.pop();
+                      });
                     },
                     style: 'destructive',
                   },

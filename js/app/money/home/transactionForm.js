@@ -126,7 +126,11 @@ function TransactionForm(props) {
         >
           {vendors.map(function(item, index) {
             return (
-              <Picker.Item key={index} label={item.name} value={item.id} />
+              <Picker.Item
+                key={index}
+                label={unescape(item.name)}
+                value={item.id}
+              />
             );
           })}
         </Picker>
@@ -174,7 +178,7 @@ function TransactionForm(props) {
             addTransaction({
               entry_type: isCredit ? 'credit' : 'debit',
               amount: parseFloat(amount),
-              date_time: date_time.getTime(),
+              date_time: date_time,
               coords,
               memo,
               vendor_id,
