@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import theme from '../../theme';
 import { connect } from 'react-redux';
-import { watchData } from '../../../firebaseHelper';
+import { watchData } from '../../firebaseHelper';
 
 const rate = 0.26;
 
