@@ -2,7 +2,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { calculateFinanceOverview } from '../../../../utils/money';
+import { calculateFinanceOverview } from '../../../utils/money';
 import Card from '../../../components/card';
 import MoneyDisplay from '../../../components/moneyDisplay';
 import Screen from '../../../components/screen';

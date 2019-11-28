@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
-import { formatAmountToDisplay } from '../../../utils/money';
+import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../../components/screen';
 import { getAllFromTable } from '../../db/shared';
 import theme from '../../theme';

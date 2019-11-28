@@ -11,8 +11,8 @@ import {
 import Swipeable from 'react-native-swipeable-row';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { NavigationEvents } from 'react-navigation';
-import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
-import { formatAmountToDisplay } from '../../../utils/money';
+import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
+import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../../components/screen';
 import {
   deleteTransaction,

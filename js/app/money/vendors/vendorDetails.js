@@ -8,8 +8,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { cleanCoordinate } from '../../../../utils/location';
-import { createMapUrl } from '../../../../utils/map';
+import { cleanCoordinate } from '../../../utils/location';
+import { createMapUrl } from '../../../utils/map';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
 import { addVendor, deleteVendor, saveVendor } from '../../../db/vendors';

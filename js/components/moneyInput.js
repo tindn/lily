@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { formatAmountToDisplay } from '../../utils/money';
+import { formatAmountToDisplay } from '../utils/money';
 import theme from '../theme';
 
 class MoneyInput extends React.PureComponent {

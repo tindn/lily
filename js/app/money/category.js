@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import LineItem from './lineItem';
-import { by } from '../../../utils/sort';
+import { by } from '../../utils/sort';
 import theme from '../../theme';
 
 function Category(props) {

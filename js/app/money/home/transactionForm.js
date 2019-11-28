@@ -9,7 +9,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { isNearby } from '../../../../utils/location';
+import { isNearby } from '../../../utils/location';
 import DateInput from '../../../components/dateInput';
 import MoneyInput from '../../../components/moneyInput';
 import OutlineButton from '../../../components/outlineButton';

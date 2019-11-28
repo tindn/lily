@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { toSimpleDateString } from '../../utils/date';
+import { toSimpleDateString } from '../utils/date';
 import sharedStyles from '../sharedStyles';
 import theme from '../theme';
 import OutlineButton from './outlineButton';
