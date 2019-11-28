@@ -1,17 +1,27 @@
 import React, { useCallback, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import Swipeable from 'react-native-swipeable-row';
 import { NavigationEvents } from 'react-navigation';
-import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../../components/screen';
+import { calculateAnalyticsForMonth } from '../../db/monthlyAnalytics';
 import { getAllFromTable } from '../../db/shared';
 import theme from '../../theme';
+import { formatAmountToDisplay } from '../../utils/money';
 
 function MonthlyAnalytics() {
   const [data, setData] = useState([]);
   var [refreshing, setRefreshing] = useState(false);
+  var [calculatingIndex, setCalculatingIndex] = useState(-1);
   var fetchData = useCallback(function(params = { useLoadingIndicator: true }) {
     params.useLoadingIndicator && setRefreshing(true);
-    getAllFromTable('monthly_analytics', 'ORDER BY start_date DESC')
+    return getAllFromTable('monthly_analytics', 'ORDER BY start_date DESC')
       .then(setData)
       .finally(() => {
         params.useLoadingIndicator && setRefreshing(false);
@@ -36,24 +46,63 @@ function MonthlyAnalytics() {
             <Text>No data.</Text>
           </View>
         }
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           const diff = item.earned - item.spent;
           const color = diff >= 0 ? theme.colors.green : theme.colors.red;
+
           return (
-            <View style={styles.listItem}>
-              <View>
-                <Text style={styles.month}>{item.name}</Text>
-                <Text style={{ color: theme.colors.green }}>
-                  {` ${formatAmountToDisplay(item.earned)}`}
-                </Text>
-                <Text style={{ color: theme.colors.red }}>
-                  {`${formatAmountToDisplay(-item.spent, true)}`}
+            <Swipeable
+              rightActionActivationDistance={150}
+              onRightActionRelease={function() {
+                setCalculatingIndex(index);
+                setTimeout(function() {
+                  calculateAnalyticsForMonth(item).then(() =>
+                    fetchData({
+                      useLoadingIndicator: false,
+                    }).finally(function() {
+                      setCalculatingIndex(-1);
+                    })
+                  );
+                }, 300);
+              }}
+              rightContent={
+                <View
+                  key={`refresh ${item.id}`}
+                  style={{
+                    backgroundColor: theme.colors.green,
+                    justifyContent: 'center',
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontWeight: '500',
+                      fontSize: 18,
+                      color: theme.colors.white,
+                      paddingLeft: 10,
+                    }}
+                  >
+                    Refresh
+                  </Text>
+                </View>
+              }
+            >
+              <View style={styles.listItem}>
+                <View>
+                  <Text style={styles.month}>{item.name}</Text>
+                  <Text style={{ color: theme.colors.green }}>
+                    {` ${formatAmountToDisplay(item.earned)}`}
+                  </Text>
+                  <Text style={{ color: theme.colors.red }}>
+                    {`${formatAmountToDisplay(-item.spent, true)}`}
+                  </Text>
+                </View>
+                <ActivityIndicator animating={index == calculatingIndex} />
+                <Text style={[styles.amount, { color }]}>
+                  {formatAmountToDisplay(diff, true)}
                 </Text>
               </View>
-              <Text style={[styles.amount, { color }]}>
-                {formatAmountToDisplay(diff, true)}
-              </Text>
-            </View>
+            </Swipeable>
           );
         }}
       />

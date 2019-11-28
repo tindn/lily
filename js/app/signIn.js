@@ -19,6 +19,7 @@ export default function LoadingScreen() {
         }}
       >
         <ImageBackground
+          // eslint-disable-next-line no-undef
           source={require('../../images/signIn.jpeg')}
           style={{
             alignItems: 'center',

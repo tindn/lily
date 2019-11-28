@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React, { useContext } from 'react';
-import { View } from 'react-native';
+import { View, Clipboard } from 'react-native';
 import { Button, Layout, Text } from 'react-native-ui-kitten';
 import Icon from 'react-native-vector-icons/AntDesign';
 import rnfb from 'rn-fetch-blob';
@@ -14,9 +14,6 @@ export default function Playground() {
   var currentUser = useContext(CurrentUserContext);
   return (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View>
-        <Text>This is playground</Text>
-      </View>
       <Button
         style={{ marginVertical: 5 }}
         onPress={() => runMigrations()}
@@ -75,6 +72,20 @@ export default function Playground() {
         Import Account Snapshots
       </Button>
 
+      <Button
+        style={{ marginVertical: 5 }}
+        onPress={function() {
+          var dbFilePath =
+            rnfb.fs.dirs.DocumentDir +
+            '/lily-user-' +
+            currentUser.user.uid +
+            '.db';
+          console.info(dbFilePath);
+          Clipboard.setString(dbFilePath);
+        }}
+      >
+        Db File Path
+      </Button>
       <Button
         style={{ marginVertical: 5 }}
         onPress={() => {

@@ -58,3 +58,19 @@ export function getById(tableName, id) {
     .executeSql(`SELECT * FROM ${tableName} WHERE id = '${id}';`)
     .then(queryResultToArray);
 }
+
+export function nextMonth(date) {
+  const newDate = new Date(date);
+  const currentMonth = newDate.getMonth();
+  const currentYear = newDate.getFullYear();
+  switch (currentMonth) {
+    case 11:
+      newDate.setMonth(0);
+      newDate.setFullYear(currentYear + 1);
+      break;
+    default:
+      newDate.setMonth(currentMonth + 1);
+      break;
+  }
+  return newDate;
+}

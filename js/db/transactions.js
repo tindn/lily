@@ -1,11 +1,14 @@
 import uuid from 'uuid/v1';
-import { db, queryResultToArray, getAllFromTable, getById } from './shared';
+import {
+  db,
+  getAllFromTable,
+  getById,
+  nextMonth,
+  queryResultToArray,
+} from './shared';
 
-export function getTransactionsFromDate(timestamp) {
-  return db
-    .executeSql(
-      `
-    SELECT
+var selectTransactionsStatement = `
+  SELECT
       t.id,
       entry_type,
       amount,
@@ -17,8 +20,29 @@ export function getTransactionsFromDate(timestamp) {
     FROM
       transactions t
       LEFT JOIN vendors v ON t.vendor_id = v.id
+`;
+
+export function getTransactionsFromDate(timestamp) {
+  return db
+    .executeSql(
+      `
+    ${selectTransactionsStatement}
     WHERE
-      date_time > ${timestamp}
+      date_time >= ${timestamp}
+    ORDER BY
+      date_time DESC;
+  `
+    )
+    .then(queryResultToArray);
+}
+
+export function getTransactionsBetweenDate(from, to) {
+  return db
+    .executeSql(
+      `
+    ${selectTransactionsStatement}
+    WHERE
+      date_time >= ${from} AND date_time < ${to}
     ORDER BY
       date_time DESC;
   `
@@ -161,20 +185,4 @@ export function deleteTransaction(transaction) {
       analyticsScript,
     ]);
   });
-}
-
-function nextMonth(date) {
-  const newDate = new Date(date);
-  const currentMonth = newDate.getMonth();
-  const currentYear = newDate.getFullYear();
-  switch (currentMonth) {
-    case 11:
-      newDate.setMonth(0);
-      newDate.setFullYear(currentYear + 1);
-      break;
-    default:
-      newDate.setMonth(currentMonth + 1);
-      break;
-  }
-  return newDate;
 }

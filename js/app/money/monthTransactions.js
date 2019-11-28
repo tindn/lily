@@ -11,8 +11,6 @@ import {
 import Swipeable from 'react-native-swipeable-row';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { NavigationEvents } from 'react-navigation';
-import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
-import { formatAmountToDisplay } from '../../utils/money';
 import Screen from '../../components/screen';
 import {
   deleteTransaction,
@@ -20,6 +18,8 @@ import {
 } from '../../db/transactions';
 import { error, success } from '../../log';
 import theme from '../../theme';
+import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
+import { formatAmountToDisplay } from '../../utils/money';
 
 function MonthTransactions(props) {
   const [data, setData] = useState([]);
@@ -63,34 +63,35 @@ function MonthTransactions(props) {
             item.entry_type == 'credit' ? theme.colors.green : theme.colors.red;
           return (
             <Swipeable
-              rightButtons={[
-                <TouchableOpacity
+              rightActionActivationDistance={175}
+              onRightActionRelease={function() {
+                Alert.alert(
+                  'Confirm',
+                  'Do you want to delete this transaction?',
+                  [
+                    {
+                      text: 'Cancel',
+                    },
+                    {
+                      text: 'Delete',
+                      onPress: function() {
+                        deleteTransaction(item)
+                          .then(function() {
+                            fetchData();
+                            success('Transaction removed');
+                          })
+                          .catch(function(e) {
+                            error('Failed to remove transaction', e);
+                          });
+                      },
+                      style: 'destructive',
+                    },
+                  ]
+                );
+              }}
+              rightContent={
+                <View
                   key={`delete ${item.id}`}
-                  onPress={function() {
-                    Alert.alert(
-                      'Confirm',
-                      'Do you want to delete this transaction?',
-                      [
-                        {
-                          text: 'Cancel',
-                        },
-                        {
-                          text: 'Delete',
-                          onPress: function() {
-                            deleteTransaction(item)
-                              .then(function() {
-                                fetchData();
-                                success('Transaction removed');
-                              })
-                              .catch(function(e) {
-                                error('Failed to remove transaction', e);
-                              });
-                          },
-                          style: 'destructive',
-                        },
-                      ]
-                    );
-                  }}
                   style={{
                     backgroundColor: theme.colors.red,
                     justifyContent: 'center',
@@ -107,8 +108,8 @@ function MonthTransactions(props) {
                   >
                     Delete
                   </Text>
-                </TouchableOpacity>,
-              ]}
+                </View>
+              }
             >
               <TouchableOpacity
                 delayPressIn={100}
