@@ -8,6 +8,7 @@ import uuid from 'uuid/v1';
 import { db, runMigrations } from '../db';
 import { getAllFromTable } from '../db/shared';
 import CurrentUserContext from './currentUserContext';
+import { upload } from '../LILYFirebaseStorage';
 
 export default function Playground() {
   var currentUser = useContext(CurrentUserContext);
@@ -84,15 +85,16 @@ export default function Playground() {
       <Button
         style={{ marginVertical: 5 }}
         onPress={() => {
-          var storage = firebase.app().storage('gs://lily-cc62d.appspot.com');
-          var userDbBackupFolder = storage
-            .ref()
-            .child('db_backups/lily-user-' + currentUser.user.uid + '.db');
+          // var storage = firebase.app().storage('gs://lily-cc62d.appspot.com');
+          // var userDbBackupFolder = storage
+          //   .ref()
+          //   .child('db_backups/lily-user-' + currentUser.user.uid + '.db');
           var dbFilePath =
             rnfb.fs.dirs.DocumentDir +
             '/lily-user-' +
             currentUser.user.uid +
             '.db';
+          upload('lily-user-' + currentUser.user.uid + '.db');
           // rnfb.fs
           //   .readStream(
           //     rnfb.fs.dirs.DocumentDir +
@@ -116,23 +118,22 @@ export default function Playground() {
           //   console.log(arguments);
           // });
 
-          rnfb.polyfill.Blob.build(dbFilePath, { type: 'file' }).then(blob => {
-            // upload image using Firebase SDK
-            debugger;
-            userDbBackupFolder
-              .put(blob)
-              .then(snapshot => {
-                console.log('Uploaded', snapshot.totalBytes, 'bytes.');
-                console.log(snapshot.metadata);
-                var url = snapshot.metadata.downloadURLs[0];
-                console.log('File available at', url);
-              })
-              .catch(function(error) {
-                console.error('Upload failed:', error);
-              });
-          });
+          // rnfb.polyfill.Blob.build(dbFilePath, { type: 'file' }).then(blob => {
+          //   // upload image using Firebase SDK
+          //   debugger;
+          //   userDbBackupFolder
+          //     .put(blob)
+          //     .then(snapshot => {
+          //       console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+          //       console.log(snapshot.metadata);
+          //       var url = snapshot.metadata.downloadURLs[0];
+          //       console.log('File available at', url);
+          //     })
+          //     .catch(function(error) {
+          //       console.error('Upload failed:', error);
+          //     });
+          // });
         }}
-        disabled
       >
         Storage
       </Button>

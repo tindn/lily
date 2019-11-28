@@ -11,6 +11,8 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		26CC4529238F12D400476ED2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26CC4528238F12D400476ED2 /* GoogleService-Info.plist */; };
+		26CC452E238F1BD300476ED2 /* LILYFirebaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 26CC452D238F1BD300476ED2 /* LILYFirebaseStorage.m */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		FB589047BE0973ECB609DDC5 /* libPods-lily.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7049011B8D9906737B619950 /* libPods-lily.a */; };
 /* End PBXBuildFile section */
@@ -39,6 +41,9 @@
 		26A8F6B6222A284D00E3EC2D /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		26A8F6B7222A284D00E3EC2D /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		26A8F6B8222A284D00E3EC2D /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		26CC4528238F12D400476ED2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		26CC452D238F1BD300476ED2 /* LILYFirebaseStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LILYFirebaseStorage.m; path = lily/Firebase/LILYFirebaseStorage.m; sourceTree = "<group>"; };
+		26CC452F238F1BF600476ED2 /* LILYFirebaseStorage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LILYFirebaseStorage.h; path = lily/Firebase/LILYFirebaseStorage.h; sourceTree = "<group>"; };
 		7049011B8D9906737B619950 /* libPods-lily.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lily.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		87F339EADF13C397911DE6F3 /* Pods-lily.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lily.debug.xcconfig"; path = "Target Support Files/Pods-lily/Pods-lily.debug.xcconfig"; sourceTree = "<group>"; };
 		9CC5660114FDF91FE56CE4DE /* Pods-lily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lily.release.xcconfig"; path = "Target Support Files/Pods-lily/Pods-lily.release.xcconfig"; sourceTree = "<group>"; };
@@ -71,6 +76,8 @@
 		13B07FAE1A68108700A75B9A /* lily */ = {
 			isa = PBXGroup;
 			children = (
+				26CC452A238F1AC400476ED2 /* Firebase */,
+				26CC4528238F12D400476ED2 /* GoogleService-Info.plist */,
 				C3BF58CD2304552100944C3F /* lily.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -111,6 +118,15 @@
 			children = (
 			);
 			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		26CC452A238F1AC400476ED2 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				26CC452D238F1BD300476ED2 /* LILYFirebaseStorage.m */,
+				26CC452F238F1BF600476ED2 /* LILYFirebaseStorage.h */,
+			);
+			name = Firebase;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -229,6 +245,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				26CC4529238F12D400476ED2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +344,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				26CC452E238F1BD300476ED2 /* LILYFirebaseStorage.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
