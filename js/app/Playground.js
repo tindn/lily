@@ -74,14 +74,7 @@ export default function Playground() {
       >
         Import Account Snapshots
       </Button>
-      <Button
-        style={{ marginVertical: 5 }}
-        onPress={() => {
-          firebase.auth().signOut();
-        }}
-      >
-        Sign out
-      </Button>
+
       <Button
         style={{ marginVertical: 5 }}
         onPress={() => {
@@ -136,6 +129,15 @@ export default function Playground() {
         }}
       >
         Storage
+      </Button>
+      <Button
+        style={{ marginVertical: 10 }}
+        size="large"
+        onPress={() => {
+          firebase.auth().signOut();
+        }}
+      >
+        SIGN OUT
       </Button>
     </Layout>
   );

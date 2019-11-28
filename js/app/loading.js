@@ -1,10 +1,17 @@
 import React from 'react';
-import { Layout, Text } from 'react-native-ui-kitten';
+import { ImageBackground, StatusBar } from 'react-native';
 
 export default function LoadingScreen() {
   return (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>loading</Text>
-    </Layout>
+    <ImageBackground
+      source={require('../../images/loading.jpeg')}
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+      }}
+    >
+      <StatusBar barStyle="light-content" />
+    </ImageBackground>
   );
 }
