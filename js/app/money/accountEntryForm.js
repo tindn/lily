@@ -151,21 +151,18 @@ function AccountEntryForm(props) {
         <OutlineButton
           label="Cancel"
           onPress={props.onCancel}
-          style={[sharedStyles.outlineButton]}
           color={theme.colors.darkGray}
         />
         {id ? (
           <OutlineButton
             label="Delete"
             onPress={confirmDelete}
-            style={[sharedStyles.outlineButton]}
             color={theme.colors.red}
           />
         ) : (
           <OutlineButton
             label="Balance"
             onPress={onBalancePressed}
-            style={[sharedStyles.outlineButton]}
             color="#000"
             labelElement={
               <View style={{ flexDirection: 'row' }}>
@@ -183,7 +180,6 @@ function AccountEntryForm(props) {
         <OutlineButton
           label={id ? 'Save' : 'Add'}
           onPress={save}
-          style={[sharedStyles.outlineButton]}
           color={id ? theme.colors.primary : theme.colors.iosBlue}
         />
       </View>

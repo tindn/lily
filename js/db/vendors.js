@@ -13,10 +13,37 @@ export async function getAllVendors() {
     return acc;
   }, {});
   vendors.forEach(function(vendor) {
+    vendor.name = unescape(vendor.name);
     if (coordinatesByVendor[vendor.id] != undefined) {
       vendor.locations = coordinatesByVendor[vendor.id];
     }
   });
+  return vendors;
+}
+
+export async function getNearbyVendors({ latitude, longitude }) {
+  latitude = latitude.toFixed(3).toString();
+  latitude = latitude.substring(0, latitude.length - 1);
+  longitude = longitude.toFixed(3).toString();
+  longitude = longitude.substring(0, latitude.length - 1);
+
+  var vendors = await db
+    .executeSql(
+      `
+      SELECT
+        *
+      FROM
+        vendors
+      WHERE
+        id IN(
+          SELECT
+            vendor_id FROM vendor_coordinates
+          WHERE
+            latitude LIKE '${latitude}%'
+            AND longitude LIKE '${longitude}%');`
+    )
+    .then(queryResultToArray);
+  vendors.forEach(v => (v.name = unescape(v.name)));
   return vendors;
 }
 
@@ -43,7 +70,7 @@ export async function getVendorById(id) {
   }
   return {
     id: rows[0].id,
-    name: rows[0].name,
+    name: unescape(rows[0].name),
     updated_on: rows[0].updated_on,
     locations: rows
       .filter(r => r.location_id)

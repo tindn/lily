@@ -40,9 +40,7 @@ function Vendors(props) {
               }}
             >
               <View>
-                <Text style={styles.transactionItemMemo}>
-                  {unescape(item.name)}
-                </Text>
+                <Text style={styles.transactionItemMemo}>{item.name}</Text>
               </View>
             </TouchableOpacity>
           );

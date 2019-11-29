@@ -1,8 +1,13 @@
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
+import sharedStyles from '../sharedStyles';
+import theme from '../theme';
 
 const OutlineButton = props => {
   let color = props.color || '#007aff';
+  if (props.disabled) {
+    color = theme.colors.lightGray;
+  }
   let backgroundColor = '#fff';
   let label = props.labelElement || (
     <Text
@@ -31,8 +36,8 @@ const OutlineButton = props => {
           borderRadius: 5,
           borderWidth: 1,
           borderColor: color,
-          // opacity: props.disabled ? 0.2 : 1
         },
+        sharedStyles.outlineButton,
         props.style,
       ]}
     >

@@ -53,7 +53,7 @@ class DateInput extends React.PureComponent {
               onPress={this.toggleModal}
               label="Done"
               color={theme.colors.primary}
-              style={[sharedStyles.outlineButton, styles.button]}
+              style={styles.button}
               textStyle={{ textAlign: 'center' }}
             />
           </SafeAreaView>

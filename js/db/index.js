@@ -10,7 +10,7 @@ export {
   getAllVendors,
 };
 
-// if (__DEV__) {
-//   SQLite.DEBUG(true);
-// }
+if (__DEV__) {
+  SQLite.DEBUG(true);
+}
 SQLite.enablePromise(true);

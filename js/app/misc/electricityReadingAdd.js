@@ -56,19 +56,13 @@ function ElectricityReadingAdd() {
           color={theme.colors.primary}
           label="Cancel"
           onPress={resetForm}
-          style={[
-            sharedStyles.outlineButton,
-            { backgroundColor: 'transparent' },
-          ]}
+          style={[{ backgroundColor: 'transparent' }]}
         />
         <OutlineButton
           color={theme.colors.iosBlue}
           label="Add"
           onPress={add}
-          style={[
-            sharedStyles.outlineButton,
-            { backgroundColor: 'transparent' },
-          ]}
+          style={[{ backgroundColor: 'transparent' }]}
         />
       </View>
     </>
