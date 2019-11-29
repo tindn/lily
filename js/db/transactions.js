@@ -178,3 +178,68 @@ export function deleteTransaction(transaction) {
     ]);
   });
 }
+
+/** @typedef SpendTracking
+ * @type {Object}
+ * @property {Number} discretionary_spent
+ * @property {Number} spent
+ * @property {Number} earned
+ */
+
+/**
+ *
+ * @param {Date} date any date of month
+ * @returns {SpendTracking} spentTracking
+ */
+export async function getSpendTracking(date) {
+  var [start, end] = getMonthStartEndFor(date);
+  var results = await db
+    .executeSql(
+      `
+  WITH month AS (
+    SELECT
+      *
+    FROM
+      transactions
+    WHERE
+      date_time >= ${start.getTime()} AND date_time < ${end.getTime()}
+    ORDER BY
+      date_time DESC
+  ),
+  cross AS (
+    SELECT
+      0 AS discretionary_spent,
+      sum(amount) AS earned,
+      0 AS spent
+    FROM
+      month
+    WHERE
+      entry_type = 'credit'
+    UNION
+    SELECT
+      0 AS discretionary_spent,
+      0 AS earned,
+      sum(amount) AS spent
+    FROM
+      month
+    WHERE
+      entry_type = 'debit'
+    UNION
+    SELECT
+      sum(amount) AS discretionary_spent,
+      0 AS earned,
+      0 AS spent
+    FROM
+      month
+    WHERE
+      entry_type = 'debit'
+      AND is_discretionary = TRUE
+  )
+  SELECT
+    sum(earned) AS earned, sum(spent) AS spent, sum(discretionary_spent) AS discretionary_spent
+  FROM
+    cross;`
+    )
+    .then(queryResultToArray);
+  return results[0];
+}

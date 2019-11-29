@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Card from '../../../components/card';
 import Screen from '../../../components/screen';
 import { getAllFromTable } from '../../../db/shared';
+import { getSpendTracking } from '../../../db/transactions';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
 import theme from '../../../theme';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
@@ -25,33 +26,11 @@ function Home(props) {
   var updateData = useCallback(
     function() {
       const today = new Date();
-      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-      getAllFromTable(
-        'transactions',
-        ` WHERE date_time > ${startOfMonth.getTime()} ORDER BY date_time DESC `
-      ).then(data => {
-        var summary = data.reduce(
-          function(acc, t) {
-            if (t.entry_type == 'debit') {
-              acc.spent = acc.spent + t.amount;
-              if (t.is_discretionary) {
-                acc.variableSpent = acc.variableSpent + t.amount;
-              }
-              return acc;
-            }
-
-            if (t.entry_type == 'credit') {
-              acc.earned = acc.earned + t.amount;
-              return acc;
-            }
-            return acc;
-          },
-          { spent: 0, earned: 0, variableSpent: 0 }
-        );
-        setSpendingThisMonth(summary.spent);
-        setEarningThisMonth(summary.earned);
-        setVariableSpendingThisMonth(summary.variableSpent);
+      getSpendTracking(today).then(function(spendTracking) {
+        setSpendingThisMonth(spendTracking.spent);
+        setEarningThisMonth(spendTracking.earned);
+        setVariableSpendingThisMonth(spendTracking.discretionary_spent);
       });
 
       var fourthMonthsAgo = new Date(Date.now() - 3600000 * 24 * 130).getTime();
