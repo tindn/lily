@@ -61,11 +61,11 @@ function VendorInput(props) {
                 vendorScrollRef.current.scrollToIndex({ index: scrollIndex });
               }
             }
-          }, 350);
+          }, 250);
         }}
-        style={{ flex: 1 }}
+        style={[{ flex: 1 }, props.displayStyle]}
       >
-        <Text style={props.displayStyle}>
+        <Text style={props.displayTextStyle}>
           {props.selectedVendorId
             ? props.vendors[props.selectedVendorId].name
             : 'Select a vendor'}
@@ -104,6 +104,12 @@ function VendorInput(props) {
               </TouchableOpacity>
             );
           }}
+          getItemLayout={(data, index) => ({
+            length: 48,
+            offset: 48 * index,
+            index,
+          })}
+          onScrollToIndexFailed={() => {}}
         />
         <FlatList
           ref={filterScrollRef}

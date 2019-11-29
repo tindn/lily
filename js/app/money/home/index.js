@@ -54,7 +54,7 @@ function Home(props) {
         setVariableSpendingThisMonth(summary.variableSpent);
       });
 
-      var fourthMonthsAgo = new Date(Date.now() - 3600000 * 24 * 120).getTime();
+      var fourthMonthsAgo = new Date(Date.now() - 3600000 * 24 * 130).getTime();
       getAllFromTable(
         'monthly_analytics',
         ` WHERE start_date > ${fourthMonthsAgo} AND end_date < ${today.getTime()} ORDER BY start_date DESC `
@@ -84,7 +84,9 @@ function Home(props) {
       >
         <Card
           onPress={() => {
-            props.navigation.navigate('MonthTransactions');
+            props.navigation.navigate('MonthTransactions', {
+              date: new Date(),
+            });
           }}
           style={{ marginTop: 10, padding: 15 }}
         >

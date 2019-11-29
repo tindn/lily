@@ -11,6 +11,7 @@ import {
 import DateInput from '../../components/dateInput';
 import MoneyInput from '../../components/moneyInput';
 import Screen from '../../components/screen';
+import VendorInput from '../../components/vendorInput';
 import { deleteTransaction, updateTransaction } from '../../db/transactions';
 import sharedStyles from '../../sharedStyles';
 import theme from '../../theme';
@@ -22,7 +23,7 @@ export default function TransactionDetails(props) {
   var [isCredit, setIsCredit] = useState(false);
   var [is_discretionary, setIsDiscretionary] = useState(true);
   var [transaction, setTransaction] = useState();
-  var [vendor, setVendor] = useState('');
+  var [vendor_id, setVendorId] = useState('');
 
   useEffect(
     function() {
@@ -33,7 +34,7 @@ export default function TransactionDetails(props) {
       setAmount(transactionFromParam.amount.toString());
       setIsCredit(transactionFromParam.entry_type == 'credit');
       setIsDiscretionary(!!transactionFromParam.is_discretionary);
-      setVendor(unescape(transactionFromParam.vendor));
+      setVendorId(transactionFromParam.vendor_id);
     },
     [props]
   );
@@ -61,14 +62,15 @@ export default function TransactionDetails(props) {
           />
           <MoneyInput onChange={setAmount} amount={amount} editable={true} />
         </View>
-        <TextInput
-          key="vendorInput"
-          style={[
-            { textAlign: 'right', fontSize: 20, fontWeight: '500' },
-            sharedStyles.inputRow,
-          ]}
-          value={vendor}
-          placeholder="vendor"
+        <VendorInput
+          displayStyle={sharedStyles.inputRow}
+          displayTextStyle={{
+            textAlign: 'right',
+            fontSize: 20,
+            fontWeight: '500',
+          }}
+          selectedVendorId={vendor_id}
+          onVendorPress={setVendorId}
         />
         <TextInput
           key="memoInput"
@@ -119,6 +121,7 @@ export default function TransactionDetails(props) {
                 amount: parseFloat(amount),
                 entry_type: isCredit ? 'credit' : 'debit',
                 is_discretionary,
+                vendor_id,
               }).then(function() {
                 props.navigation.pop();
               });

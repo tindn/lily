@@ -1,11 +1,6 @@
 import uuid from 'uuid/v1';
-import {
-  db,
-  getAllFromTable,
-  getById,
-  nextMonth,
-  queryResultToArray,
-} from './shared';
+import { getMonthStartEndFor } from '../utils/date';
+import { db, getAllFromTable, getById, queryResultToArray } from './shared';
 
 var selectTransactionsStatement = `
   SELECT
@@ -22,7 +17,7 @@ var selectTransactionsStatement = `
       LEFT JOIN vendors v ON t.vendor_id = v.id
 `;
 
-export function getTransactionsFromDate(timestamp) {
+export function getTransactionsFromTimestamp(timestamp) {
   return db
     .executeSql(
       `
@@ -36,7 +31,7 @@ export function getTransactionsFromDate(timestamp) {
     .then(queryResultToArray);
 }
 
-export function getTransactionsBetweenDate(from, to) {
+export function getTransactionsBetweenTimestamps(from, to) {
   return db
     .executeSql(
       `
@@ -87,13 +82,10 @@ export function addTransaction(transaction) {
     'monthly_analytics',
     `WHERE name = '${monthName}'`
   ).then(function([monthlyAnalytics]) {
-    var analyticsScript,
-      monthStartDate = new Date(
-        transaction.date_time.getFullYear(),
-        transaction.date_time.getMonth(),
-        1
-      ),
-      monthEndDate = nextMonth(monthStartDate);
+    var analyticsScript;
+    var [monthStartDate, monthEndDate] = getMonthStartEndFor(
+      transaction.date_time
+    );
     if (!monthlyAnalytics) {
       var monthlyId = uuid();
       analyticsScript = `INSERT INTO monthly_analytics VALUES ('${monthlyId}', '${monthName}',${monthStartDate.getTime()}, ${monthEndDate.getTime()}, ${

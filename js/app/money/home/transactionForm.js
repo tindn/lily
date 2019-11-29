@@ -107,7 +107,7 @@ function TransactionForm(props) {
               setVendorId(id);
             }
           }}
-          displayStyle={[sharedStyles.formTextInput, styles.memoInput]}
+          displayTextStyle={[sharedStyles.formTextInput, styles.memoInput]}
           nearbyVendors={nearbyVendors}
         />
       </View>

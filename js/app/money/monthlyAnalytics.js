@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import { NavigationEvents } from 'react-navigation';
@@ -15,7 +16,7 @@ import { getAllFromTable } from '../../db/shared';
 import theme from '../../theme';
 import { formatAmountToDisplay } from '../../utils/money';
 
-function MonthlyAnalytics() {
+function MonthlyAnalytics(props) {
   const [data, setData] = useState([]);
   var [refreshing, setRefreshing] = useState(false);
   var [calculatingIndex, setCalculatingIndex] = useState(-1);
@@ -87,7 +88,14 @@ function MonthlyAnalytics() {
                 </View>
               }
             >
-              <View style={styles.listItem}>
+              <TouchableOpacity
+                style={styles.listItem}
+                onPress={() => {
+                  props.navigation.navigate('MonthTransactions', {
+                    date: new Date(item.start_date),
+                  });
+                }}
+              >
                 <View>
                   <Text style={styles.month}>{item.name}</Text>
                   <Text style={{ color: theme.colors.green }}>
@@ -101,7 +109,7 @@ function MonthlyAnalytics() {
                 <Text style={[styles.amount, { color }]}>
                   {formatAmountToDisplay(diff, true)}
                 </Text>
-              </View>
+              </TouchableOpacity>
             </Swipeable>
           );
         }}

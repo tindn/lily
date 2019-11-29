@@ -1,8 +1,8 @@
 import { db } from './shared';
-import { getTransactionsBetweenDate } from './transactions';
+import { getTransactionsBetweenTimestamps } from './transactions';
 
 export async function calculateAnalyticsForMonth(monthlyAnalytics) {
-  var monthTransactions = await getTransactionsBetweenDate(
+  var monthTransactions = await getTransactionsBetweenTimestamps(
     monthlyAnalytics.start_date,
     monthlyAnalytics.end_date
   );

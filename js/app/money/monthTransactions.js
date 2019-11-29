@@ -14,30 +14,32 @@ import { NavigationEvents } from 'react-navigation';
 import Screen from '../../components/screen';
 import {
   deleteTransaction,
-  getTransactionsFromDate,
+  getTransactionsBetweenTimestamps,
 } from '../../db/transactions';
 import { error, success } from '../../log';
 import theme from '../../theme';
-import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
+import {
+  getMonthStartEndFor,
+  toWeekDayDateStringFromTimestamp,
+} from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
 
 function MonthTransactions(props) {
   const [data, setData] = useState([]);
   var [refreshing, setRefreshing] = useState(false);
-  var fetchData = useCallback(function(params = { useLoadingIndicator: true }) {
-    const today = new Date();
-    const startOfMonth = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      1
-    ).getTime();
-    params.useLoadingIndicator && setRefreshing(true);
-    getTransactionsFromDate(startOfMonth)
-      .then(setData)
-      .finally(() => {
-        params.useLoadingIndicator && setRefreshing(false);
-      });
-  }, []);
+  var date = props.navigation.getParam('date', new Date());
+  var fetchData = useCallback(
+    function(params = { useLoadingIndicator: true }) {
+      params.useLoadingIndicator && setRefreshing(true);
+      var [start, end] = getMonthStartEndFor(date);
+      getTransactionsBetweenTimestamps(start.getTime(), end.getTime())
+        .then(setData)
+        .finally(() => {
+          params.useLoadingIndicator && setRefreshing(false);
+        });
+    },
+    [date.getTime()]
+  );
 
   return (
     <Screen>
