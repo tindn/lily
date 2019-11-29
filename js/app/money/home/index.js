@@ -142,7 +142,7 @@ function Home(props) {
               setShowTransactionForm(false);
             }}
             onTransactionAdded={updateData}
-            style={{ marginBottom: 200, marginTop: 20 }}
+            style={{ marginBottom: 225, marginTop: 20 }}
           />
         ) : null}
       </ScrollView>

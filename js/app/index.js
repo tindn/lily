@@ -16,7 +16,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setRef } from '../log';
-import { persistor, store } from '../store';
+import { persistor, store } from '../redux';
 import CurrentUserContext from './currentUserContext';
 import LoadingScreen from './loading';
 import navigation from './navigation';
