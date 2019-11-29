@@ -1,5 +1,17 @@
 import uuid from 'uuid/v1';
-import { db, getById } from './shared';
+import { db, getById, getAllFromTable } from './shared';
+
+export function getAccountEntriesForAccount(accountId) {
+  return getAllFromTable(
+    'account_entries',
+    `WHERE account_id = '${accountId}' ORDER BY date_time DESC`
+  ).then(function(entries) {
+    entries.forEach(function(e) {
+      e.memo = unescape(e.memo);
+    });
+    return entries;
+  });
+}
 
 /**
  *

@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import DateInput from '../../components/dateInput';
-import MoneyInput from '../../components/moneyInput';
-import { useToggle } from '../../hooks';
-import theme from '../../theme';
+import DateInput from '../../../components/dateInput';
+import MoneyInput from '../../../components/moneyInput';
+import { useToggle } from '../../../hooks';
+import theme from '../../../theme';
 import AccountEntryForm from './accountEntryForm';
 
 function AccountEntry(props) {
@@ -31,7 +31,7 @@ function AccountEntry(props) {
         <DateInput
           date={new Date(props.entry.date_time)}
           style={styles.date}
-          disabled={true}
+          disabled
         />
         <Text style={{ fontSize: 16 }}>{props.entry.memo}</Text>
       </View>
@@ -41,7 +41,7 @@ function AccountEntry(props) {
         textStyle={{
           fontSize: 20,
         }}
-        type={props.entry.type}
+        type={props.entry.entry_type}
       />
     </TouchableOpacity>
   );

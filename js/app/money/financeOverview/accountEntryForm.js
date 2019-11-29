@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Switch, Text, TextInput, View } from 'react-native';
-import DateInput from '../../components/dateInput';
-import MoneyInput from '../../components/moneyInput';
-import OutlineButton from '../../components/outlineButton';
+import DateInput from '../../../components/dateInput';
+import MoneyInput from '../../../components/moneyInput';
+import OutlineButton from '../../../components/outlineButton';
 import {
   addAccountEntry,
   removeAccountEntry,
   updateAccountEntry,
-} from '../../db/accountEntries';
-import { useToggle } from '../../hooks';
-import sharedStyles from '../../sharedStyles';
-import theme from '../../theme';
+} from '../../../db/accountEntries';
+import { useToggle } from '../../../hooks';
+import sharedStyles from '../../../sharedStyles';
+import theme from '../../../theme';
 
 function AccountEntryForm(props) {
   var [id, setId] = useState('');
@@ -48,7 +48,7 @@ function AccountEntryForm(props) {
   }
 
   function updateBalanceAmount(amount) {
-    let diff = amount - props.account.balance;
+    let diff = amount - props.accountBalance;
     setBalance(amount);
     setAmount(diff);
     setEntryType(diff < 0 ? 'debit' : 'credit');
@@ -113,6 +113,7 @@ function AccountEntryForm(props) {
             color:
               entry_type === 'debit' ? theme.colors.red : theme.colors.green,
           }}
+          autoFocus={props.autoFocus}
         />
       </View>
       <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
@@ -144,6 +145,7 @@ function AccountEntryForm(props) {
             textStyle={{
               flex: 10,
             }}
+            autoFocus={props.autoFocus}
           />
         </View>
       )}

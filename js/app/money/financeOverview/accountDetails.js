@@ -1,28 +1,33 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MoneyDisplay from '../../components/moneyDisplay';
-import Pill from '../../components/pill';
-import Screen from '../../components/screen';
-import theme from '../../theme';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
+import MoneyDisplay from '../../../components/moneyDisplay';
+import Pill from '../../../components/pill';
+import Screen from '../../../components/screen';
+import theme from '../../../theme';
 import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
-import { getById, getAllFromTable } from '../../db/shared';
+import { getAccountById, updateBalanceForAccount } from '../../../db/accounts';
+import { getAccountEntriesForAccount } from '../../../db/accountEntries';
 
 function AccountDetails(props) {
   const [showNewEntryForm, setForm] = useState(false);
   const [entries, setEntries] = useState([]);
   var [account, setAccount] = useState({});
+  var [updatingBalance, setUpdatingBalance] = useState(false);
   var updateData = useCallback(
     function() {
       var accountId = props.navigation.getParam('accountId', undefined);
       if (accountId) {
-        getById('accounts', accountId).then(function(data) {
-          setAccount(data[0]);
+        getAccountById(accountId).then(function(data) {
+          setAccount(data);
         });
-        getAllFromTable(
-          'account_entries',
-          `WHERE account_id = '${accountId}' ORDER BY date_time DESC`
-        ).then(setEntries);
+        getAccountEntriesForAccount(accountId).then(setEntries);
       }
     },
     [props]
@@ -36,12 +41,13 @@ function AccountDetails(props) {
     setForm(!showNewEntryForm);
   };
 
-  const { name, balance, type, category } = account;
+  const { name, balance, type, category, id } = account;
   return (
     <Screen>
       <ScrollView keyboardShouldPersistTaps="always">
         <View style={[styles.row]}>
           <Text style={{ fontSize: 17 }}>{name}</Text>
+          <ActivityIndicator animating={updatingBalance} />
           <MoneyDisplay
             amount={balance}
             style={{ color: '#000', fontSize: 17 }}
@@ -57,12 +63,38 @@ function AccountDetails(props) {
             marginTop: 20,
           }}
         >
+          <Pill
+            backgroundColor={theme.colors.primary}
+            color={theme.colors.secondary}
+            onPress={() => {
+              setUpdatingBalance(true);
+              updateBalanceForAccount(id)
+                .then(function() {
+                  updateData();
+                })
+                .finally(function() {
+                  // eslint-disable-next-line no-undef
+                  setTimeout(function() {
+                    setUpdatingBalance(false);
+                  }, 100);
+                });
+            }}
+            style={{
+              padding: 12,
+              marginLeft: 50,
+              marginRight: 50,
+              marginBottom: 20,
+            }}
+            label="Update Balance"
+            textStyle={{ textAlign: 'center' }}
+          />
           {showNewEntryForm ? (
             <AccountEntryForm
               onCancel={toggleAccountEntry}
               accountBalance={balance}
               accountId={account.id}
               onEntryChange={updateData}
+              autoFocus
             />
           ) : (
             <Pill
@@ -79,7 +111,7 @@ function AccountDetails(props) {
           style={{
             borderTopColor: theme.colors.lighterGray,
             borderTopWidth: 1,
-            marginTop: 30,
+            marginVertical: 15,
           }}
         >
           {entries.map(function(item, index) {
