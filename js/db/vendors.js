@@ -1,5 +1,5 @@
 import uuid from 'uuid/v1';
-import { db, getAllFromTable } from './shared';
+import { db, getAllFromTable, queryResultToArray } from './shared';
 
 export async function getAllVendors() {
   var vendors = await getAllFromTable('vendors', 'ORDER BY name');
@@ -20,6 +20,41 @@ export async function getAllVendors() {
   return vendors;
 }
 
+export async function getVendorById(id) {
+  var rows = await db
+    .executeSql(
+      `
+  SELECT
+    v.id as id,
+    name,
+    updated_on,
+    c.id as location_id,
+    latitude,
+    longitude
+  FROM
+    vendors v
+    LEFT JOIN vendor_coordinates c ON v.id = c.vendor_id
+  WHERE
+    v.id = '${id}';`
+    )
+    .then(queryResultToArray);
+  if (!rows || !rows.length) {
+    return null;
+  }
+  return {
+    id: rows[0].id,
+    name: rows[0].name,
+    updated_on: rows[0].updated_on,
+    locations: rows
+      .filter(r => r.location_id)
+      .map(r => ({
+        id: r.location_id,
+        latitude: r.latitude,
+        longitude: r.longitude,
+      })),
+  };
+}
+
 export function addVendor(vendor) {
   var scripts = [];
   var vendorId = uuid();
@@ -38,7 +73,9 @@ export function addVendor(vendor) {
       );
     });
   }
-  return db.sqlBatch(scripts);
+  return db.sqlBatch(scripts).then(function() {
+    return vendorId;
+  });
 }
 
 export async function saveVendor(vendor) {
@@ -53,21 +90,21 @@ export async function saveVendor(vendor) {
     vendor.locations.forEach(function(location) {
       if (location.id) {
         scripts.push(
-          `UPDATE coordinates 
+          `UPDATE vendor_coordinates 
            SET latitude = ${location.latitude}, longitude = ${location.longitude} 
            WHERE id = '${location.id}';`
         );
       } else {
         var locationId = uuid();
         scripts.push(
-          `INSERT INTO coordinates (id, latitude, longitude, vendor_id) 
+          `INSERT INTO vendor_coordinates (id, latitude, longitude, vendor_id) 
            VALUES ('${locationId}',${location.latitude},${location.longitude},'${vendor.id}');`
         );
       }
     });
   } else {
     var existingLocations = await getAllFromTable(
-      'coordinates',
+      'vendor_coordinates',
       `WHERE vendor_id = '${vendor.id}'`
     );
     if (existingLocations && existingLocations.length) {
@@ -81,7 +118,7 @@ export async function saveVendor(vendor) {
 
 export function deleteVendor(id) {
   var scripts = [
-    `DELETE FROM coordinates WHERE vendor_id = '${id}';`,
+    `DELETE FROM vendor_coordinates WHERE vendor_id = '${id}';`,
     `DELETE FROM vendors WHERE id = '${id}';`,
   ];
 

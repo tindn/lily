@@ -1,42 +1,28 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import {
   FlatList,
-  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { NavigationEvents } from 'react-navigation';
+import { connect } from 'react-redux';
 import Screen from '../../../components/screen';
-import { getAllVendors } from '../../../db';
+import { getVendorsArray } from '../../../redux/selectors/vendors';
 import theme from '../../../theme';
 
-function Vendors(props) {
-  var [refreshing, setRefreshing] = useState(false);
-  var [vendors, setVendors] = useState([]);
-  var fetchData = useCallback(function(params = { useLoadingIndicator: true }) {
-    params.useLoadingIndicator && setRefreshing(true);
-    getAllVendors()
-      .then(setVendors)
-      .finally(() => {
-        params.useLoadingIndicator && setRefreshing(false);
-      });
-  }, []);
+function mapStateToProps(state) {
+  return {
+    vendors: getVendorsArray(state),
+  };
+}
 
+function Vendors(props) {
   return (
     <Screen>
-      <NavigationEvents
-        onWillFocus={function() {
-          fetchData({ useLocadingIndicator: false });
-        }}
-      />
       <FlatList
-        data={vendors}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
-        }
+        data={props.vendors}
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={
           <View style={styles.emptyComponent}>
@@ -100,4 +86,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Vendors;
+export default connect(mapStateToProps)(Vendors);

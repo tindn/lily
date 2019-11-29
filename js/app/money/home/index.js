@@ -1,14 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
+import { connect } from 'react-redux';
 import Card from '../../../components/card';
 import Screen from '../../../components/screen';
 import { getAllFromTable } from '../../../db/shared';
+import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
 import theme from '../../../theme';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
 import TransactionForm from './transactionForm';
+
+var mapDispatchToProps = { loadVendorsFromDbToRedux: loadVendorsFromDbToRedux };
 
 function Home(props) {
   var [spendingThisMonth, setSpendingThisMonth] = useState(0);
@@ -67,6 +71,7 @@ function Home(props) {
   // Will focus is not called on first load
   useEffect(function() {
     updateData();
+    props.loadVendorsFromDbToRedux();
   }, []);
 
   return (
@@ -164,4 +169,4 @@ Home.navigationOptions = {
   header: null,
 };
 
-export default Home;
+export default connect(null, mapDispatchToProps)(Home);

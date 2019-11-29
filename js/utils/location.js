@@ -25,7 +25,7 @@ export function isNearby(current, location) {
   );
 }
 
-export function cleanCoordinate(coordinate, decimal = 4) {
+export function cleanCoordinate(coordinate, decimal = 6) {
   return {
     latitude: parseFloat(coordinate.latitude.toFixed(decimal)),
     longitude: parseFloat(coordinate.longitude.toFixed(decimal)),

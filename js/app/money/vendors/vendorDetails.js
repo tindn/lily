@@ -12,10 +12,21 @@ import { cleanCoordinate } from '../../../utils/location';
 import { createMapUrl } from '../../../utils/map';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
-import { addVendor, deleteVendor, saveVendor } from '../../../db/vendors';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
 import MapLocationInput from '../mapLocationInput';
+import { connect } from 'react-redux';
+import {
+  addVendorToDb,
+  saveVendorToDb,
+  deleteVendorFromDb,
+} from '../../../redux/actions/vendors';
+
+var mapDispatchToProps = {
+  addVendorToDb: addVendorToDb,
+  saveVendorToDb: saveVendorToDb,
+  deleteVendorFromDb: deleteVendorFromDb,
+};
 
 function VendorDetails(props) {
   var [name, setName] = useState();
@@ -143,23 +154,29 @@ function VendorDetails(props) {
             <Button
               title="Save"
               onPress={() => {
-                saveVendor({
-                  id,
-                  name,
-                  locations,
-                });
-                props.navigation.pop();
+                props
+                  .saveVendorToDb({
+                    id,
+                    name,
+                    locations,
+                  })
+                  .then(function() {
+                    props.navigation.pop();
+                  });
               }}
             />
           ) : (
             <Button
               title="Add"
               onPress={() => {
-                addVendor({
-                  name,
-                  locations,
-                });
-                props.navigation.pop();
+                props
+                  .addVendorToDb({
+                    name,
+                    locations,
+                  })
+                  .then(function() {
+                    props.navigation.pop();
+                  });
               }}
             />
           )}
@@ -180,8 +197,9 @@ function VendorDetails(props) {
                     {
                       text: 'Delete',
                       onPress: () => {
-                        deleteVendor(id);
-                        props.navigation.pop();
+                        props.deleteVendorFromDb(id).then(function() {
+                          props.navigation.pop();
+                        });
                       },
                       style: 'destructive',
                     },
@@ -205,4 +223,4 @@ VendorDetails.navigationOptions = function({ navigation }) {
   };
 };
 
-export default VendorDetails;
+export default connect(null, mapDispatchToProps)(VendorDetails);
