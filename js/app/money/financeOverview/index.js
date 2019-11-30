@@ -5,26 +5,23 @@ import {
   LayoutAnimation,
   ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
-import Card from '../../../components/card';
-import MoneyDisplay from '../../../components/moneyDisplay';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
+import { getActiveAccounts } from '../../../db/accounts';
 import {
   buildAccountSnapshot,
   getEarliestSnapshot,
   getLatestSnapshot,
 } from '../../../db/accountSnapshots';
-import { getAllFromTable } from '../../../db/shared';
 import { useToggle } from '../../../hooks';
 import theme from '../../../theme';
 import { calculateFinanceOverview } from '../../../utils/money';
 import Category from './category';
 import LineItem from './lineItem';
+import OverviewCard from './overviewCard';
 
 function FinanceOverview(props) {
   var [overview, setOverview] = useState({});
@@ -41,23 +38,6 @@ function FinanceOverview(props) {
     shortTermLiabilities: [],
     longTermLiabilities: [],
   });
-
-  useEffect(function() {
-    getAllFromTable('accounts').then(function(accounts) {
-      var overview = calculateFinanceOverview(accounts);
-      setOverview(overview);
-    });
-    getEarliestSnapshot().then(function(accounts) {
-      var overview = calculateFinanceOverview(accounts);
-      overview.date_time = accounts[0].date_time;
-      setEarliestSnapshot(overview);
-    });
-    getLatestSnapshot().then(function(accounts) {
-      var overview = calculateFinanceOverview(accounts);
-      overview.date_time = accounts[0].date_time;
-      setLatestSnapshot(overview);
-    });
-  }, []);
 
   useEffect(
     function() {
@@ -76,7 +56,9 @@ function FinanceOverview(props) {
   );
 
   var fetchData = useCallback(function() {
-    getAllFromTable('accounts').then(function(accounts) {
+    getActiveAccounts().then(function(accounts) {
+      var overview = calculateFinanceOverview(accounts);
+      setOverview(overview);
       let liquidAssets = [],
         investments = [],
         fixedAssets = [],
@@ -118,6 +100,16 @@ function FinanceOverview(props) {
         totalLiabilitiesBalance,
       });
     });
+    getEarliestSnapshot().then(function(accounts) {
+      var overview = calculateFinanceOverview(accounts);
+      overview.date_time = accounts[0].date_time;
+      setEarliestSnapshot(overview);
+    });
+    getLatestSnapshot().then(function(accounts) {
+      var overview = calculateFinanceOverview(accounts);
+      overview.date_time = accounts[0].date_time;
+      setLatestSnapshot(overview);
+    });
   }, []);
 
   return (
@@ -128,210 +120,26 @@ function FinanceOverview(props) {
         }}
       />
       <ScrollView contentContainerStyle={{ marginHorizontal: 5 }}>
-        <Card
-          style={{
-            marginTop: 5,
-            marginHorizontal: 0,
-          }}
-          onPress={() => props.navigation.navigate('SnapshotList')}
-        >
-          <View
-            key="first"
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}
-          >
-            <View>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  marginBottom: 10,
-                  color: theme.colors.darkGray,
-                }}
-              >
-                Current
-              </Text>
-              <MoneyDisplay
-                amount={overview.liquidity}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-              <MoneyDisplay
-                amount={overview.networth}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-            </View>
-            <View>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  marginBottom: 10,
-                  color: theme.colors.darkGray,
-                }}
-              >
-                Last
-              </Text>
-              <MoneyDisplay
-                amount={latestSnapshot.liquidity || 0}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-              <MoneyDisplay
-                amount={latestSnapshot.networth || 0}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-            </View>
-            <View>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  marginBottom: 10,
-                  color: theme.colors.darkGray,
-                }}
-              >
-                Avg. monthly
-              </Text>
-              <MoneyDisplay
-                amount={liquidityRate}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-              <MoneyDisplay
-                amount={networthRate}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-            </View>
-          </View>
-          <View
-            key="second"
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              marginTop: 20,
-            }}
-          >
-            <View>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  marginBottom: 10,
-                  color: theme.colors.darkGray,
-                }}
-              >
-                1 year
-              </Text>
-              <MoneyDisplay
-                amount={(overview.liquidity + liquidityRate * 12).toFixed(2)}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-              <MoneyDisplay
-                amount={(overview.networth + networthRate * 12).toFixed(2)}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-            </View>
-            <View>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  marginBottom: 10,
-                  color: theme.colors.darkGray,
-                }}
-              >
-                3 years
-              </Text>
-              <MoneyDisplay
-                amount={(overview.liquidity + liquidityRate * 36).toFixed(2)}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-              <MoneyDisplay
-                amount={(overview.networth + networthRate * 36).toFixed(2)}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-            </View>
-            <View>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  marginBottom: 10,
-                  color: theme.colors.darkGray,
-                }}
-              >
-                5 years
-              </Text>
-              <MoneyDisplay
-                amount={(overview.liquidity + liquidityRate * 60).toFixed(2)}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-              <MoneyDisplay
-                amount={(overview.networth + networthRate * 60).toFixed(2)}
-                style={{
-                  fontSize: 15,
-                  fontWeight: '500',
-                  paddingBottom: 5,
-                }}
-              />
-            </View>
-          </View>
-        </Card>
-
-        <TouchableOpacity
+        <OverviewCard
+          overview={overview}
+          navigation={props.navigation}
+          latestSnapshot={latestSnapshot}
+          liquidityRate={liquidityRate}
+          networthRate={networthRate}
+        />
+        <LineItem
           onPress={() => {
             toggleShowAssets();
             LayoutAnimation.easeInEaseOut();
           }}
           style={{
-            paddingTop: 25,
-            paddingBottom: 5,
+            marginTop: 20,
+            marginBottom: 5,
           }}
-        >
-          <LineItem
-            text="Total Assets"
-            amount={state.totalAssetsBalance}
-            textStyle={styles.total}
-          />
-        </TouchableOpacity>
+          text="Total Assets"
+          amount={state.totalAssetsBalance}
+          textStyle={styles.total}
+        />
         {showAssets && [
           <Category
             accounts={state.liquidAssets}
@@ -353,20 +161,17 @@ function FinanceOverview(props) {
           />,
         ]}
 
-        <TouchableOpacity
+        <LineItem
           onPress={() => {
             toggleShowLiabilities();
             LayoutAnimation.easeInEaseOut();
           }}
-          style={{ marginTop: 20, paddingTop: 25, paddingBottom: 5 }}
-        >
-          <LineItem
-            text="Total Liabilities"
-            amount={state.totalLiabilitiesBalance}
-            textStyle={styles.total}
-            negative
-          />
-        </TouchableOpacity>
+          style={{ marginTop: 20, marginBottom: 5 }}
+          text="Total Liabilities"
+          amount={state.totalLiabilitiesBalance}
+          textStyle={styles.total}
+          negative
+        />
         {showLiabilities && [
           <Category
             accounts={state.shortTermLiabilities}

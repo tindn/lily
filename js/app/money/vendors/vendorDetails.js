@@ -1,26 +1,18 @@
 import geolocation from '@react-native-community/geolocation';
 import React, { useCallback, useState } from 'react';
-import {
-  Alert,
-  Button,
-  Linking,
-  ScrollView,
-  TextInput,
-  View,
-} from 'react-native';
-import { cleanCoordinate } from '../../../utils/location';
-import { createMapUrl } from '../../../utils/map';
+import { Alert, Button, ScrollView, TextInput, View } from 'react-native';
+import { connect } from 'react-redux';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
-import sharedStyles from '../../../sharedStyles';
-import theme from '../../../theme';
-import MapLocationInput from '../mapLocationInput';
-import { connect } from 'react-redux';
 import {
   addVendorToDb,
-  saveVendorToDb,
   deleteVendorFromDb,
+  saveVendorToDb,
 } from '../../../redux/actions/vendors';
+import sharedStyles from '../../../sharedStyles';
+import theme from '../../../theme';
+import { cleanCoordinate } from '../../../utils/location';
+import MapLocationInput from '../mapLocationInput';
 
 var mapDispatchToProps = {
   addVendorToDb: addVendorToDb,
@@ -75,11 +67,11 @@ function VendorDetails(props) {
             value={name}
             placeholder="Name"
             onChangeText={setName}
-            style={{ fontSize: 18 }}
-            autoFocus={true}
+            style={sharedStyles.formTextInput}
+            autoFocus={!id}
           />
         </View>
-        <View style={{ marginTop: 10, paddingLeft: 20 }}>
+        <View style={{ marginTop: 10, paddingHorizontal: 20 }}>
           {locations &&
             locations.map((location, index) => (
               <View
@@ -107,48 +99,29 @@ function VendorDetails(props) {
                   }}
                   markerDraggable={true}
                 />
-                <Pill
-                  label="Go"
-                  onPress={() => {
-                    Linking.openURL(
-                      createMapUrl({
-                        travelMode: 'd',
-                        q: name,
-                        latitude: location.latitude,
-                        longitude: location.longitude,
-                      })
-                    );
-                  }}
-                  style={{ padding: 12, marginHorizontal: 10 }}
-                  color={theme.colors.secondary}
-                  backgroundColor={theme.colors.primary}
-                />
               </View>
             ))}
         </View>
-        <View
-          style={{
-            paddingLeft: 40,
-            paddingRight: 100,
+        <Pill
+          onPress={() => {
+            geolocation.getCurrentPosition(
+              position => {
+                addLocation(cleanCoordinate(position.coords));
+              },
+              null,
+              { enableHighAccuracy: false }
+            );
           }}
-        >
-          <Pill
-            onPress={() => {
-              geolocation.getCurrentPosition(
-                position => {
-                  addLocation(cleanCoordinate(position.coords));
-                },
-                null,
-                { enableHighAccuracy: false }
-              );
-            }}
-            label="Add location"
-            style={{ padding: 12 }}
-            color={theme.colors.secondary}
-            backgroundColor={theme.colors.primary}
-            textStyle={{ textAlign: 'center' }}
-          />
-        </View>
+          label="Add location"
+          style={{
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            alignSelf: 'center',
+          }}
+          color={theme.colors.secondary}
+          backgroundColor={theme.colors.primary}
+          textStyle={{ textAlign: 'center' }}
+        />
         <View style={[{ marginTop: 40 }, sharedStyles.actionButton]}>
           {id ? (
             <Button

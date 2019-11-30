@@ -78,4 +78,12 @@ export default [
     );
     `,
   ],
+  [
+    `
+    ALTER TABLE accounts ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0;
+    `,
+    `
+    ALTER TABLE vendors ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0;
+    `,
+  ],
 ];

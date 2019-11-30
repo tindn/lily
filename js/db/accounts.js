@@ -1,4 +1,4 @@
-import { getAllFromTable, getById } from './shared';
+import { getAllFromTable, getById, db } from './shared';
 
 export function getAccountById(id) {
   return getById('accounts', id).then(function(data) {
@@ -20,4 +20,14 @@ export async function updateBalanceForAccount(id) {
     }
     return acc;
   }, 0);
+}
+
+export function getActiveAccounts() {
+  return getAllFromTable('accounts', 'WHERE is_archived = false');
+}
+
+export function archiveAccount(id) {
+  return db.executeSql(
+    `UPDATE accounts SET is_archived = 1 WHERE id = '${id}';`
+  );
 }

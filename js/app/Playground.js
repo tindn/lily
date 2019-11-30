@@ -1,19 +1,20 @@
 import firebase from 'firebase';
 import React, { useContext } from 'react';
-import { View, Clipboard } from 'react-native';
-import { Button, Layout, Text } from 'react-native-ui-kitten';
+import { Clipboard, StatusBar } from 'react-native';
+import { Button, Layout } from 'react-native-ui-kitten';
 import Icon from 'react-native-vector-icons/AntDesign';
 import rnfb from 'rn-fetch-blob';
 import uuid from 'uuid/v1';
 import { db, runMigrations } from '../db';
 import { getAllFromTable } from '../db/shared';
-import CurrentUserContext from './currentUserContext';
 import { upload } from '../LILYFirebaseStorage';
+import CurrentUserContext from './currentUserContext';
 
 export default function Playground() {
   var currentUser = useContext(CurrentUserContext);
   return (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <StatusBar barStyle="dark-content" />
       <Button
         style={{ marginVertical: 5 }}
         onPress={() => runMigrations()}
@@ -88,6 +89,7 @@ export default function Playground() {
       </Button>
       <Button
         style={{ marginVertical: 5 }}
+        disabled
         onPress={() => {
           // var storage = firebase.app().storage('gs://lily-cc62d.appspot.com');
           // var userDbBackupFolder = storage

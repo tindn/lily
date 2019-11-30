@@ -4,7 +4,12 @@ import theme from '../theme';
 import { formatAmountToDisplay } from '../utils/money';
 
 function MoneyDisplay(props) {
-  const color = props.amount < 0 ? theme.colors.red : theme.colors.green;
+  const color =
+    props.amount == 0
+      ? theme.colors.darkerGray
+      : props.amount < 0
+      ? theme.colors.red
+      : theme.colors.green;
   return (
     <Text
       style={[

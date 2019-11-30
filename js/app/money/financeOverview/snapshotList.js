@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
-import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
-import { calculateFinanceOverview } from '../../utils/money';
-import MoneyDisplay from '../../components/moneyDisplay';
-import Screen from '../../components/screen';
-import { getAccountSnapshots } from '../../db/accountSnapshots';
-import theme from '../../theme';
+import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
+import { calculateFinanceOverview } from '../../../utils/money';
+import MoneyDisplay from '../../../components/moneyDisplay';
+import Screen from '../../../components/screen';
+import { getAccountSnapshots } from '../../../db/accountSnapshots';
+import theme from '../../../theme';
 
 function SnapshotList() {
   var [list, setList] = useState([]);
@@ -71,6 +71,10 @@ function SnapshotList() {
     </Screen>
   );
 }
+
+SnapshotList.navigationOptions = {
+  headerTitle: 'Snapshots',
+};
 
 const styles = StyleSheet.create({
   emptyComponent: {

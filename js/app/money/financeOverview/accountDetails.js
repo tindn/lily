@@ -1,19 +1,24 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
   View,
-  ActivityIndicator,
 } from 'react-native';
 import MoneyDisplay from '../../../components/moneyDisplay';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
+import { getAccountEntriesForAccount } from '../../../db/accountEntries';
+import {
+  archiveAccount,
+  getAccountById,
+  updateBalanceForAccount,
+} from '../../../db/accounts';
 import theme from '../../../theme';
 import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
-import { getAccountById, updateBalanceForAccount } from '../../../db/accounts';
-import { getAccountEntriesForAccount } from '../../../db/accountEntries';
 
 function AccountDetails(props) {
   const [showNewEntryForm, setForm] = useState(false);
@@ -60,9 +65,38 @@ function AccountDetails(props) {
 
         <View
           style={{
-            marginTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 10,
           }}
         >
+          <Pill
+            backgroundColor={theme.colors.primary}
+            color={theme.colors.secondary}
+            onPress={() => {
+              Alert.alert('Confirm', 'Do you want to archive the account?', [
+                {
+                  text: 'Cancel',
+                  onPress: function() {},
+                  style: 'cancel',
+                },
+                {
+                  text: 'Yes',
+                  onPress: () =>
+                    archiveAccount(id).then(() => props.navigation.pop()),
+                },
+              ]);
+            }}
+            style={{
+              flex: 1,
+              paddingVertical: 10,
+              paddingHorizontal: 7,
+              justifyContent: 'center',
+              marginHorizontal: 3,
+            }}
+            label="Archive"
+            textStyle={{ textAlign: 'center' }}
+          />
           <Pill
             backgroundColor={theme.colors.primary}
             color={theme.colors.secondary}
@@ -80,38 +114,45 @@ function AccountDetails(props) {
                 });
             }}
             style={{
-              padding: 12,
-              marginLeft: 50,
-              marginRight: 50,
-              marginBottom: 20,
+              flex: 1,
+              paddingVertical: 10,
+              paddingHorizontal: 7,
+              justifyContent: 'center',
+              marginHorizontal: 3,
             }}
             label="Update Balance"
             textStyle={{ textAlign: 'center' }}
           />
-          {showNewEntryForm ? (
-            <AccountEntryForm
-              onCancel={toggleAccountEntry}
-              accountBalance={balance}
-              accountId={account.id}
-              onEntryChange={updateData}
-              autoFocus
-            />
-          ) : (
-            <Pill
-              backgroundColor={theme.colors.primary}
-              color={theme.colors.secondary}
-              onPress={toggleAccountEntry}
-              style={{ padding: 12, marginLeft: 50, marginRight: 50 }}
-              label="Add Entry"
-              textStyle={{ textAlign: 'center' }}
-            />
-          )}
+          <Pill
+            backgroundColor={theme.colors.primary}
+            color={theme.colors.secondary}
+            onPress={toggleAccountEntry}
+            style={{
+              paddingVertical: 10,
+              paddingHorizontal: 7,
+              flex: 1,
+              justifyContent: 'center',
+              marginHorizontal: 3,
+            }}
+            label="Add Entry"
+            textStyle={{ textAlign: 'center' }}
+          />
         </View>
+        {showNewEntryForm ? (
+          <AccountEntryForm
+            onCancel={toggleAccountEntry}
+            accountBalance={balance}
+            accountId={account.id}
+            onEntryChange={updateData}
+            autoFocus
+          />
+        ) : null}
         <View
           style={{
             borderTopColor: theme.colors.lighterGray,
             borderTopWidth: 1,
-            marginVertical: 15,
+            marginTop: 10,
+            marginBottom: 30,
           }}
         >
           {entries.map(function(item, index) {

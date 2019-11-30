@@ -3,6 +3,7 @@ import { SafeAreaView, StatusBar } from 'react-native';
 import theme from '../theme';
 
 function Screen(props) {
+  StatusBar.setBarStyle(props.statusBarStyle || 'dark-content');
   return (
     <SafeAreaView
       style={[
@@ -10,7 +11,6 @@ function Screen(props) {
         props.style,
       ]}
     >
-      <StatusBar style={props.statusBarStyle} />
       {props.children}
     </SafeAreaView>
   );

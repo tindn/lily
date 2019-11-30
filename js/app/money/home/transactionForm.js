@@ -1,6 +1,7 @@
 import geolocation from '@react-native-community/geolocation';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
+  FlatList,
   LayoutAnimation,
   StyleSheet,
   Switch,
@@ -98,6 +99,18 @@ function TransactionForm(props) {
         />
       </View>
       <View key="thirdRow" style={[sharedStyles.formRow, styles.borderBottom]}>
+        <TextInput
+          key="memoInput"
+          style={[
+            sharedStyles.formTextInput,
+            {
+              textAlign: 'left',
+            },
+          ]}
+          value={memo}
+          placeholder="memo"
+          onChangeText={setMemo}
+        />
         <VendorInput
           selectedVendorId={vendor_id}
           onVendorPress={function(id) {
@@ -107,19 +120,49 @@ function TransactionForm(props) {
               setVendorId(id);
             }
           }}
-          displayTextStyle={[sharedStyles.formTextInput, styles.memoInput]}
+          displayTextStyle={[
+            sharedStyles.formTextInput,
+            {
+              textAlign: 'right',
+            },
+          ]}
           nearbyVendors={nearbyVendors}
         />
       </View>
-      <View key="fourthRow" style={[sharedStyles.formRow, styles.borderBottom]}>
-        <TextInput
-          key="memoInput"
-          style={[sharedStyles.formTextInput, styles.memoInput]}
-          value={memo}
-          placeholder="memo"
-          onChangeText={setMemo}
-        />
-      </View>
+      {nearbyVendors && nearbyVendors.length ? (
+        <View
+          style={[
+            sharedStyles.formRow,
+            sharedStyles.borderBottom,
+            { flexDirection: 'column' },
+          ]}
+        >
+          <FlatList
+            data={nearbyVendors}
+            horizontal
+            renderItem={function({ item, index }) {
+              let selected = item.id == vendor_id;
+              return (
+                <OutlineButton
+                  key={index.toString()}
+                  label={item.name}
+                  color={
+                    selected ? theme.colors.primary : theme.colors.darkerGray
+                  }
+                  onPress={function() {
+                    if (vendor_id == item.id) {
+                      setVendorId('');
+                    } else {
+                      setVendorId(item.id);
+                    }
+                  }}
+                  style={{ margin: 5 }}
+                />
+              );
+            }}
+          />
+        </View>
+      ) : null}
       <View
         key="fifthRow"
         style={[
@@ -180,9 +223,6 @@ const styles = StyleSheet.create({
   borderBottom: {
     borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
-  },
-  memoInput: {
-    textAlign: 'right',
   },
 });
 

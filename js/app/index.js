@@ -12,7 +12,6 @@ import DropdownAlert from 'react-native-dropdownalert';
 import 'react-native-gesture-handler';
 import { ApplicationProvider } from 'react-native-ui-kitten';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setRef } from '../log';
@@ -20,7 +19,6 @@ import { persistor, store } from '../redux';
 import CurrentUserContext from './currentUserContext';
 import LoadingScreen from './loading';
 import navigation from './navigation';
-
 import SignInScreen from './signIn';
 import UserApp from './userApp';
 

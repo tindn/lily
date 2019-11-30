@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
-import Screen from '../../components/screen';
 import Card from '../../components/card';
+import Screen from '../../components/screen';
 import ElectricityOverview from './electricityOverview';
 import ElectricityReadingAdd from './electricityReadingAdd';
 

@@ -1,11 +1,5 @@
 import React, { useRef, useState } from 'react';
-import {
-  FlatList,
-  TouchableOpacity,
-  View,
-  Text,
-  ScrollView,
-} from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import sharedStyles from '../sharedStyles';
 import theme from '../theme';
@@ -66,9 +60,11 @@ function VendorInput(props) {
         style={[{ flex: 1 }, props.displayStyle]}
       >
         <Text style={props.displayTextStyle}>
-          {props.selectedVendorId
-            ? props.vendors[props.selectedVendorId].name
-            : 'Select a vendor'}
+          {props.selectedVendorId ? (
+            props.vendors[props.selectedVendorId].name
+          ) : (
+            <Text style={{ color: theme.colors.lightGray }}>vendor</Text>
+          )}
         </Text>
       </TouchableOpacity>
       <BottomSheet show={showModal} hide={() => setShowModal(false)}>
@@ -142,53 +138,6 @@ function VendorInput(props) {
           }}
         />
 
-        {props.nearbyVendors && props.nearbyVendors.length ? (
-          <>
-            <Text
-              style={{
-                fontWeight: 'bold',
-                marginLeft: 10,
-                marginTop: 20,
-                marginBottom: 5,
-              }}
-            >
-              Nearby
-            </Text>
-
-            <ScrollView
-              style={{
-                maxHeight: 100,
-              }}
-              contentContainerStyle={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                paddingHorizontal: 5,
-              }}
-              bounces={false}
-            >
-              {props.nearbyVendors.map(function(v, i) {
-                let selected = v.id == props.selectedVendorId;
-                return (
-                  <OutlineButton
-                    key={i.toString()}
-                    label={v.name}
-                    color={
-                      selected ? theme.colors.primary : theme.colors.darkerGray
-                    }
-                    onPress={() => {
-                      props.onVendorPress(v.id);
-                      // eslint-disable-next-line no-undef
-                      setTimeout(function() {
-                        setShowModal(false);
-                      }, 150);
-                    }}
-                    style={{ margin: 5 }}
-                  />
-                );
-              })}
-            </ScrollView>
-          </>
-        ) : null}
         <OutlineButton
           onPress={() => setShowModal(false)}
           label="Cancel"
