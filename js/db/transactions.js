@@ -11,11 +11,22 @@ var selectTransactionsStatement = `
       memo,
       v.name AS vendor,
       vendor_id,
-      is_discretionary
+      t.category
     FROM
       transactions t
       LEFT JOIN vendors v ON t.vendor_id = v.id
 `;
+
+function processTransactions(transactions) {
+  transactions.forEach(function(t) {
+    t.memo = unescape(t.memo);
+    if (t.category) {
+      t.category = unescape(t.category);
+    }
+    t.vendor = unescape(t.vendor);
+  });
+  return transactions;
+}
 
 export function getTransactionsFromTimestamp(timestamp) {
   return db
@@ -28,7 +39,8 @@ export function getTransactionsFromTimestamp(timestamp) {
       date_time DESC;
   `
     )
-    .then(queryResultToArray);
+    .then(queryResultToArray)
+    .then(processTransactions);
 }
 
 export function getTransactionsBetweenTimestamps(from, to) {
@@ -42,7 +54,8 @@ export function getTransactionsBetweenTimestamps(from, to) {
       date_time DESC;
   `
     )
-    .then(queryResultToArray);
+    .then(queryResultToArray)
+    .then(processTransactions);
 }
 
 /**
@@ -54,7 +67,7 @@ export function getTransactionsBetweenTimestamps(from, to) {
  * @param {Object} transaction.coords
  * @param {String} transaction.memo
  * @param {String} transaction.vendor_id
- * @param {Boolean} transaction.is_discretionary
+ * @param {String} transaction.category
  */
 export function addTransaction(transaction) {
   var transaction_id = uuid();
@@ -75,9 +88,9 @@ export function addTransaction(transaction) {
     transaction.amount
   }, ${transaction.date_time.getTime()}, ${now}, ${now}, '${JSON.stringify(
     transaction.coords
-  )}', '${escape(transaction.memo)}',${vendor}, ${
-    transaction.is_discretionary
-  });`;
+  )}', '${escape(transaction.memo)}',${vendor}, '${escape(
+    transaction.category
+  )}');`;
   return getAllFromTable(
     'monthly_analytics',
     `WHERE name = '${monthName}'`
@@ -112,7 +125,7 @@ export function addTransaction(transaction) {
  * @param {Number} transaction.date_time JS timestamp (use Date.getTime())
  * @param {String} transaction.memo
  * @param {String} transaction.vendor_id
- * @param {Boolean} transaction.is_discretionary
+ * @param {String} transaction.category
  */
 export function updateTransaction(transaction) {
   var now = Date.now();
@@ -127,7 +140,7 @@ export function updateTransaction(transaction) {
       updated_on = ${now},
       memo = '${escape(transaction.memo)}',
       vendor_id = '${transaction.vendor_id}',
-      is_discretionary = ${transaction.is_discretionary}
+      category = '${escape(transaction.category)}'
     WHERE id = '${transaction.id}';`;
   return getAllFromTable('monthly_analytics', `WHERE name = '${monthName}'`)
     .then(function([monthlyAnalytics]) {
@@ -181,7 +194,6 @@ export function deleteTransaction(transaction) {
 
 /** @typedef SpendTracking
  * @type {Object}
- * @property {Number} discretionary_spent
  * @property {Number} spent
  * @property {Number} earned
  */
@@ -224,16 +236,6 @@ export async function getSpendTracking(date) {
       month
     WHERE
       entry_type = 'debit'
-    UNION
-    SELECT
-      sum(amount) AS discretionary_spent,
-      0 AS earned,
-      0 AS spent
-    FROM
-      month
-    WHERE
-      entry_type = 'debit'
-      AND is_discretionary = TRUE
   )
   SELECT
     sum(earned) AS earned, sum(spent) AS spent, sum(discretionary_spent) AS discretionary_spent

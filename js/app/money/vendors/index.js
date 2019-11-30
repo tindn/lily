@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import Screen from '../../../components/screen';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
 import theme from '../../../theme';
+import OutlineButton from '../../../components/outlineButton';
 
 function mapStateToProps(state) {
   return {
@@ -39,9 +40,14 @@ function Vendors(props) {
                 });
               }}
             >
-              <View>
-                <Text style={styles.transactionItemMemo}>{item.name}</Text>
-              </View>
+              <Text style={styles.transactionItemMemo}>{item.name}</Text>
+              {item.category ? (
+                <OutlineButton
+                  disabled
+                  label={item.category}
+                  style={{ paddingHorizontal: 7, paddingVertical: 3 }}
+                />
+              ) : null}
             </TouchableOpacity>
           );
         }}

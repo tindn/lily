@@ -12,13 +12,16 @@ import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
 import TransactionForm from './transactionForm';
+import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 
-var mapDispatchToProps = { loadVendorsFromDbToRedux: loadVendorsFromDbToRedux };
+var mapDispatchToProps = {
+  loadVendorsFromDbToRedux: loadVendorsFromDbToRedux,
+  loadCategoriesFromDbToRedux: loadCategoriesFromDbToRedux,
+};
 
 function Home(props) {
   var [spendingThisMonth, setSpendingThisMonth] = useState(0);
   var [earningThisMonth, setEarningThisMonth] = useState(0);
-  var [variableSpendingThisMonth, setVariableSpendingThisMonth] = useState(0);
   var [showTransactionForm, setShowTransactionForm] = useState(false);
   var [lastThreeMonths, setLastThreeMonths] = useState([]);
   var scrollViewRef = useRef(null);
@@ -30,7 +33,6 @@ function Home(props) {
       getSpendTracking(today).then(function(spendTracking) {
         setSpendingThisMonth(spendTracking.spent);
         setEarningThisMonth(spendTracking.earned);
-        setVariableSpendingThisMonth(spendTracking.discretionary_spent);
       });
 
       var fourthMonthsAgo = new Date(Date.now() - 3600000 * 24 * 130).getTime();
@@ -39,18 +41,14 @@ function Home(props) {
         ` WHERE start_date > ${fourthMonthsAgo} AND end_date < ${today.getTime()} ORDER BY start_date DESC `
       ).then(setLastThreeMonths);
     },
-    [
-      setSpendingThisMonth,
-      setEarningThisMonth,
-      setVariableSpendingThisMonth,
-      setLastThreeMonths,
-    ]
+    [setSpendingThisMonth, setEarningThisMonth, setLastThreeMonths]
   );
 
   // Will focus is not called on first load
   useEffect(function() {
     updateData();
     props.loadVendorsFromDbToRedux();
+    props.loadCategoriesFromDbToRedux();
   }, []);
 
   return (
@@ -72,7 +70,6 @@ function Home(props) {
           <SpendTracking
             earningThisMonth={earningThisMonth}
             spendingThisMonth={spendingThisMonth}
-            variableSpendingThisMonth={variableSpendingThisMonth}
             navigation={props.navigation}
           />
         </Card>
@@ -107,6 +104,18 @@ function Home(props) {
         >
           <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
             Vendors
+          </Text>
+        </Card>
+        <Card
+          style={{
+            paddingVertical: 15,
+            marginTop: 15,
+            alignItems: 'center',
+          }}
+          onPress={() => props.navigation.navigate('Categories')}
+        >
+          <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
+            Categories
           </Text>
         </Card>
         <Card

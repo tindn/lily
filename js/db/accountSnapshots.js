@@ -20,6 +20,15 @@ export function getAccountSnapshots() {
     .then(queryResultToArray);
 }
 
+export function deleteAccountSnapshot(timestamp) {
+  return db.executeSql(
+    `
+    DELETE FROM account_snapshots
+    WHERE date_time = ${timestamp};
+    `
+  );
+}
+
 export function getEarliestSnapshot() {
   return db
     .executeSql(

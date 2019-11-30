@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { AsyncStorage, View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { AsyncStorage, Text, View } from 'react-native';
 import Pill from '../../components/pill';
-import theme from '../../theme';
 import sharedStyles from '../../sharedStyles';
 
 export default function Counter(props) {
@@ -42,16 +41,12 @@ export default function Counter(props) {
       ]}
     >
       <Pill
-        backgroundColor={theme.colors.primary}
-        color={theme.colors.secondary}
         label="-"
         textStyle={{ paddingHorizontal: 30, paddingVertical: 10 }}
         onPress={decrement}
       />
       <Text style={{ fontWeight: '500', fontSize: 18 }}>{count}</Text>
       <Pill
-        backgroundColor={theme.colors.primary}
-        color={theme.colors.secondary}
         label="+"
         textStyle={{ paddingHorizontal: 30, paddingVertical: 10 }}
         onPress={increment}

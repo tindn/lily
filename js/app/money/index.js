@@ -5,12 +5,12 @@ import AccountDetails from './financeOverview/accountDetails';
 import FinanceOverview from './financeOverview';
 import Home from './home';
 import MonthlyAnalytics from './monthlyAnalytics';
-import MonthSetup from './monthSetup';
 import MonthTransactions from './monthTransactions';
 import SnapshotList from './financeOverview/snapshotList';
 import TransactionDetails from './transactionDetails';
 import VendorDetails from './vendors/vendorDetails';
 import Vendors from './vendors';
+import Categories from './categories';
 
 const MoneyStack = createStackNavigator({
   Home,
@@ -22,7 +22,7 @@ const MoneyStack = createStackNavigator({
   VendorDetails,
   SnapshotList,
   FinanceOverview,
-  MonthSetup,
+  Categories,
 });
 
 class Money extends React.Component {

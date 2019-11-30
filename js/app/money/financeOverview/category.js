@@ -7,7 +7,7 @@ import LineItem from './lineItem';
 
 function Category(props) {
   const { accounts, name, negative, navigation } = props;
-  var [showCategoryDetails, toggleDetails] = useToggle(true);
+  var [showCategoryDetails, toggleDetails] = useToggle();
 
   const sum = accounts.reduce(function(accum, account) {
     return accum + account.balance;

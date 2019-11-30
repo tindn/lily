@@ -13,6 +13,7 @@ import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
 import { cleanCoordinate } from '../../../utils/location';
 import MapLocationInput from '../mapLocationInput';
+import CategoryInput from '../../../components/categoryInput';
 
 var mapDispatchToProps = {
   addVendorToDb: addVendorToDb,
@@ -24,12 +25,14 @@ function VendorDetails(props) {
   var [name, setName] = useState();
   var [id, setId] = useState();
   var [locations, setLocations] = useState([]);
+  var [category, setCategory] = useState('');
   useState(function() {
     var vendor = props.navigation.getParam('vendor');
     if (vendor) {
-      setName(unescape(vendor.name));
+      setName(vendor.name);
       setLocations(vendor.locations);
       setId(vendor.id);
+      setCategory(vendor.category);
     }
   });
 
@@ -69,8 +72,20 @@ function VendorDetails(props) {
             onChangeText={setName}
             style={sharedStyles.formTextInput}
             autoFocus={!id}
+            placeholderTextColor={theme.colors.lightGray}
           />
         </View>
+        <CategoryInput
+          current={category}
+          onPress={function(name) {
+            if (category == name) {
+              setCategory('');
+            } else {
+              setCategory(name);
+            }
+          }}
+        />
+
         <View style={{ marginTop: 10, paddingHorizontal: 20 }}>
           {locations &&
             locations.map((location, index) => (
@@ -132,6 +147,7 @@ function VendorDetails(props) {
                     id,
                     name,
                     locations,
+                    category,
                   })
                   .then(function() {
                     props.navigation.pop();
@@ -146,6 +162,7 @@ function VendorDetails(props) {
                   .addVendorToDb({
                     name,
                     locations,
+                    category,
                   })
                   .then(function() {
                     props.navigation.pop();
@@ -191,8 +208,7 @@ function VendorDetails(props) {
 VendorDetails.navigationOptions = function({ navigation }) {
   const { params } = navigation.state;
   return {
-    title:
-      params && params.vendor ? unescape(params.vendor.name) : 'New Vendor',
+    title: params && params.vendor ? params.vendor.name : 'New Vendor',
   };
 };
 

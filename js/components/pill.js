@@ -1,9 +1,10 @@
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
+import theme from '../theme';
 
 function Pill(props) {
-  let color = props.color || '#007aff';
-  let backgroundColor = props.backgroundColor || '#fff';
+  let color = props.color || theme.colors.secondary;
+  let backgroundColor = props.backgroundColor || theme.colors.primary;
 
   return (
     <TouchableOpacity
@@ -25,6 +26,8 @@ function Pill(props) {
           shadowOpacity: 0.22,
           shadowRadius: 2.22,
           elevation: 3,
+          paddingHorizontal: 20,
+          paddingVertical: 10,
         },
         props.style,
       ]}
@@ -33,6 +36,7 @@ function Pill(props) {
         style={[
           {
             color,
+            textAlign: 'center',
           },
           props.textStyle,
         ]}

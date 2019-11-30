@@ -69,6 +69,7 @@ class ElectricityReadingItem extends React.Component {
             keyboardType="number-pad"
             value={this.state.value.toString()}
             onChangeText={text => this.setState({ value: text })}
+            placeholderTextColor={theme.colors.lightGray}
           />
         </View>
         {this.state.expanded && [

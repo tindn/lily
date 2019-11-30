@@ -14,6 +14,9 @@ export async function getAllVendors() {
   }, {});
   vendors.forEach(function(vendor) {
     vendor.name = unescape(vendor.name);
+    if (vendor.category) {
+      vendor.category = unescape(vendor.category);
+    }
     if (coordinatesByVendor[vendor.id] != undefined) {
       vendor.locations = coordinatesByVendor[vendor.id];
     }
@@ -57,7 +60,8 @@ export async function getVendorById(id) {
     updated_on,
     c.id as location_id,
     latitude,
-    longitude
+    longitude,
+    v.category
   FROM
     vendors v
     LEFT JOIN vendor_coordinates c ON v.id = c.vendor_id
@@ -71,6 +75,7 @@ export async function getVendorById(id) {
   return {
     id: rows[0].id,
     name: unescape(rows[0].name),
+    category: unescape(rows[0].category),
     updated_on: rows[0].updated_on,
     locations: rows
       .filter(r => r.location_id)
@@ -88,7 +93,9 @@ export function addVendor(vendor) {
   scripts.push(
     `INSERT INTO vendors 
      (id, name, updated_on)
-     VALUES ('${vendorId}','${escape(vendor.name)}',datetime());`
+     VALUES ('${vendorId}','${escape(
+      vendor.name
+    )}', ${Date.now()}, 0, '${escape(vendor.category)}');`
   );
 
   if (vendor.locations && vendor.locations.length) {
@@ -109,7 +116,9 @@ export async function saveVendor(vendor) {
   var scripts = [];
   scripts.push(
     `UPDATE vendors 
-     SET name = '${escape(vendor.name)}', updated_on = datetime() 
+     SET name = '${escape(
+       vendor.name
+     )}', updated_on = ${Date.now()}, category = '${escape(vendor.category)}'
      WHERE id = '${vendor.id}';`
   );
 

@@ -1,12 +1,17 @@
 import React, { useCallback, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
+import Swipeable from 'react-native-swipeable-row';
 import { NavigationEvents } from 'react-navigation';
-import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
-import { calculateFinanceOverview } from '../../../utils/money';
 import MoneyDisplay from '../../../components/moneyDisplay';
 import Screen from '../../../components/screen';
-import { getAccountSnapshots } from '../../../db/accountSnapshots';
+import {
+  deleteAccountSnapshot,
+  getAccountSnapshots,
+} from '../../../db/accountSnapshots';
+import { error, success } from '../../../log';
 import theme from '../../../theme';
+import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
+import { calculateFinanceOverview } from '../../../utils/money';
 
 function SnapshotList() {
   var [list, setList] = useState([]);
@@ -48,23 +53,69 @@ function SnapshotList() {
         }
         renderItem={({ item }) => {
           return (
-            <View style={styles.listItem}>
-              <View style={{ alignSelf: 'flex-start', marginBottom: 15 }}>
-                <Text>
-                  {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
-                </Text>
+            <Swipeable
+              rightActionActivationDistance={175}
+              onRightActionRelease={function() {
+                Alert.alert('Confirm', 'Do you want to delete this snapshot?', [
+                  {
+                    text: 'Cancel',
+                  },
+                  {
+                    text: 'Delete',
+                    onPress: function() {
+                      deleteAccountSnapshot(item.date_time)
+                        .then(function() {
+                          getData();
+                          success('Snapshot removed');
+                        })
+                        .catch(function(e) {
+                          error('Failed to remove snapshot', e);
+                        });
+                    },
+                    style: 'destructive',
+                  },
+                ]);
+              }}
+              rightContent={
+                <View
+                  key={`delete ${item.id}`}
+                  style={{
+                    backgroundColor: theme.colors.red,
+                    justifyContent: 'center',
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontWeight: '500',
+                      fontSize: 18,
+                      color: theme.colors.white,
+                      paddingLeft: 10,
+                    }}
+                  >
+                    Delete
+                  </Text>
+                </View>
+              }
+            >
+              <View style={styles.listItem}>
+                <View style={{ alignSelf: 'flex-start', marginBottom: 15 }}>
+                  <Text>
+                    {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <MoneyDisplay amount={item.liquidity} />
+                  <MoneyDisplay amount={item.networth} />
+                </View>
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <MoneyDisplay amount={item.liquidity} />
-                <MoneyDisplay amount={item.networth} />
-              </View>
-            </View>
+            </Swipeable>
           );
         }}
       />

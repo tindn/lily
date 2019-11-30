@@ -8,6 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import CategoryInput from '../../components/categoryInput';
 import DateInput from '../../components/dateInput';
 import MoneyInput from '../../components/moneyInput';
 import Screen from '../../components/screen';
@@ -21,20 +22,20 @@ export default function TransactionDetails(props) {
   var [memo, setMemo] = useState('');
   var [amount, setAmount] = useState('');
   var [isCredit, setIsCredit] = useState(false);
-  var [is_discretionary, setIsDiscretionary] = useState(true);
   var [transaction, setTransaction] = useState();
   var [vendor_id, setVendorId] = useState('');
+  var [category, setCategory] = useState('');
 
   useEffect(
     function() {
       var transactionFromParam = props.navigation.getParam('transaction');
       setTransaction(transactionFromParam);
       setDateTime(new Date(transactionFromParam.date_time));
-      setMemo(unescape(transactionFromParam.memo));
+      setMemo(transactionFromParam.memo);
       setAmount(transactionFromParam.amount.toString());
       setIsCredit(transactionFromParam.entry_type == 'credit');
-      setIsDiscretionary(!!transactionFromParam.is_discretionary);
       setVendorId(transactionFromParam.vendor_id);
+      setCategory(transactionFromParam.category);
     },
     [props]
   );
@@ -62,6 +63,7 @@ export default function TransactionDetails(props) {
           />
           <MoneyInput onChange={setAmount} amount={amount} editable={true} />
         </View>
+
         <VendorInput
           displayStyle={sharedStyles.inputRow}
           displayTextStyle={{
@@ -70,46 +72,44 @@ export default function TransactionDetails(props) {
             fontWeight: '500',
           }}
           selectedVendorId={vendor_id}
-          onVendorPress={setVendorId}
+          onVendorPress={function(v) {
+            setVendorId(v.id);
+          }}
         />
         <TextInput
           key="memoInput"
           style={[
             { textAlign: 'right', fontSize: 20, fontWeight: '500' },
             sharedStyles.inputRow,
+            sharedStyles.formTextInput,
           ]}
           value={memo}
           placeholder="memo"
           onChangeText={setMemo}
+          placeholderTextColor={theme.colors.lightGray}
         />
         <View
           key="creditSwitch"
-          style={[
-            {
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            },
-            sharedStyles.inputRow,
-          ]}
+          style={[sharedStyles.formRow, sharedStyles.borderBottom]}
         >
-          <Text style={{ color: theme.colors.darkGray }}>Income?</Text>
-          <Switch value={isCredit} onValueChange={setIsCredit} />
+          <View style={sharedStyles.formSwitchRow}>
+            <Text style={{ color: theme.colors.darkGray, marginRight: 10 }}>
+              Income?
+            </Text>
+            <Switch value={isCredit} onValueChange={setIsCredit} />
+          </View>
+          <CategoryInput
+            current={category}
+            onPress={function(name) {
+              if (category == name) {
+                setCategory('');
+              } else {
+                setCategory(name);
+              }
+            }}
+          />
         </View>
-        <View
-          key="fixedSwitch"
-          style={[
-            {
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            },
-            sharedStyles.inputRow,
-          ]}
-        >
-          <Text style={{ color: theme.colors.darkGray }}>Discretionary?</Text>
-          <Switch value={is_discretionary} onValueChange={setIsDiscretionary} />
-        </View>
+
         <View style={[{ marginTop: 40 }, sharedStyles.actionButton]}>
           <Button
             title="Save"
@@ -120,8 +120,8 @@ export default function TransactionDetails(props) {
                 memo: memo,
                 amount: parseFloat(amount),
                 entry_type: isCredit ? 'credit' : 'debit',
-                is_discretionary,
                 vendor_id,
+                category,
               }).then(function() {
                 props.navigation.pop();
               });

@@ -44,6 +44,7 @@ function ElectricityReadingAdd() {
             padding: 10,
             borderRadius: 5,
           }}
+          placeholderTextColor={theme.colors.lightGray}
         />
         <Switch
           value={cycleEnd}

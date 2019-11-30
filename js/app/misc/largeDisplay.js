@@ -61,14 +61,11 @@ class LargeDisplay extends React.Component {
             )}
 
             <Pill
-              backgroundColor={theme.colors.secondary}
-              color={theme.colors.primary}
               onPress={this.toggleCommonPhrasePicker}
               style={{
                 padding: 12,
               }}
               label="Common"
-              textStyle={{ textAlign: 'center' }}
             />
           </View>
           <View style={{ margin: 5, width: 50 }}>
@@ -89,14 +86,11 @@ class LargeDisplay extends React.Component {
               </Picker>
             )}
             <Pill
-              backgroundColor={theme.colors.secondary}
-              color={theme.colors.primary}
               onPress={this.toggleFontSizePicker}
               style={{
                 padding: 12,
               }}
               label={this.state.fontSize}
-              textStyle={{ textAlign: 'center' }}
             />
           </View>
         </View>
@@ -112,6 +106,7 @@ class LargeDisplay extends React.Component {
           multiline={true}
           onChangeText={text => this.setState({ value: text })}
           autoCapitalize="none"
+          placeholderTextColor={theme.colors.lightGray}
         />
       </Screen>
     );

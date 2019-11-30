@@ -71,8 +71,6 @@ function AccountDetails(props) {
           }}
         >
           <Pill
-            backgroundColor={theme.colors.primary}
-            color={theme.colors.secondary}
             onPress={() => {
               Alert.alert('Confirm', 'Do you want to archive the account?', [
                 {
@@ -89,17 +87,13 @@ function AccountDetails(props) {
             }}
             style={{
               flex: 1,
-              paddingVertical: 10,
               paddingHorizontal: 7,
               justifyContent: 'center',
               marginHorizontal: 3,
             }}
             label="Archive"
-            textStyle={{ textAlign: 'center' }}
           />
           <Pill
-            backgroundColor={theme.colors.primary}
-            color={theme.colors.secondary}
             onPress={() => {
               setUpdatingBalance(true);
               updateBalanceForAccount(id)
@@ -115,27 +109,21 @@ function AccountDetails(props) {
             }}
             style={{
               flex: 1,
-              paddingVertical: 10,
               paddingHorizontal: 7,
               justifyContent: 'center',
               marginHorizontal: 3,
             }}
             label="Update Balance"
-            textStyle={{ textAlign: 'center' }}
           />
           <Pill
-            backgroundColor={theme.colors.primary}
-            color={theme.colors.secondary}
             onPress={toggleAccountEntry}
             style={{
-              paddingVertical: 10,
               paddingHorizontal: 7,
               flex: 1,
               justifyContent: 'center',
               marginHorizontal: 3,
             }}
             label="Add Entry"
-            textStyle={{ textAlign: 'center' }}
           />
         </View>
         {showNewEntryForm ? (

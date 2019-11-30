@@ -49,7 +49,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   formTextInput: {
-    color: theme.colors.darkerGray,
+    color: theme.colors.dark,
     flex: 1,
     fontSize: 18,
     fontWeight: '500',
@@ -73,10 +73,8 @@ export default StyleSheet.create({
     shadowRadius: 2.62,
   },
   outlineButton: {
-    paddingBottom: 7,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 7,
+    paddingHorizontal: 20,
+    paddingVertical: 7,
   },
   shadow1: {
     elevation: 1,

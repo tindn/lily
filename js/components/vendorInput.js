@@ -87,7 +87,7 @@ function VendorInput(props) {
                   selected && { backgroundColor: theme.colors.secondary },
                 ]}
                 onPress={() => {
-                  props.onVendorPress(item.id);
+                  props.onVendorPress(item);
                   // eslint-disable-next-line no-undef
                   setTimeout(function() {
                     setShowModal(false);

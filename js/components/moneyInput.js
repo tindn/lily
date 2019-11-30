@@ -32,6 +32,7 @@ class MoneyInput extends React.PureComponent {
           onChangeText={this.onChangeText}
           autoFocus={this.props.autoFocus}
           editable={this.props.editable}
+          placeholderTextColor={theme.colors.lightGray}
         />
         <TouchableOpacity
           onPress={() => {

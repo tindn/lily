@@ -121,6 +121,7 @@ function AccountEntryForm(props) {
           value={memo}
           style={[sharedStyles.formTextInput, { textAlign: 'right' }]}
           onChangeText={setMemo}
+          placeholderTextColor={theme.colors.lightGray}
         />
       </View>
       <View

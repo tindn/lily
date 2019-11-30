@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import { connect } from 'react-redux';
+import CategoryInput from '../../../components/categoryInput';
 import DateInput from '../../../components/dateInput';
 import MoneyInput from '../../../components/moneyInput';
 import OutlineButton from '../../../components/outlineButton';
@@ -25,7 +26,7 @@ function mapStateToProps(state) {
   var vendors = getVendorsArray(state);
   vendors.unshift({ id: '', name: '' });
   var vendorPickerItems = vendors.map(v => ({
-    label: unescape(v.name),
+    label: v.name,
     value: v.id,
   }));
   return {
@@ -39,9 +40,9 @@ function TransactionForm(props) {
   var [memo, setMemo] = useState('');
   var [amount, setAmount] = useState('');
   var [isCredit, setIsCredit] = useState(false);
-  var [is_discretionary, setIsDiscretionary] = useState(true);
   var [moneyInputKey, setMoneyInputKey] = useState(0);
   var [vendor_id, setVendorId] = useState('');
+  var [category, setCategory] = useState('');
   var [nearbyVendors, setNearbyVendors] = useState([]);
   var [coords, setCoords] = useState();
   var resetFormState = useCallback(
@@ -50,20 +51,20 @@ function TransactionForm(props) {
       setMemo('');
       setAmount('');
       setIsCredit(false);
-      setIsDiscretionary(true);
       setMoneyInputKey(moneyInputKey);
       setVendorId('');
       setCoords(null);
+      setCategory('');
     },
     [
       setDateTime,
       setMemo,
       setAmount,
       setIsCredit,
-      setIsDiscretionary,
       setMoneyInputKey,
       setVendorId,
       setCoords,
+      setCategory,
     ]
   );
 
@@ -98,6 +99,7 @@ function TransactionForm(props) {
           autoFocus
         />
       </View>
+
       <View key="thirdRow" style={[sharedStyles.formRow, styles.borderBottom]}>
         <TextInput
           key="memoInput"
@@ -110,14 +112,18 @@ function TransactionForm(props) {
           value={memo}
           placeholder="memo"
           onChangeText={setMemo}
+          placeholderTextColor={theme.colors.lightGray}
         />
         <VendorInput
           selectedVendorId={vendor_id}
-          onVendorPress={function(id) {
-            if (vendor_id == id) {
+          onVendorPress={function(v) {
+            if (vendor_id == v.id) {
               setVendorId('');
             } else {
-              setVendorId(id);
+              setVendorId(v.id);
+            }
+            if (v.category && !category) {
+              setCategory(v.category);
             }
           }}
           displayTextStyle={[
@@ -163,19 +169,25 @@ function TransactionForm(props) {
           />
         </View>
       ) : null}
-      <View
-        key="fifthRow"
-        style={[
-          sharedStyles.formRow,
-          sharedStyles.formSwitchRow,
-          styles.borderBottom,
-        ]}
-      >
-        <Text style={{ color: theme.colors.darkGray }}>Income?</Text>
-        <Switch value={isCredit} onValueChange={setIsCredit} />
-        <Text style={{ color: theme.colors.darkGray }}>Discretionary?</Text>
-        <Switch value={is_discretionary} onValueChange={setIsDiscretionary} />
+      <View key="secondRow" style={[sharedStyles.formRow, styles.borderBottom]}>
+        <View style={sharedStyles.formSwitchRow}>
+          <Text style={{ color: theme.colors.darkGray, marginRight: 10 }}>
+            Income?
+          </Text>
+          <Switch value={isCredit} onValueChange={setIsCredit} />
+        </View>
+        <CategoryInput
+          current={category}
+          onPress={function(name) {
+            if (category == name) {
+              setCategory('');
+            } else {
+              setCategory(name);
+            }
+          }}
+        />
       </View>
+
       <View key="buttons" style={sharedStyles.formButtons}>
         <OutlineButton
           label="Cancel"
@@ -200,7 +212,7 @@ function TransactionForm(props) {
               coords,
               memo,
               vendor_id,
-              is_discretionary,
+              category,
             })
               .then(function() {
                 success('Transaction added');

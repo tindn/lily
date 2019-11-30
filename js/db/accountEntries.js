@@ -7,7 +7,9 @@ export function getAccountEntriesForAccount(accountId) {
     `WHERE account_id = '${accountId}' ORDER BY date_time DESC`
   ).then(function(entries) {
     entries.forEach(function(e) {
-      e.memo = unescape(e.memo);
+      if (e.memo) {
+        e.memo = unescape(e.memo);
+      }
     });
     return entries;
   });

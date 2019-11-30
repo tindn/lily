@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
-import Icon from 'react-native-vector-icons/AntDesign';
 import { NavigationEvents } from 'react-navigation';
 import Screen from '../../components/screen';
 import {
@@ -23,6 +22,7 @@ import {
   toWeekDayDateStringFromTimestamp,
 } from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
+import OutlineButton from '../../components/outlineButton';
 
 function MonthTransactions(props) {
   const [data, setData] = useState([]);
@@ -125,23 +125,17 @@ function MonthTransactions(props) {
               >
                 <View>
                   <Text style={styles.transactionItemMemo}>
-                    {unescape(item.memo || item.vendor).slice(0, 25)}
+                    {(item.memo || item.vendor).slice(0, 25)}
                   </Text>
                   <Text style={styles.transactionItemDate}>{dateDisplay}</Text>
                 </View>
-                {!item.is_discretionary && (
-                  <View
-                    style={{
-                      backgroundColor: theme.colors.lighterGray,
-                      borderRadius: 5,
-                      borderWidth: 1,
-                      borderColor: theme.colors.lightGray,
-                      padding: 5,
-                    }}
-                  >
-                    <Text style={{ color: theme.colors.lightGray }}>FIXED</Text>
-                  </View>
-                )}
+                {item.category ? (
+                  <OutlineButton
+                    label={item.category}
+                    style={{ paddingHorizontal: 7, paddingVertical: 3 }}
+                    disabled
+                  />
+                ) : null}
                 <Text style={[styles.transactionItemAmount, { color }]}>
                   {formatAmountToDisplay(item.amount)}
                 </Text>
@@ -154,21 +148,11 @@ function MonthTransactions(props) {
   );
 }
 
-MonthTransactions.navigationOptions = ({ navigation }) => ({
+MonthTransactions.navigationOptions = {
   headerTitle: new Date().toLocaleDateString('en-US', {
     month: 'long',
   }),
-  headerRight: (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('MonthSetup');
-      }}
-      style={{ marginRight: 10 }}
-    >
-      <Icon name="profile" size={25} color={theme.colors.primary} />
-    </TouchableOpacity>
-  ),
-});
+};
 
 export default MonthTransactions;
 

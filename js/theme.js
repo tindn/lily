@@ -11,5 +11,6 @@ export default {
     iosBlue: '#007aff',
     primary: '#F58560',
     secondary: '#FAF5EB',
+    dark: '#282929',
   },
 };

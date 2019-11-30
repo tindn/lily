@@ -4,7 +4,7 @@ import sharedStyles from '../sharedStyles';
 import theme from '../theme';
 
 const OutlineButton = props => {
-  let color = props.color || '#007aff';
+  let color = props.color || theme.colors.primary;
   if (props.disabled) {
     color = theme.colors.lightGray;
   }
@@ -24,6 +24,7 @@ const OutlineButton = props => {
 
   return (
     <TouchableOpacity
+      disabled={props.disabled}
       onPress={() => {
         if (props.disabled) {
           return;

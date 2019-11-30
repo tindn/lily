@@ -86,4 +86,36 @@ export default [
     ALTER TABLE vendors ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0;
     `,
   ],
+  [
+    `
+    CREATE TABLE transactions_new (
+      id TEXT PRIMARY KEY NOT NULL,
+      entry_type TEXT NOT NULL,
+      amount REAL NOT NULL,
+      date_time INTEGER NOT NULL,
+      added_on INTEGER NOT NULL,
+      updated_on INTERGER,
+      location TEXT,
+      memo TEXT,
+      vendor_id TEXT,
+      category TEXT,
+      FOREIGN KEY(vendor_id) REFERENCES vendors(id)
+    );`,
+    `
+    INSERT INTO transactions_new 
+    SELECT id, entry_type, amount, date_time, added_on, updated_on, location, memo, vendor_id, NULL
+    FROM transactions;
+    `,
+    `
+    DROP TABLE transactions;`,
+    `
+    ALTER TABLE transactions_new RENAME TO transactions;`,
+    `
+    ALTER TABLE vendors ADD COLUMN category TEXT;`,
+    `
+    CREATE TABLE categories (
+      name TEXT PRIMARY KEY NOT NULL,
+      is_archived INTEGER NOT NULL DEFAULT 0
+    );`,
+  ],
 ];

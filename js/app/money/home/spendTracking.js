@@ -10,31 +10,22 @@ const dayOfMonth = today.date();
 const daysInMonth = today.daysInMonth();
 
 function SpendTracking(props) {
-  var {
-    earningThisMonth,
-    spendingThisMonth,
-    variableSpendingThisMonth,
-    estimatedEarning,
-    fixedSpending,
-  } = props;
+  var { earningThisMonth, spendingThisMonth } = props;
 
-  var estimatedSpendingPerDay = variableSpendingThisMonth / dayOfMonth;
-  var estimatedSpending = estimatedSpendingPerDay * daysInMonth + fixedSpending;
   var actualNet = earningThisMonth - spendingThisMonth;
-  var estimatedNet = estimatedEarning - estimatedSpending;
   var daysLeft = daysInMonth - dayOfMonth;
   var daysLeftText = `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`;
 
   return (
-    <View style={styles.row}>
-      <View>
+    <View>
+      <View style={styles.row}>
         <Text style={[styles.mainNumber, { color: theme.colors.green }]}>
           {formatAmountToDisplay(earningThisMonth, false, 0)}
         </Text>
         <Text style={[styles.mainNumber, { color: theme.colors.red }]}>
           {formatAmountToDisplay(spendingThisMonth, false, 0)}
         </Text>
-        <View style={styles.netLine}>
+        <View>
           <Text
             style={[
               styles.mainNumber,
@@ -49,29 +40,6 @@ function SpendTracking(props) {
       </View>
       <View>
         <Text style={styles.supportive}>{daysLeftText}</Text>
-        <Text style={styles.supportive}>
-          {`(${formatAmountToDisplay(estimatedSpendingPerDay, false, 0)}/day)`}
-        </Text>
-      </View>
-      <View>
-        <Text style={[styles.mainNumber, { color: theme.colors.green }]}>
-          {formatAmountToDisplay(estimatedEarning, false, 0)}
-        </Text>
-        <Text style={[styles.mainNumber, { color: theme.colors.red }]}>
-          {formatAmountToDisplay(estimatedSpending, false, 0)}
-        </Text>
-        <View style={styles.netLine}>
-          <Text
-            style={[
-              styles.mainNumber,
-              {
-                color: estimatedNet > 0 ? theme.colors.green : theme.colors.red,
-              },
-            ]}
-          >
-            {formatAmountToDisplay(estimatedNet, false, 0)}
-          </Text>
-        </View>
       </View>
     </View>
   );
@@ -94,11 +62,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 10,
     textAlign: 'center',
-  },
-  netLine: {
-    paddingTop: 10,
-    borderColor: theme.colors.lighterGray,
-    borderTopWidth: 1,
   },
 });
 
