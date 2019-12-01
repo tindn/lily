@@ -1,9 +1,8 @@
 import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import MoneyDisplay from '../../../components/moneyDisplay';
 import theme from '../../../theme';
-import { formatAmountToDisplay } from '../../../utils/money';
-import { connect } from 'react-redux';
 
 const today = moment();
 const dayOfMonth = today.date();
@@ -17,38 +16,40 @@ function SpendTracking(props) {
   var daysLeftText = `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`;
 
   return (
-    <View>
+    <>
       <View style={styles.row}>
-        <Text style={[styles.mainNumber, { color: theme.colors.green }]}>
-          {formatAmountToDisplay(earningThisMonth, false, 0)}
-        </Text>
-        <Text style={[styles.mainNumber, { color: theme.colors.red }]}>
-          {formatAmountToDisplay(spendingThisMonth, false, 0)}
-        </Text>
         <View>
-          <Text
-            style={[
-              styles.mainNumber,
-              {
-                color: actualNet > 0 ? theme.colors.green : theme.colors.red,
-              },
-            ]}
-          >
-            {formatAmountToDisplay(actualNet, false, 0)}
-          </Text>
+          <MoneyDisplay
+            amount={earningThisMonth}
+            useParentheses={false}
+            toFixed={0}
+            style={styles.mainNumber}
+          />
+          <MoneyDisplay
+            amount={-spendingThisMonth}
+            useParentheses={false}
+            toFixed={0}
+            style={styles.mainNumber}
+          />
+        </View>
+        <View>
+          <MoneyDisplay
+            amount={actualNet}
+            style={styles.mainNumber}
+            useParentheses={false}
+            toFixed={0}
+          />
+          <Text style={styles.supportive}>{daysLeftText}</Text>
         </View>
       </View>
-      <View>
-        <Text style={styles.supportive}>{daysLeftText}</Text>
-      </View>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   mainNumber: {
-    fontSize: 15,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '500',
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -58,30 +59,11 @@ const styles = StyleSheet.create({
   },
   supportive: {
     color: theme.colors.darkGray,
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
     marginBottom: 10,
     textAlign: 'center',
   },
 });
 
-function mapStateToProps(state) {
-  return {
-    estimatedEarning: state.currentMonthSetup.earnings.reduce(
-      (acc, earning) => {
-        acc = acc + earning.amount;
-        return acc;
-      },
-      0
-    ),
-    fixedSpending: state.currentMonthSetup.fixedSpendings.reduce(
-      (acc, spend) => {
-        acc = acc + spend.amount;
-        return acc;
-      },
-      0
-    ),
-  };
-}
-
-export default connect(mapStateToProps)(SpendTracking);
+export default SpendTracking;

@@ -133,13 +133,17 @@ export function updateTransaction(transaction) {
     year: 'numeric',
     month: 'short',
   });
+  var vendor = 'NULL';
+  if (transaction.vendor_id) {
+    vendor = `'${transaction.vendor_id}'`;
+  }
   var updateTransactionScript = `UPDATE transactions 
     SET entry_type = '${transaction.entry_type}', 
       amount = ${transaction.amount}, 
       date_time = ${transaction.date_time.getTime()},
       updated_on = ${now},
       memo = '${escape(transaction.memo)}',
-      vendor_id = '${transaction.vendor_id}',
+      vendor_id = ${vendor},
       category = '${escape(transaction.category)}'
     WHERE id = '${transaction.id}';`;
   return getAllFromTable('monthly_analytics', `WHERE name = '${monthName}'`)
@@ -203,8 +207,7 @@ export function deleteTransaction(transaction) {
  * @param {Date} date any date of month
  * @returns {SpendTracking} spentTracking
  */
-export async function getSpendTracking(date) {
-  var [start, end] = getMonthStartEndFor(date);
+export async function getSpendTracking(from, to) {
   var results = await db
     .executeSql(
       `
@@ -214,7 +217,7 @@ export async function getSpendTracking(date) {
     FROM
       transactions
     WHERE
-      date_time >= ${start.getTime()} AND date_time < ${end.getTime()}
+      date_time >= ${from} AND date_time < ${to}
     ORDER BY
       date_time DESC
   ),
@@ -244,4 +247,33 @@ export async function getSpendTracking(date) {
     )
     .then(queryResultToArray);
   return results[0];
+}
+
+export function getCategorySummary(from, to) {
+  return db
+    .executeSql(
+      `
+    SELECT
+      category as name,
+      sum(amount) as amount,
+      entry_type
+    FROM
+      transactions
+    WHERE
+      date_time >= ${from} AND date_time < ${to}
+    GROUP BY
+      category, entry_type
+     ORDER BY entry_type ASC, sum(amount) DESC;`
+    )
+    .then(queryResultToArray)
+    .then(function(rows) {
+      rows.forEach(function(r) {
+        if (r.name == null) {
+          r.name = 'No category';
+        } else {
+          r.name = unescape(r.name);
+        }
+      });
+      return rows;
+    });
 }

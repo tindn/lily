@@ -25,6 +25,17 @@ export function isNearby(current, location) {
   );
 }
 
+export function getDistance(current, point) {
+  return (
+    Math.abs(point.latitude - current.latitude) +
+    Math.abs(point.longitude - current.longitude)
+  );
+}
+
+export function sortByDistance(a, b) {
+  return a.distance - b.distance;
+}
+
 export function cleanCoordinate(coordinate, decimal = 6) {
   return {
     latitude: parseFloat(coordinate.latitude.toFixed(decimal)),

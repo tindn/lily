@@ -12,7 +12,7 @@ export async function updateBalanceForAccount(id) {
     'account_entries',
     `WHERE account_id = '${id}' ORDER BY date_time ASC`
   );
-  return allEntries.reduce(function(acc, e) {
+  var newBalance = allEntries.reduce(function(acc, e) {
     if (e.entry_type == 'debit') {
       acc = acc - e.amount;
     } else {
@@ -20,6 +20,9 @@ export async function updateBalanceForAccount(id) {
     }
     return acc;
   }, 0);
+  return db.executeSql(
+    `UPDATE accounts SET balance = ${newBalance} WHERE id = '${id}'`
+  );
 }
 
 export function getActiveAccounts() {
@@ -29,5 +32,11 @@ export function getActiveAccounts() {
 export function archiveAccount(id) {
   return db.executeSql(
     `UPDATE accounts SET is_archived = 1 WHERE id = '${id}';`
+  );
+}
+
+export function unarchivedAccount(id) {
+  return db.executeSql(
+    `UPDATE accounts SET is_archived = 0 WHERE id = '${id}';`
   );
 }

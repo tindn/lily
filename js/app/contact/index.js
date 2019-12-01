@@ -15,11 +15,11 @@ function Contact() {
   );
 }
 
-Contact.navigationOptions = () => ({
+Contact.navigationOptions = {
   // eslint-disable-next-line react/display-name
   tabBarIcon: ({ horizontal, tintColor }) => {
     return <Icon name="user" size={horizontal ? 20 : 25} color={tintColor} />;
   },
-});
+};
 
 export default Contact;

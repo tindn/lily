@@ -23,6 +23,7 @@ import {
 } from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
 import OutlineButton from '../../components/outlineButton';
+import SwipeToDeleteContent from '../../components/Swipeable/SwipeToDeleteContent';
 
 function MonthTransactions(props) {
   const [data, setData] = useState([]);
@@ -45,7 +46,7 @@ function MonthTransactions(props) {
     <Screen>
       <NavigationEvents
         onWillFocus={function() {
-          fetchData();
+          fetchData({ useLoadingIndicator: false });
         }}
       />
       <FlatList
@@ -91,27 +92,7 @@ function MonthTransactions(props) {
                   ]
                 );
               }}
-              rightContent={
-                <View
-                  key={`delete ${item.id}`}
-                  style={{
-                    backgroundColor: theme.colors.red,
-                    justifyContent: 'center',
-                    flex: 1,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontWeight: '500',
-                      fontSize: 18,
-                      color: theme.colors.white,
-                      paddingLeft: 10,
-                    }}
-                  >
-                    Delete
-                  </Text>
-                </View>
-              }
+              rightContent={<SwipeToDeleteContent />}
             >
               <TouchableOpacity
                 delayPressIn={100}
@@ -148,11 +129,13 @@ function MonthTransactions(props) {
   );
 }
 
-MonthTransactions.navigationOptions = {
-  headerTitle: new Date().toLocaleDateString('en-US', {
-    month: 'long',
-  }),
-};
+MonthTransactions.navigationOptions = ({ navigation }) => ({
+  headerTitle: navigation
+    .getParam('date', new Date())
+    .toLocaleDateString('en-US', {
+      month: 'long',
+    }),
+});
 
 export default MonthTransactions;
 

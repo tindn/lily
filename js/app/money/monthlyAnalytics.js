@@ -5,16 +5,19 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import { NavigationEvents } from 'react-navigation';
+import MoneyDisplay from '../../components/moneyDisplay';
 import Screen from '../../components/screen';
 import { calculateAnalyticsForMonth } from '../../db/monthlyAnalytics';
 import { getAllFromTable } from '../../db/shared';
+import { getCategorySummary } from '../../db/transactions';
+import useToggle from '../../hooks/useToggle';
+import sharedStyles from '../../sharedStyles';
 import theme from '../../theme';
-import { formatAmountToDisplay } from '../../utils/money';
 
 function MonthlyAnalytics(props) {
   const [data, setData] = useState([]);
@@ -48,14 +51,12 @@ function MonthlyAnalytics(props) {
           </View>
         }
         renderItem={({ item, index }) => {
-          const diff = item.earned - item.spent;
-          const color = diff >= 0 ? theme.colors.green : theme.colors.red;
-
           return (
             <Swipeable
               rightActionActivationDistance={150}
               onRightActionRelease={function() {
                 setCalculatingIndex(index);
+                // eslint-disable-next-line no-undef
                 setTimeout(function() {
                   calculateAnalyticsForMonth(item).then(() =>
                     fetchData({
@@ -88,28 +89,11 @@ function MonthlyAnalytics(props) {
                 </View>
               }
             >
-              <TouchableOpacity
-                style={styles.listItem}
-                onPress={() => {
-                  props.navigation.navigate('MonthTransactions', {
-                    date: new Date(item.start_date),
-                  });
-                }}
-              >
-                <View>
-                  <Text style={styles.month}>{item.name}</Text>
-                  <Text style={{ color: theme.colors.green }}>
-                    {` ${formatAmountToDisplay(item.earned)}`}
-                  </Text>
-                  <Text style={{ color: theme.colors.red }}>
-                    {`${formatAmountToDisplay(-item.spent, true)}`}
-                  </Text>
-                </View>
-                <ActivityIndicator animating={index == calculatingIndex} />
-                <Text style={[styles.amount, { color }]}>
-                  {formatAmountToDisplay(diff, true)}
-                </Text>
-              </TouchableOpacity>
+              <Month
+                month={item}
+                isCalculating={index == calculatingIndex}
+                navigation={props.navigation}
+              />
             </Swipeable>
           );
         }}
@@ -125,30 +109,113 @@ MonthlyAnalytics.navigationOptions = {
 export default MonthlyAnalytics;
 
 const styles = StyleSheet.create({
-  amount: {
-    fontSize: 20,
-    fontWeight: '500',
-  },
   emptyComponent: {
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 20,
   },
-  listItem: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.backgroundColor,
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingBottom: 8,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 8,
-  },
-  month: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
 });
+
+function Month({ month, navigation, isCalculating }) {
+  const diff = month.earned - month.spent;
+  var [showSummaries, toggleSummaries] = useToggle();
+  var [summaries, setSummaries] = useState();
+  var getSummaries = useCallback(
+    function() {
+      getCategorySummary(month.start_date, month.end_date).then(setSummaries);
+    },
+    [setSummaries]
+  );
+
+  return (
+    <>
+      <View
+        style={{
+          flexDirection: 'row',
+          borderBottomColor: theme.colors.lighterGray,
+          borderBottomWidth: 1,
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            alignItems: 'center',
+            // backgroundColor: theme.colors.backgroundColor,
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingBottom: 8,
+            paddingLeft: 10,
+            paddingRight: 10,
+            paddingTop: 8,
+          }}
+          onPress={() => {
+            if (!showSummaries && summaries == undefined) {
+              getSummaries();
+            }
+            toggleSummaries();
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text>{month.name}</Text>
+            <MoneyDisplay amount={diff} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <MoneyDisplay amount={month.earned} />
+            <MoneyDisplay
+              amount={month.spent}
+              style={{ color: theme.colors.red }}
+            />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{
+            padding: 5,
+            backgroundColor: theme.colors.secondary,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            navigation.navigate('MonthTransactions', {
+              date: new Date(month.start_date),
+            });
+          }}
+        >
+          <Text style={{ paddingHorizontal: 10 }}>Transactions</Text>
+          <ActivityIndicator style={{ width: 20 }} animating={isCalculating} />
+        </TouchableOpacity>
+      </View>
+      {showSummaries && summaries ? (
+        <View style={{ marginHorizontal: 10 }}>
+          {summaries.map(function(category, index) {
+            return (
+              <View
+                key={index.toString()}
+                style={[
+                  {
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    paddingVertical: 5,
+                  },
+                  sharedStyles.borderBottom,
+                ]}
+              >
+                <Text>{category.name}</Text>
+                <MoneyDisplay
+                  amount={category.amount}
+                  useParentheses={false}
+                  style={[
+                    { fontSize: 16 },
+                    category.entry_type == 'debit' && {
+                      color: theme.colors.red,
+                    },
+                  ]}
+                />
+              </View>
+            );
+          })}
+        </View>
+      ) : null}
+    </>
+  );
+}

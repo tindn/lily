@@ -16,6 +16,7 @@ import VendorInput from '../../components/vendorInput';
 import { deleteTransaction, updateTransaction } from '../../db/transactions';
 import sharedStyles from '../../sharedStyles';
 import theme from '../../theme';
+import { error } from '../../log';
 
 export default function TransactionDetails(props) {
   var [date_time, setDateTime] = useState(new Date());
@@ -24,7 +25,7 @@ export default function TransactionDetails(props) {
   var [isCredit, setIsCredit] = useState(false);
   var [transaction, setTransaction] = useState();
   var [vendor_id, setVendorId] = useState('');
-  var [category, setCategory] = useState('');
+  var [category, setCategory] = useState(undefined);
 
   useEffect(
     function() {
@@ -84,7 +85,7 @@ export default function TransactionDetails(props) {
             sharedStyles.formTextInput,
           ]}
           value={memo}
-          placeholder="memo"
+          placeholder="Memo"
           onChangeText={setMemo}
           placeholderTextColor={theme.colors.lightGray}
         />
@@ -99,10 +100,11 @@ export default function TransactionDetails(props) {
             <Switch value={isCredit} onValueChange={setIsCredit} />
           </View>
           <CategoryInput
+            displayStyle={{ alignItems: 'flex-end', marginTop: 2 }}
             current={category}
             onPress={function(name) {
               if (category == name) {
-                setCategory('');
+                setCategory(undefined);
               } else {
                 setCategory(name);
               }
@@ -116,15 +118,19 @@ export default function TransactionDetails(props) {
             onPress={() => {
               updateTransaction({
                 ...transaction,
-                date_time: date_time,
-                memo: memo,
+                date_time,
+                memo,
                 amount: parseFloat(amount),
                 entry_type: isCredit ? 'credit' : 'debit',
                 vendor_id,
                 category,
-              }).then(function() {
-                props.navigation.pop();
-              });
+              })
+                .then(function() {
+                  props.navigation.pop();
+                })
+                .catch(function(e) {
+                  error('Error saving transaction', e.message);
+                });
             }}
           />
         </View>

@@ -7,7 +7,7 @@ import reducers from './reducers';
 const persistConfig = {
   key: 'lily-app',
   storage,
-  whitelist: ['currentMonthSetup'],
+  whitelist: [],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

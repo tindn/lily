@@ -4,8 +4,8 @@ import { createStackNavigator } from 'react-navigation-stack';
 import AccountDetails from './financeOverview/accountDetails';
 import FinanceOverview from './financeOverview';
 import Home from './home';
-import MonthlyAnalytics from './monthlyAnalytics';
-import MonthTransactions from './monthTransactions';
+import MonthlyAnalytics from './MonthlyAnalytics';
+import MonthTransactions from './MonthTransactions';
 import SnapshotList from './financeOverview/snapshotList';
 import TransactionDetails from './transactionDetails';
 import VendorDetails from './vendors/vendorDetails';
@@ -32,13 +32,13 @@ class Money extends React.Component {
   }
 }
 
-Money.navigationOptions = () => ({
+Money.navigationOptions = {
   // eslint-disable-next-line react/display-name
   tabBarIcon: ({ horizontal, tintColor }) => {
     return (
       <Icon name="barschart" size={horizontal ? 20 : 25} color={tintColor} />
     );
   },
-});
+};
 
 export default Money;

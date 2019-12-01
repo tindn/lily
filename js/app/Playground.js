@@ -156,14 +156,14 @@ export default function Playground() {
   );
 }
 
-Playground.navigationOptions = () => ({
+Playground.navigationOptions = {
   // eslint-disable-next-line react/display-name
   tabBarIcon: ({ horizontal, tintColor }) => {
     return (
       <Icon name="setting" size={horizontal ? 20 : 25} color={tintColor} />
     );
   },
-});
+};
 
 function processVendor(vendor) {
   var vendorId = uuid();

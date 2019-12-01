@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import { FlatList, Text, TextInput, View } from 'react-native';
+import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Swipeable from 'react-native-swipeable-row';
 import { connect } from 'react-redux';
 import OutlineButton from '../../../components/outlineButton';
-import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
-import useToggle from '../../../hooks/useToggle';
-import { addCategoryToDb } from '../../../redux/actions/categories';
+import SwipeToArchiveContent from '../../../components/Swipeable/SwipeToArchiveContent';
+import { error } from '../../../log';
+import {
+  addCategoryToDb,
+  archiveCategoryToDb,
+  saveCategoryToDb,
+  unarchiveCategoryToDb,
+} from '../../../redux/actions/categories';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
 
@@ -17,15 +24,17 @@ function mapStateToProps(state) {
 
 var mapDispatchToProps = {
   addCategoryToDb: addCategoryToDb,
+  archiveCategoryToDb: archiveCategoryToDb,
+  saveCategoryToDb: saveCategoryToDb,
+  unarchiveCategoryToDb: unarchiveCategoryToDb,
 };
 
 function Categories(props) {
-  var [showAddForm, toggleAddForm] = useToggle();
   var [newCategory, setNewCategory] = useState('');
-
+  var [oldCategory, setOldCategory] = useState();
   return (
     <Screen>
-      {showAddForm ? (
+      <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
         <View style={[sharedStyles.formContainer, props.style]}>
           <View key="firstRow" style={[sharedStyles.formRow]}>
             <TextInput
@@ -39,7 +48,6 @@ function Categories(props) {
               placeholder="Name"
               onChangeText={setNewCategory}
               placeholderTextColor={theme.colors.lightGray}
-              autoFocus
             />
           </View>
           <View
@@ -53,48 +61,123 @@ function Categories(props) {
               label="Cancel"
               onPress={function() {
                 setNewCategory('');
-                toggleAddForm();
+                setOldCategory(undefined);
               }}
               color={theme.colors.darkGray}
             />
             <OutlineButton
-              label="Save"
+              label={oldCategory ? 'Save' : 'Add'}
               onPress={function() {
-                props.addCategoryToDb(newCategory).then(function() {
-                  setNewCategory('');
-                  toggleAddForm();
-                });
+                if (oldCategory) {
+                  props
+                    .saveCategoryToDb(oldCategory, newCategory)
+                    .then(function() {
+                      setOldCategory(undefined);
+                      setNewCategory('');
+                    });
+                } else {
+                  props.addCategoryToDb(newCategory).then(function() {
+                    setNewCategory('');
+                  });
+                }
               }}
             />
           </View>
         </View>
-      ) : (
-        <Pill
-          label="Add"
-          style={{
-            alignSelf: 'center',
-            marginVertical: 7,
-          }}
-          onPress={toggleAddForm}
-        />
-      )}
-      <FlatList
-        data={props.categories}
-        renderItem={function({ item, index }) {
+
+        {props.categories.map(function(item, index) {
           return (
-            <View
-              key={`${index}`}
-              style={[sharedStyles.formRow, sharedStyles.borderBottom]}
+            <Swipeable
+              key={index.toString()}
+              rightContent={<SwipeToArchiveContent />}
+              rightActionActivationDistance={175}
+              onRightActionRelease={function() {
+                Alert.alert('Confirm', `Do you want to archive ${item.name}?`, [
+                  {
+                    text: 'Cancel',
+                  },
+                  {
+                    text: 'Archive',
+                    onPress: function() {
+                      props.archiveCategoryToDb(item.name).catch(function(e) {
+                        error('Failed to archive category', e.message);
+                      });
+                    },
+                    style: 'destructive',
+                  },
+                ]);
+              }}
+              leftContent={
+                <View
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    justifyContent: 'center',
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontWeight: '500',
+                      fontSize: 18,
+                      color: theme.colors.white,
+                      paddingLeft: 10,
+                      textAlign: 'right',
+                      paddingRight: 5,
+                    }}
+                  >
+                    Un-Archive
+                  </Text>
+                </View>
+              }
+              leftActionActivationDistance={175}
+              onLeftActionRelease={function() {
+                Alert.alert(
+                  'Confirm',
+                  `Do you want to un-archive ${item.name}?`,
+                  [
+                    {
+                      text: 'Cancel',
+                    },
+                    {
+                      text: 'Un-Archive',
+                      onPress: function() {
+                        props
+                          .unarchiveCategoryToDb(item.name)
+                          .catch(function(e) {
+                            error('Failed to un-archive category', e.message);
+                          });
+                      },
+                      style: 'destructive',
+                    },
+                  ]
+                );
+              }}
             >
-              <Text
-                style={[sharedStyles.formTextInput, { fontWeight: 'normal' }]}
+              <TouchableOpacity
+                style={[
+                  sharedStyles.formRow,
+                  sharedStyles.borderBottom,
+                  { paddingVertical: 15 },
+                ]}
+                onPress={function() {
+                  setOldCategory(item.name);
+                  setNewCategory(item.name);
+                }}
+                disabled={item.is_archived}
               >
-                {item.name}
-              </Text>
-            </View>
+                <Text>{item.name}</Text>
+                {item.is_archived ? (
+                  <OutlineButton
+                    label="Archived"
+                    disabled
+                    style={{ position: 'absolute', right: 5, top: 5 }}
+                  />
+                ) : null}
+              </TouchableOpacity>
+            </Swipeable>
           );
-        }}
-      />
+        })}
+      </ScrollView>
     </Screen>
   );
 }

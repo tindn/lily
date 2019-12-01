@@ -75,16 +75,24 @@ function VendorDetails(props) {
             placeholderTextColor={theme.colors.lightGray}
           />
         </View>
-        <CategoryInput
-          current={category}
-          onPress={function(name) {
-            if (category == name) {
-              setCategory('');
-            } else {
-              setCategory(name);
-            }
-          }}
-        />
+        <View
+          style={[
+            sharedStyles.formRow,
+            sharedStyles.borderBottom,
+            { paddingVertical: 20 },
+          ]}
+        >
+          <CategoryInput
+            current={category}
+            onPress={function(name) {
+              if (category == name) {
+                setCategory('');
+              } else {
+                setCategory(name);
+              }
+            }}
+          />
+        </View>
 
         <View style={{ marginTop: 10, paddingHorizontal: 20 }}>
           {locations &&

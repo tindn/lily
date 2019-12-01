@@ -1,4 +1,6 @@
-import { db, queryResultToArray } from './shared';
+import { db, queryResultToArray, getAllFromTable } from './shared';
+import { getActiveAccounts } from './accounts';
+import uuid from 'uuid/v1';
 
 export function getAccountSnapshots() {
   return db
@@ -89,4 +91,11 @@ export function getLatestSnapshot() {
     .then(queryResultToArray);
 }
 
-export function buildAccountSnapshot() {}
+export async function buildAccountSnapshot() {
+  var activeAccounts = await getActiveAccounts();
+  var timeOfSnapshot = Date.now();
+  var scripts = activeAccounts.map(function(a) {
+    return `INSERT INTO account_snapshots VALUES ('${uuid()}', ${a.balance}, ${timeOfSnapshot}, '${a.id}')`;
+  });
+  return db.sqlBatch(scripts);
+}

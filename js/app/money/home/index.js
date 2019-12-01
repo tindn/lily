@@ -3,16 +3,19 @@ import { ScrollView, Text, View } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 import Card from '../../../components/card';
+import MoneyDisplay from '../../../components/moneyDisplay';
 import Screen from '../../../components/screen';
 import { getAllFromTable } from '../../../db/shared';
-import { getSpendTracking } from '../../../db/transactions';
+import { getCategorySummary } from '../../../db/transactions';
+import useToggle from '../../../hooks/useToggle';
+import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
+import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
+import { getMonthStartEndFor } from '../../../utils/date';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
-import SpendTracking from './spendTracking';
 import TransactionAdd from './transactionAdd';
 import TransactionForm from './transactionForm';
-import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 
 var mapDispatchToProps = {
   loadVendorsFromDbToRedux: loadVendorsFromDbToRedux,
@@ -20,28 +23,28 @@ var mapDispatchToProps = {
 };
 
 function Home(props) {
-  var [spendingThisMonth, setSpendingThisMonth] = useState(0);
-  var [earningThisMonth, setEarningThisMonth] = useState(0);
   var [showTransactionForm, setShowTransactionForm] = useState(false);
   var [lastThreeMonths, setLastThreeMonths] = useState([]);
+  var [showSummaries, toggleSummaries] = useToggle();
+  var [categorySummaries, setCategorySummaries] = useState([]);
+
   var scrollViewRef = useRef(null);
 
   var updateData = useCallback(
     function() {
       const today = new Date();
+      var [start, end] = getMonthStartEndFor(today);
 
-      getSpendTracking(today).then(function(spendTracking) {
-        setSpendingThisMonth(spendTracking.spent);
-        setEarningThisMonth(spendTracking.earned);
-      });
+      getCategorySummary(start.getTime(), end.getTime()).then(
+        setCategorySummaries
+      );
 
-      var fourthMonthsAgo = new Date(Date.now() - 3600000 * 24 * 130).getTime();
       getAllFromTable(
         'monthly_analytics',
-        ` WHERE start_date > ${fourthMonthsAgo} AND end_date < ${today.getTime()} ORDER BY start_date DESC `
+        ` WHERE end_date <= ${end.getTime()} ORDER BY start_date DESC LIMIT 3`
       ).then(setLastThreeMonths);
     },
-    [setSpendingThisMonth, setEarningThisMonth, setLastThreeMonths]
+    [setLastThreeMonths]
   );
 
   // Will focus is not called on first load
@@ -59,24 +62,10 @@ function Home(props) {
         keyboardShuldPersistTaps="always"
         ref={scrollViewRef}
       >
-        <Card
-          onPress={() => {
-            props.navigation.navigate('MonthTransactions', {
-              date: new Date(),
-            });
-          }}
-          style={{ marginTop: 10, padding: 15 }}
-        >
-          <SpendTracking
-            earningThisMonth={earningThisMonth}
-            spendingThisMonth={spendingThisMonth}
-            navigation={props.navigation}
-          />
-        </Card>
         <View
           style={{
             flexDirection: 'row',
-            marginTop: 15,
+            marginVertical: 7,
             justifyContent: 'space-around',
           }}
         >
@@ -94,10 +83,70 @@ function Home(props) {
               ))
             : null}
         </View>
+        {showSummaries ? (
+          <Card onPress={toggleSummaries} style={{ marginVertical: 7 }}>
+            {categorySummaries.map(function(category, index) {
+              return (
+                <View
+                  key={index.toString()}
+                  style={[
+                    {
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      paddingVertical: 5,
+                    },
+                    sharedStyles.borderBottom,
+                  ]}
+                >
+                  <Text style={{ fontSize: 16 }}>{category.name}</Text>
+                  <MoneyDisplay
+                    amount={category.amount}
+                    useParentheses={false}
+                    style={[
+                      { fontSize: 16 },
+                      category.entry_type == 'debit' && {
+                        color: theme.colors.red,
+                      },
+                    ]}
+                  />
+                </View>
+              );
+            })}
+          </Card>
+        ) : (
+          <Card
+            style={{
+              paddingVertical: 15,
+              marginVertical: 7,
+              alignItems: 'center',
+            }}
+            onPress={toggleSummaries}
+          >
+            <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
+              Summary
+            </Text>
+          </Card>
+        )}
         <Card
           style={{
             paddingVertical: 15,
-            marginTop: 15,
+            marginVertical: 7,
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            props.navigation.navigate('MonthTransactions', {
+              date: new Date(),
+            });
+          }}
+        >
+          <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
+            Transactions
+          </Text>
+        </Card>
+        <Card
+          style={{
+            paddingVertical: 15,
+            marginVertical: 7,
             alignItems: 'center',
           }}
           onPress={() => props.navigation.navigate('Vendors')}
@@ -109,7 +158,7 @@ function Home(props) {
         <Card
           style={{
             paddingVertical: 15,
-            marginTop: 15,
+            marginVertical: 7,
             alignItems: 'center',
           }}
           onPress={() => props.navigation.navigate('Categories')}
@@ -121,7 +170,7 @@ function Home(props) {
         <Card
           style={{
             paddingVertical: 15,
-            marginTop: 15,
+            marginVertical: 7,
             alignItems: 'center',
           }}
           onPress={() => props.navigation.navigate('FinanceOverview')}

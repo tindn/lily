@@ -50,7 +50,7 @@ function AccountEntryForm(props) {
   function updateBalanceAmount(amount) {
     let diff = amount - props.accountBalance;
     setBalance(amount);
-    setAmount(diff);
+    setAmount(Math.abs(diff));
     setEntryType(diff < 0 ? 'debit' : 'credit');
   }
 

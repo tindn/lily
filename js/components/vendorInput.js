@@ -63,7 +63,7 @@ function VendorInput(props) {
           {props.selectedVendorId ? (
             props.vendors[props.selectedVendorId].name
           ) : (
-            <Text style={{ color: theme.colors.lightGray }}>vendor</Text>
+            <Text style={{ color: theme.colors.lightGray }}>Vendor</Text>
           )}
         </Text>
       </TouchableOpacity>

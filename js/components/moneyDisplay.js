@@ -10,6 +10,12 @@ function MoneyDisplay(props) {
       : props.amount < 0
       ? theme.colors.red
       : theme.colors.green;
+  if (props.useParentheses == undefined) {
+    props.useParentheses = true;
+  }
+  if (props.toFixed == undefined) {
+    props.toFixed = 2;
+  }
   return (
     <Text
       style={[
@@ -19,7 +25,7 @@ function MoneyDisplay(props) {
         props.style,
       ]}
     >
-      {formatAmountToDisplay(props.amount, props.useParentheses || true)}
+      {formatAmountToDisplay(props.amount, props.useParentheses, props.toFixed)}
     </Text>
   );
 }

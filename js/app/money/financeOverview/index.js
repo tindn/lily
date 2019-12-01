@@ -17,6 +17,7 @@ import {
   getLatestSnapshot,
 } from '../../../db/accountSnapshots';
 import { useToggle } from '../../../hooks';
+import { error, success } from '../../../log';
 import theme from '../../../theme';
 import { calculateFinanceOverview } from '../../../utils/money';
 import Category from './category';
@@ -37,6 +38,7 @@ function FinanceOverview(props) {
     fixedAssets: [],
     shortTermLiabilities: [],
     longTermLiabilities: [],
+    retirements: [],
   });
 
   useEffect(
@@ -64,6 +66,7 @@ function FinanceOverview(props) {
         fixedAssets = [],
         shortTermLiabilities = [],
         longTermLiabilities = [],
+        retirements = [],
         totalAssetsBalance = 0,
         totalLiabilitiesBalance = 0;
       accounts.forEach(function(account) {
@@ -88,6 +91,8 @@ function FinanceOverview(props) {
             longTermLiabilities.push(account);
             totalLiabilitiesBalance += account.balance;
             break;
+          case 'Retirement':
+            retirements.push(account);
         }
       });
       setState({
@@ -96,6 +101,7 @@ function FinanceOverview(props) {
         fixedAssets,
         shortTermLiabilities,
         longTermLiabilities,
+        retirements,
         totalAssetsBalance,
         totalLiabilitiesBalance,
       });
@@ -126,6 +132,12 @@ function FinanceOverview(props) {
           latestSnapshot={latestSnapshot}
           liquidityRate={liquidityRate}
           networthRate={networthRate}
+        />
+        <Category
+          accounts={state.retirements}
+          name="Retirements"
+          key="retirements"
+          navigation={props.navigation}
         />
         <LineItem
           onPress={() => {
@@ -160,7 +172,6 @@ function FinanceOverview(props) {
             navigation={props.navigation}
           />,
         ]}
-
         <LineItem
           onPress={() => {
             toggleShowLiabilities();
@@ -188,6 +199,7 @@ function FinanceOverview(props) {
             navigation={props.navigation}
           />,
         ]}
+
         <Pill
           onPress={() =>
             Alert.alert('Confirm', 'Do you want to create a new snapshot?', [
@@ -198,7 +210,16 @@ function FinanceOverview(props) {
               },
               {
                 text: 'Yes',
-                onPress: buildAccountSnapshot(),
+                onPress: function() {
+                  buildAccountSnapshot()
+                    .then(function() {
+                      success('Snapshot created');
+                    })
+                    .catch(function(e) {
+                      error('Error creating snapshot', e.message);
+                    })
+                    .finally(fetchData);
+                },
               },
             ])
           }
@@ -225,8 +246,8 @@ const styles = StyleSheet.create({
   },
 });
 
-FinanceOverview.navigationOptions = () => ({
+FinanceOverview.navigationOptions = {
   headerTitle: 'Overview',
-});
+};
 
 export default FinanceOverview;

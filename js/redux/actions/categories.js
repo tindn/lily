@@ -2,12 +2,13 @@ import {
   archiveCategory,
   createCategory,
   editCategory,
-  getActiveCategories,
+  getAllCategories,
+  unarchiveCategory,
 } from '../../db/categories';
 
 export function loadCategoriesFromDbToRedux() {
   return function(dispatch) {
-    getActiveCategories().then(function(categories) {
+    getAllCategories().then(function(categories) {
       dispatch({ type: 'UPDATE_CATEGORIES', payload: categories });
     });
   };
@@ -32,6 +33,14 @@ export function saveCategoryToDb(oldCategory, newCategory) {
 export function archiveCategoryToDb(name) {
   return function(dispatch) {
     return archiveCategory(name).then(function() {
+      return dispatch(loadCategoriesFromDbToRedux());
+    });
+  };
+}
+
+export function unarchiveCategoryToDb(name) {
+  return function(dispatch) {
+    return unarchiveCategory(name).then(function() {
       return dispatch(loadCategoriesFromDbToRedux());
     });
   };

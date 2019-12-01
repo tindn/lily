@@ -11,9 +11,24 @@ export function getActiveCategories() {
   );
 }
 
+export function getAllCategories() {
+  return getAllFromTable('categories').then(function(categories) {
+    categories.forEach(function(c) {
+      c.name = unescape(c.name);
+    });
+    return categories;
+  });
+}
+
 export function archiveCategory(name) {
   return db.executeSql(
     `UPDATE categories SET is_archived = 1 WHERE name = '${escape(name)}';`
+  );
+}
+
+export function unarchiveCategory(name) {
+  return db.executeSql(
+    `UPDATE categories SET is_archived = 0 WHERE name = '${escape(name)}';`
   );
 }
 

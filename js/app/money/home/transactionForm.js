@@ -17,10 +17,11 @@ import OutlineButton from '../../../components/outlineButton';
 import VendorInput from '../../../components/vendorInput';
 import { addTransaction } from '../../../db/transactions';
 import { getNearbyVendors } from '../../../db/vendors';
-import { error, success } from '../../../log';
+import { error } from '../../../log';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
+import { getDistance, sortByDistance } from '../../../utils/location';
 
 function mapStateToProps(state) {
   var vendors = getVendorsArray(state);
@@ -72,7 +73,18 @@ function TransactionForm(props) {
     geolocation.getCurrentPosition(
       function({ coords }) {
         setCoords(coords);
-        getNearbyVendors(coords).then(setNearbyVendors);
+        getNearbyVendors(coords)
+          .then(function(nearbyVendors) {
+            nearbyVendors.forEach(function(v) {
+              v.distance = getDistance(coords, v);
+            });
+            return nearbyVendors;
+          })
+          .then(function(nearbyVendors) {
+            nearbyVendors.sort(sortByDistance);
+            return nearbyVendors;
+          })
+          .then(setNearbyVendors);
       },
       function() {},
       { enableHighAccuracy: true }
@@ -110,7 +122,7 @@ function TransactionForm(props) {
             },
           ]}
           value={memo}
-          placeholder="memo"
+          placeholder="Memo"
           onChangeText={setMemo}
           placeholderTextColor={theme.colors.lightGray}
         />
@@ -177,6 +189,7 @@ function TransactionForm(props) {
           <Switch value={isCredit} onValueChange={setIsCredit} />
         </View>
         <CategoryInput
+          displayStyle={{ alignItems: 'flex-end', marginTop: 2 }}
           current={category}
           onPress={function(name) {
             if (category == name) {
@@ -215,7 +228,6 @@ function TransactionForm(props) {
               category,
             })
               .then(function() {
-                success('Transaction added');
                 LayoutAnimation.easeInEaseOut();
                 resetFormState(moneyInputKey + 1);
                 props.onTransactionAdded && props.onTransactionAdded();

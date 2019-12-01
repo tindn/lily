@@ -28,22 +28,21 @@ export async function getNearbyVendors({ latitude, longitude }) {
   latitude = latitude.toFixed(3).toString();
   latitude = latitude.substring(0, latitude.length - 1);
   longitude = longitude.toFixed(3).toString();
-  longitude = longitude.substring(0, latitude.length - 1);
+  longitude = longitude.substring(0, longitude.length - 1);
 
   var vendors = await db
     .executeSql(
       `
       SELECT
-        *
+        v.*,
+        c.latitude,
+        c.longitude
       FROM
-        vendors
+        vendors v
+      LEFT JOIN vendor_coordinates c ON v.id = c.vendor_id
       WHERE
-        id IN(
-          SELECT
-            vendor_id FROM vendor_coordinates
-          WHERE
-            latitude LIKE '${latitude}%'
-            AND longitude LIKE '${longitude}%');`
+        c.latitude LIKE '${latitude}%'
+        AND c.longitude LIKE '${longitude}%';`
     )
     .then(queryResultToArray);
   vendors.forEach(v => (v.name = unescape(v.name)));
@@ -90,19 +89,22 @@ export async function getVendorById(id) {
 export function addVendor(vendor) {
   var scripts = [];
   var vendorId = uuid();
+  var category = 'NULL';
+  if (vendor.category) {
+    category = `'${escape(vendor.category)}'`;
+  }
   scripts.push(
-    `INSERT INTO vendors 
-     (id, name, updated_on)
+    `INSERT INTO vendors
      VALUES ('${vendorId}','${escape(
       vendor.name
-    )}', ${Date.now()}, 0, '${escape(vendor.category)}');`
+    )}', ${Date.now()}, 0, ${category});`
   );
 
   if (vendor.locations && vendor.locations.length) {
     vendor.locations.forEach(function(location) {
       var locationId = uuid();
       scripts.push(
-        `INSERT INTO coordinates (id, latitude, longitude, vendor_id) 
+        `INSERT INTO vendor_coordinates (id, latitude, longitude, vendor_id) 
          VALUES ('${locationId}',${location.latitude},${location.longitude},'${vendorId}');`
       );
     });

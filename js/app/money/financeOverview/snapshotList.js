@@ -4,6 +4,7 @@ import Swipeable from 'react-native-swipeable-row';
 import { NavigationEvents } from 'react-navigation';
 import MoneyDisplay from '../../../components/moneyDisplay';
 import Screen from '../../../components/screen';
+import SwipeToDeleteContent from '../../../components/Swipeable/SwipeToDeleteContent';
 import {
   deleteAccountSnapshot,
   getAccountSnapshots,
@@ -76,27 +77,7 @@ function SnapshotList() {
                   },
                 ]);
               }}
-              rightContent={
-                <View
-                  key={`delete ${item.id}`}
-                  style={{
-                    backgroundColor: theme.colors.red,
-                    justifyContent: 'center',
-                    flex: 1,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontWeight: '500',
-                      fontSize: 18,
-                      color: theme.colors.white,
-                      paddingLeft: 10,
-                    }}
-                  >
-                    Delete
-                  </Text>
-                </View>
-              }
+              rightContent={<SwipeToDeleteContent />}
             >
               <View style={styles.listItem}>
                 <View style={{ alignSelf: 'flex-start', marginBottom: 15 }}>

@@ -8,25 +8,25 @@ import BottomSheet from './bottomSheet';
 
 function mapStateToProps(state) {
   return {
-    categories: state.categories,
+    categories: state.categories.filter(c => !c.is_archived),
   };
 }
 
 function CategoryInput(props) {
   var [showModal, setShowModal] = useState(false);
   return (
-    <View>
+    <>
       <TouchableOpacity
         onPress={function() {
           setShowModal(true);
         }}
-        style={props.displayStyle}
+        style={[{ flex: 1 }, props.displayStyle]}
       >
         <Text style={[sharedStyles.formTextInput, props.displayTextStyle]}>
           {props.current ? (
             props.current
           ) : (
-            <Text style={{ color: theme.colors.lightGray }}>category</Text>
+            <Text style={{ color: theme.colors.lightGray }}>Category</Text>
           )}
         </Text>
       </TouchableOpacity>
@@ -75,7 +75,7 @@ function CategoryInput(props) {
           textStyle={{ textAlign: 'center' }}
         />
       </BottomSheet>
-    </View>
+    </>
   );
 }
 
