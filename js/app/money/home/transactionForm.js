@@ -173,6 +173,9 @@ function TransactionForm(props) {
                     } else {
                       setVendorId(item.id);
                     }
+                    if (item.category && !category) {
+                      setCategory(item.category);
+                    }
                   }}
                   style={{ margin: 5 }}
                 />
