@@ -12,9 +12,9 @@ import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
 import theme from '../../../theme';
 import { getMonthStartEndFor } from '../../../utils/date';
 import CategoryLine from './CategoryLine';
-import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
-import TransactionAdd from './transactionAdd';
-import TransactionForm from './transactionForm';
+import MonthlyAnalyticsOverview from './MonthlyAnalyticsOverview';
+import AddTransactionButton from './AddTransactionButton';
+import TransactionForm from './TransactionForm';
 
 var mapDispatchToProps = {
   loadVendorsFromDbToRedux: loadVendorsFromDbToRedux,
@@ -165,7 +165,7 @@ function Home(props) {
         ) : null}
       </ScrollView>
       {!showTransactionForm ? (
-        <TransactionAdd
+        <AddTransactionButton
           onPress={() => {
             setShowTransactionForm(true);
             // eslint-disable-next-line no-undef
