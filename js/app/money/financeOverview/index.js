@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { differenceInCalendarDays } from 'date-fns';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
@@ -44,9 +44,10 @@ function FinanceOverview(props) {
   useEffect(
     function() {
       if (earliestSnapshot.date_time && overview.liquidity) {
-        earliestSnapshot.date_time = moment(earliestSnapshot.date_time);
-        const today = moment();
-        const days = today.diff(earliestSnapshot.date_time, 'days');
+        const days = differenceInCalendarDays(
+          new Date(),
+          new Date(earliestSnapshot.date_time)
+        );
         const changeInLiquidity =
           overview.liquidity - earliestSnapshot.liquidity;
         const changeInNetworth = overview.networth - earliestSnapshot.networth;
