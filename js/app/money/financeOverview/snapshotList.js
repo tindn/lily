@@ -80,21 +80,11 @@ function SnapshotList() {
               rightContent={<SwipeToDeleteContent />}
             >
               <View style={styles.listItem}>
-                <View style={{ alignSelf: 'flex-start', marginBottom: 15 }}>
-                  <Text>
-                    {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <MoneyDisplay amount={item.liquidity} />
-                  <MoneyDisplay amount={item.networth} />
-                </View>
+                <Text style={{ fontWeight: '500' }}>
+                  {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
+                </Text>
+                <MoneyDisplay amount={item.liquidity} />
+                <MoneyDisplay amount={item.networth} />
               </View>
             </Swipeable>
           );
@@ -119,10 +109,9 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.colors.lighterGray,
     borderBottomWidth: 1,
     flex: 1,
-    paddingBottom: 8,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
   },
 });
 

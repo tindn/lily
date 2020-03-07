@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import theme from '../../../theme';
-import { formatAmountToDisplay } from '../../../utils/money';
+import MoneyDisplay from '../../../components/moneyDisplay';
 
 function MonthlyAnalyticsOverview(props) {
   const { month } = props;
@@ -21,27 +21,25 @@ function MonthlyAnalyticsOverview(props) {
       >
         {month.name}
       </Text>
-      <Text
+      <MoneyDisplay
+        amount={month.spent}
         style={{
-          color: color,
           textAlign: 'center',
           fontWeight: '500',
           fontSize: 16,
+          color: theme.colors.red,
+          marginBottom: 10,
         }}
-      >
-        {formatAmountToDisplay(diff)}
-      </Text>
-      <Text
+      />
+      <MoneyDisplay
+        amount={diff}
         style={{
-          color: theme.colors.lightGray,
+          color: color,
           textAlign: 'center',
           fontWeight: '600',
           fontSize: 14,
-          marginTop: 10,
         }}
-      >
-        {formatAmountToDisplay(-month.spent, true)}
-      </Text>
+      />
     </>
   );
 }

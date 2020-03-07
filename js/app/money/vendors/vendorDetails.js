@@ -1,5 +1,5 @@
 import geolocation from '@react-native-community/geolocation';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Button, ScrollView, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
 import Pill from '../../../components/pill';
@@ -16,9 +16,9 @@ import MapLocationInput from '../mapLocationInput';
 import CategoryInput from '../../../components/categoryInput';
 
 var mapDispatchToProps = {
-  addVendorToDb: addVendorToDb,
-  saveVendorToDb: saveVendorToDb,
-  deleteVendorFromDb: deleteVendorFromDb,
+  addVendorToDb,
+  saveVendorToDb,
+  deleteVendorFromDb,
 };
 
 function VendorDetails(props) {
@@ -30,30 +30,11 @@ function VendorDetails(props) {
     var vendor = props.navigation.getParam('vendor');
     if (vendor) {
       setName(vendor.name);
-      setLocations(vendor.locations);
+      setLocations(vendor.locations || []);
       setId(vendor.id);
       setCategory(vendor.category);
     }
   });
-
-  var addLocation = useCallback(
-    coord => {
-      setLocations([...locations, coord]);
-    },
-    [setLocations]
-  );
-
-  var removeLocation = useCallback(index => {
-    const newLocations = [...locations];
-    newLocations.splice(index, 1);
-    setLocations(newLocations);
-  }, []);
-
-  var updateLocation = useCallback((index, coord) => {
-    const newLocations = [...locations];
-    newLocations[index] = coord;
-    setLocations(newLocations);
-  }, []);
 
   return (
     <Screen style={{ alignContent: 'space-around' }}>
@@ -70,7 +51,7 @@ function VendorDetails(props) {
             value={name}
             placeholder="Name"
             onChangeText={setName}
-            style={sharedStyles.formTextInput}
+            style={[sharedStyles.formTextInput, { textAlign: 'right' }]}
             autoFocus={!id}
             placeholderTextColor={theme.colors.lightGray}
           />
@@ -91,6 +72,7 @@ function VendorDetails(props) {
                 setCategory(name);
               }
             }}
+            displayTextStyle={{ textAlign: 'right' }}
           />
         </View>
 
@@ -109,16 +91,23 @@ function VendorDetails(props) {
                 <MapLocationInput
                   coord={location}
                   title={name}
-                  style={[sharedStyles.shadow2, { flex: 1 }]}
+                  zoom={2000}
+                  style={[
+                    sharedStyles.shadow2,
+                    { flex: 1, marginHorizontal: 30 },
+                  ]}
                   mapStyle={{ borderRadius: 10 }}
                   removeLocation={() => {
-                    removeLocation(index);
+                    const newLocations = [...locations];
+                    newLocations.splice(index, 1);
+                    setLocations(newLocations);
                   }}
                   updateLocation={e => {
-                    updateLocation(
-                      index,
-                      cleanCoordinate(e.nativeEvent.coordinate)
+                    const newLocations = [...locations];
+                    newLocations[index] = cleanCoordinate(
+                      e.nativeEvent.coordinate
                     );
+                    setLocations(newLocations);
                   }}
                   markerDraggable={true}
                 />
@@ -129,7 +118,8 @@ function VendorDetails(props) {
           onPress={() => {
             geolocation.getCurrentPosition(
               position => {
-                addLocation(cleanCoordinate(position.coords));
+                locations.push(position.coords);
+                setLocations([...locations]);
               },
               null,
               { enableHighAccuracy: false }
@@ -184,25 +174,21 @@ function VendorDetails(props) {
             <Button
               title="Delete"
               onPress={() => {
-                Alert.alert(
-                  'Confirm',
-                  'Do you want to delete this transaction?',
-                  [
-                    {
-                      text: 'Cancel',
-                      onPress: function() {},
+                Alert.alert('Confirm', 'Do you want to delete this vendor?', [
+                  {
+                    text: 'Cancel',
+                    onPress: function() {},
+                  },
+                  {
+                    text: 'Delete',
+                    onPress: () => {
+                      props.deleteVendorFromDb(id).then(function() {
+                        props.navigation.pop();
+                      });
                     },
-                    {
-                      text: 'Delete',
-                      onPress: () => {
-                        props.deleteVendorFromDb(id).then(function() {
-                          props.navigation.pop();
-                        });
-                      },
-                      style: 'destructive',
-                    },
-                  ]
-                );
+                    style: 'destructive',
+                  },
+                ]);
               }}
               color={theme.colors.red}
             />

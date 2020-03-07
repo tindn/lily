@@ -14,7 +14,7 @@ import MoneyDisplay from '../../components/moneyDisplay';
 import Screen from '../../components/screen';
 import { calculateAnalyticsForMonth } from '../../db/monthlyAnalytics';
 import { getAllFromTable } from '../../db/shared';
-import { getCategorySummary } from '../../db/transactions';
+import { getTransactionSummaryByCategory } from '../../db/categories';
 import useToggle from '../../hooks/useToggle';
 import sharedStyles from '../../sharedStyles';
 import theme from '../../theme';
@@ -122,7 +122,9 @@ function Month({ month, navigation, isCalculating }) {
   var [summaries, setSummaries] = useState();
   var getSummaries = useCallback(
     function() {
-      getCategorySummary(month.start_date, month.end_date).then(setSummaries);
+      getTransactionSummaryByCategory(month.start_date, month.end_date).then(
+        setSummaries
+      );
     },
     [setSummaries]
   );
@@ -139,7 +141,6 @@ function Month({ month, navigation, isCalculating }) {
         <TouchableOpacity
           style={{
             alignItems: 'center',
-            // backgroundColor: theme.colors.backgroundColor,
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -149,6 +150,15 @@ function Month({ month, navigation, isCalculating }) {
             paddingTop: 8,
           }}
           onPress={() => {
+            if (showSummaries) {
+              toggleSummaries();
+            } else {
+              navigation.navigate('MonthTransactions', {
+                date: new Date(month.start_date),
+              });
+            }
+          }}
+          onLongPress={() => {
             if (!showSummaries && summaries == undefined) {
               getSummaries();
             }
@@ -156,10 +166,18 @@ function Month({ month, navigation, isCalculating }) {
           }}
         >
           <View style={{ flex: 1 }}>
-            <Text>{month.name}</Text>
-            <MoneyDisplay amount={diff} />
+            <Text style={{ fontWeight: '500', color: theme.colors.darkGray }}>
+              {month.name}
+            </Text>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <MoneyDisplay amount={diff} />
+            <ActivityIndicator
+              style={{ width: 20, marginLeft: 10 }}
+              animating={isCalculating}
+            />
+          </View>
+          <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <MoneyDisplay amount={month.earned} />
             <MoneyDisplay
               amount={month.spent}
@@ -167,29 +185,12 @@ function Month({ month, navigation, isCalculating }) {
             />
           </View>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{
-            padding: 5,
-            backgroundColor: theme.colors.secondary,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-          onPress={() => {
-            navigation.navigate('MonthTransactions', {
-              date: new Date(month.start_date),
-            });
-          }}
-        >
-          <Text style={{ paddingHorizontal: 10 }}>Transactions</Text>
-          <ActivityIndicator style={{ width: 20 }} animating={isCalculating} />
-        </TouchableOpacity>
       </View>
       {showSummaries && summaries ? (
         <View style={{ marginHorizontal: 10 }}>
           {summaries.map(function(category, index) {
             return (
-              <View
+              <TouchableOpacity
                 key={index.toString()}
                 style={[
                   {
@@ -199,6 +200,12 @@ function Month({ month, navigation, isCalculating }) {
                   },
                   sharedStyles.borderBottom,
                 ]}
+                onPress={function() {
+                  navigation.navigate('MonthTransactions', {
+                    date: new Date(month.start_date),
+                    category: category.name,
+                  });
+                }}
               >
                 <Text>{category.name}</Text>
                 <MoneyDisplay
@@ -211,7 +218,7 @@ function Month({ month, navigation, isCalculating }) {
                     },
                   ]}
                 />
-              </View>
+              </TouchableOpacity>
             );
           })}
         </View>

@@ -14,7 +14,7 @@ export default function OverviewCard({
   return (
     <Card
       style={{
-        marginTop: 5,
+        marginVertical: 7,
         marginHorizontal: 0,
       }}
       onPress={() => navigation.navigate('SnapshotList')}
@@ -133,14 +133,6 @@ export default function OverviewCard({
               paddingBottom: 5,
             }}
           />
-          <MoneyDisplay
-            amount={(overview.networth + networthRate * 12).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
         </View>
         <View>
           <Text
@@ -160,14 +152,6 @@ export default function OverviewCard({
               paddingBottom: 5,
             }}
           />
-          <MoneyDisplay
-            amount={(overview.networth + networthRate * 36).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
         </View>
         <View>
           <Text
@@ -181,14 +165,6 @@ export default function OverviewCard({
           </Text>
           <MoneyDisplay
             amount={(overview.liquidity + liquidityRate * 60).toFixed(2)}
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              paddingBottom: 5,
-            }}
-          />
-          <MoneyDisplay
-            amount={(overview.networth + networthRate * 60).toFixed(2)}
             style={{
               fontSize: 15,
               fontWeight: '500',

@@ -7,7 +7,7 @@ import Home from './home';
 import MonthlyAnalytics from './MonthlyAnalytics';
 import MonthTransactions from './MonthTransactions';
 import SnapshotList from './financeOverview/snapshotList';
-import TransactionDetails from './transactionDetails';
+import TransactionDetails from './TransactionDetails';
 import VendorDetails from './vendors/vendorDetails';
 import Vendors from './vendors';
 import Categories from './categories';

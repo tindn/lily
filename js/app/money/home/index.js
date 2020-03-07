@@ -3,16 +3,15 @@ import { ScrollView, Text, View } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 import Card from '../../../components/card';
-import MoneyDisplay from '../../../components/moneyDisplay';
 import Screen from '../../../components/screen';
 import { getAllFromTable } from '../../../db/shared';
-import { getCategorySummary } from '../../../db/transactions';
+import { getTransactionSummaryByCategory } from '../../../db/categories';
 import useToggle from '../../../hooks/useToggle';
 import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
-import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
 import { getMonthStartEndFor } from '../../../utils/date';
+import CategoryLine from './CategoryLine';
 import MonthlyAnalyticsOverview from './monthlyAnalyticsOverview';
 import TransactionAdd from './transactionAdd';
 import TransactionForm from './transactionForm';
@@ -35,7 +34,7 @@ function Home(props) {
       const today = new Date();
       var [start, end] = getMonthStartEndFor(today);
 
-      getCategorySummary(start.getTime(), end.getTime()).then(
+      getTransactionSummaryByCategory(start.getTime(), end.getTime()).then(
         setCategorySummaries
       );
 
@@ -70,11 +69,15 @@ function Home(props) {
           }}
         >
           {lastThreeMonths.length
-            ? lastThreeMonths.map(month => (
+            ? lastThreeMonths.map((month, index) => (
                 <Card
                   key={month.id}
                   onPress={() => {
-                    props.navigation.navigate('MonthlyAnalytics');
+                    if (index == 0) {
+                      toggleSummaries();
+                    } else {
+                      props.navigation.navigate('MonthlyAnalytics');
+                    }
                   }}
                   style={{ paddingHorizontal: 15 }}
                 >
@@ -84,49 +87,22 @@ function Home(props) {
             : null}
         </View>
         {showSummaries ? (
-          <Card onPress={toggleSummaries} style={{ marginVertical: 7 }}>
+          <Card style={{ marginVertical: 7 }}>
             {categorySummaries.map(function(category, index) {
               return (
-                <View
+                <CategoryLine
                   key={index.toString()}
-                  style={[
-                    {
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      paddingVertical: 5,
-                    },
-                    sharedStyles.borderBottom,
-                  ]}
-                >
-                  <Text style={{ fontSize: 16 }}>{category.name}</Text>
-                  <MoneyDisplay
-                    amount={category.amount}
-                    useParentheses={false}
-                    style={[
-                      { fontSize: 16 },
-                      category.entry_type == 'debit' && {
-                        color: theme.colors.red,
-                      },
-                    ]}
-                  />
-                </View>
+                  category={category}
+                  onPress={() => {
+                    props.navigation.navigate('MonthTransactions', {
+                      category: category.name,
+                    });
+                  }}
+                />
               );
             })}
           </Card>
-        ) : (
-          <Card
-            style={{
-              paddingVertical: 15,
-              marginVertical: 7,
-              alignItems: 'center',
-            }}
-            onPress={toggleSummaries}
-          >
-            <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
-              Summary
-            </Text>
-          </Card>
-        )}
+        ) : null}
         <Card
           style={{
             paddingVertical: 15,
@@ -134,9 +110,7 @@ function Home(props) {
             alignItems: 'center',
           }}
           onPress={() => {
-            props.navigation.navigate('MonthTransactions', {
-              date: new Date(),
-            });
+            props.navigation.navigate('MonthTransactions');
           }}
         >
           <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>

@@ -124,6 +124,11 @@ export async function saveVendor(vendor) {
      WHERE id = '${vendor.id}';`
   );
 
+  var existingLocations = await getAllFromTable(
+    'vendor_coordinates',
+    `WHERE vendor_id = '${vendor.id}'`
+  );
+
   if (vendor.locations && vendor.locations.length) {
     vendor.locations.forEach(function(location) {
       if (location.id) {
@@ -140,14 +145,23 @@ export async function saveVendor(vendor) {
         );
       }
     });
+
+    // existing locations that are no longer in the new vendor object
+    existingLocations
+      .filter(function(existing) {
+        return (
+          vendor.locations.findIndex(function(newLocation) {
+            return newLocation.id === existing.id;
+          }) == -1
+        );
+      })
+      .forEach(l => {
+        scripts.push(`DELETE FROM vendor_coordinates WHERE id = '${l.id}';`);
+      });
   } else {
-    var existingLocations = await getAllFromTable(
-      'vendor_coordinates',
-      `WHERE vendor_id = '${vendor.id}'`
-    );
     if (existingLocations && existingLocations.length) {
       existingLocations.forEach(function(l) {
-        scripts.push(`DELETE FROM coordinates WHERE id = '${l.id}';`);
+        scripts.push(`DELETE FROM vendor_coordinates WHERE id = '${l.id}';`);
       });
     }
   }

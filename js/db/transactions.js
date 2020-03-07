@@ -58,6 +58,30 @@ export function getTransactionsBetweenTimestamps(from, to) {
     .then(processTransactions);
 }
 
+export function getTransactionsBetweenTimestampsForCategory(
+  from,
+  to,
+  category
+) {
+  if (!category) {
+    return getTransactionsBetweenTimestamps(from, to);
+  }
+  return db
+    .executeSql(
+      `
+    ${selectTransactionsStatement}
+    WHERE
+      date_time >= ${from} AND date_time < ${to} AND t.category = '${escape(
+        category
+      )}'
+    ORDER BY
+      date_time DESC;
+  `
+    )
+    .then(queryResultToArray)
+    .then(processTransactions);
+}
+
 /**
  *
  * @param {Object} transaction
@@ -247,33 +271,4 @@ export async function getSpendTracking(from, to) {
     )
     .then(queryResultToArray);
   return results[0];
-}
-
-export function getCategorySummary(from, to) {
-  return db
-    .executeSql(
-      `
-    SELECT
-      category as name,
-      sum(amount) as amount,
-      entry_type
-    FROM
-      transactions
-    WHERE
-      date_time >= ${from} AND date_time < ${to}
-    GROUP BY
-      category, entry_type
-     ORDER BY entry_type ASC, sum(amount) DESC;`
-    )
-    .then(queryResultToArray)
-    .then(function(rows) {
-      rows.forEach(function(r) {
-        if (r.name == null) {
-          r.name = 'No category';
-        } else {
-          r.name = unescape(r.name);
-        }
-      });
-      return rows;
-    });
 }
