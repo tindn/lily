@@ -64,3 +64,5 @@ ios/Pods/
 
 # env files
 .env*
+
+ios/GoogleService-Info.plist
