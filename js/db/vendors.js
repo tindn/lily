@@ -45,7 +45,12 @@ export async function getNearbyVendors({ latitude, longitude }) {
         AND c.longitude LIKE '${longitude}%';`
     )
     .then(queryResultToArray);
-  vendors.forEach(v => (v.name = unescape(v.name)));
+  vendors.forEach(v => {
+    v.name = unescape(v.name);
+    if (v.category) {
+      v.category = unescape(v.category);
+    }
+  });
   return vendors;
 }
 
