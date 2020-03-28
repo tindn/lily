@@ -239,7 +239,7 @@ PODS:
   - React-jsinspector (0.61.2)
   - react-native-geolocation (2.0.2):
     - React
-  - react-native-maps (0.23.0):
+  - react-native-maps (0.27.1):
     - React
   - react-native-sqlite-storage (4.1.0):
     - React
@@ -454,7 +454,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 8909917ff7d8f21a57e443a866fd8d4560e50c65
   React-jsinspector: 111d7d342b07a904c400592e02a2b958f1098b60
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
-  react-native-maps: 9469741f77f270c605cafec603ce47327dc5b5f8
+  react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-sqlite-storage: f06bfba10f67f989c00b6a699b9c2b80a816edbe
   React-RCTActionSheet: 89b037c0fb7d2671607cb645760164e7e0c013f6
   React-RCTAnimation: e3cefa93c38c004c318f7ec04b883eb14b8b8235
