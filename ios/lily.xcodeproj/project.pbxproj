@@ -11,9 +11,8 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		262D9EBB243019B1000CA2ED /* LILYFirebaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 26CC452D238F1BD300476ED2 /* LILYFirebaseStorage.m */; };
 		26CC4529238F12D400476ED2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26CC4528238F12D400476ED2 /* GoogleService-Info.plist */; };
-		26CC452E238F1BD300476ED2 /* LILYFirebaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 26CC452D238F1BD300476ED2 /* LILYFirebaseStorage.m */; };
-		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		FB589047BE0973ECB609DDC5 /* libPods-lily.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7049011B8D9906737B619950 /* libPods-lily.a */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +25,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = lily/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = lily/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = lily/main.m; sourceTree = "<group>"; };
+		262D9EB82430142C000CA2ED /* lily-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "lily-Bridging-Header.h"; sourceTree = "<group>"; };
 		26A8F6AA222A284D00E3EC2D /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		26A8F6AB222A284D00E3EC2D /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
 		26A8F6AC222A284D00E3EC2D /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
@@ -47,7 +47,6 @@
 		7049011B8D9906737B619950 /* libPods-lily.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lily.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		87F339EADF13C397911DE6F3 /* Pods-lily.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lily.debug.xcconfig"; path = "Target Support Files/Pods-lily/Pods-lily.debug.xcconfig"; sourceTree = "<group>"; };
 		9CC5660114FDF91FE56CE4DE /* Pods-lily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lily.release.xcconfig"; path = "Target Support Files/Pods-lily/Pods-lily.release.xcconfig"; sourceTree = "<group>"; };
-		C3BF58CD2304552100944C3F /* lily.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = lily.entitlements; path = lily/lily.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -56,7 +55,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				FB589047BE0973ECB609DDC5 /* libPods-lily.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -78,7 +76,6 @@
 			children = (
 				26CC452A238F1AC400476ED2 /* Firebase */,
 				26CC4528238F12D400476ED2 /* GoogleService-Info.plist */,
-				C3BF58CD2304552100944C3F /* lily.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -86,6 +83,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				262D9EB82430142C000CA2ED /* lily-Bridging-Header.h */,
 			);
 			name = lily;
 			sourceTree = "<group>";
@@ -111,13 +109,6 @@
 			);
 			name = Fonts;
 			path = "../node_modules/react-native-vector-icons/Fonts";
-			sourceTree = "<group>";
-		};
-		26A8F6D4222A298B00E3EC2D /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		26CC452A238F1AC400476ED2 /* Firebase */ = {
@@ -153,8 +144,6 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				26A8F6D4222A298B00E3EC2D /* Recovered References */,
-				F6764722FBDD465BA44D483C /* Resources */,
 				0F32256FCFF848034D85C766 /* Pods */,
 			);
 			indentWidth = 2;
@@ -168,13 +157,6 @@
 				13B07F961A680F5B00A75B9A /* lily.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		F6764722FBDD465BA44D483C /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,10 +189,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1020;
-				ORGANIZATIONNAME = Facebook;
+				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = MANXVB8K2R;
+						LastSwiftMigration = 1130;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -344,7 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				26CC452E238F1BD300476ED2 /* LILYFirebaseStorage.m in Sources */,
+				262D9EBB243019B1000CA2ED /* LILYFirebaseStorage.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,16 +355,15 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = MANXVB8K2R;
-				HEADER_SEARCH_PATHS = (
+				ENABLE_BITCODE = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-keyboard-manager/ios/**",
+					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = lily/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -390,6 +372,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.tindn.lily;
 				PRODUCT_NAME = lily;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "lily-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -400,18 +385,14 @@
 			baseConfigurationReference = 9CC5660114FDF91FE56CE4DE /* Pods-lily.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = MANXVB8K2R;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-keyboard-manager/ios/**",
-				);
 				INFOPLIST_FILE = lily/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -420,6 +401,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.tindn.lily;
 				PRODUCT_NAME = lily;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "lily-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -473,6 +456,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -520,6 +509,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
