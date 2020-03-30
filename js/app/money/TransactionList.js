@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   Alert,
@@ -15,9 +16,9 @@ import { error, success } from '../../log';
 import theme from '../../theme';
 import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
-import navigation from '../navigation';
 
 export default function TransactionList(props) {
+  const navigation = useNavigation();
   return (
     <FlatList
       data={props.data}

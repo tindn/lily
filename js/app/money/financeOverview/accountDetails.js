@@ -20,14 +20,14 @@ import theme from '../../../theme';
 import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
 
-function AccountDetails(props) {
+export default function AccountDetails(props) {
   const [showNewEntryForm, setForm] = useState(false);
   const [entries, setEntries] = useState([]);
   var [account, setAccount] = useState({});
   var [updatingBalance, setUpdatingBalance] = useState(false);
   var updateData = useCallback(
     function() {
-      var accountId = props.navigation.getParam('accountId', undefined);
+      var accountId = (props.route.params || {}).accountId;
       if (accountId) {
         getAccountById(accountId).then(function(data) {
           setAccount(data);
@@ -50,7 +50,7 @@ function AccountDetails(props) {
   return (
     <Screen>
       <ScrollView keyboardShouldPersistTaps="always">
-        <View style={[styles.row]}>
+        <View style={styles.row}>
           <Text style={{ fontSize: 17 }}>{name}</Text>
           <ActivityIndicator animating={updatingBalance} />
           <MoneyDisplay
@@ -58,7 +58,7 @@ function AccountDetails(props) {
             style={{ color: '#000', fontSize: 17 }}
           />
         </View>
-        <View style={[styles.row]}>
+        <View style={styles.row}>
           <Text style={{ fontSize: 17 }}>{category}</Text>
           <Text style={{ fontSize: 17 }}>{type}</Text>
         </View>
@@ -159,10 +159,6 @@ function AccountDetails(props) {
   );
 }
 
-AccountDetails.navigationOptions = ({ navigation }) => {
-  return { title: navigation.getParam('accountName', 'Account Details') };
-};
-
 const styles = StyleSheet.create({
   row: {
     backgroundColor: '#fff',
@@ -173,5 +169,3 @@ const styles = StyleSheet.create({
     padding: 12,
   },
 });
-
-export default AccountDetails;

@@ -1,7 +1,7 @@
+import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
-import { NavigationEvents } from 'react-navigation';
 import MoneyDisplay from '../../../components/moneyDisplay';
 import Screen from '../../../components/screen';
 import SwipeToDeleteContent from '../../../components/Swipeable/SwipeToDeleteContent';
@@ -14,7 +14,7 @@ import theme from '../../../theme';
 import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
 import { calculateFinanceOverview } from '../../../utils/money';
 
-function SnapshotList() {
+export default function SnapshotList() {
   var [list, setList] = useState([]);
   var getData = useCallback(
     function() {
@@ -41,9 +41,10 @@ function SnapshotList() {
     },
     [setList]
   );
+
+  useFocusEffect(getData);
   return (
     <Screen>
-      <NavigationEvents onWillFocus={getData} />
       <FlatList
         data={list}
         keyExtractor={(item, index) => index.toString()}
@@ -94,10 +95,6 @@ function SnapshotList() {
   );
 }
 
-SnapshotList.navigationOptions = {
-  headerTitle: 'Snapshots',
-};
-
 const styles = StyleSheet.create({
   emptyComponent: {
     alignItems: 'center',
@@ -114,5 +111,3 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 });
-
-export default SnapshotList;

@@ -1,29 +1,28 @@
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { createStackNavigator } from 'react-navigation-stack';
 import ElectricityReadingsList from './electricityReadingsList';
 import Home from './home';
 import LargeDisplay from './largeDisplay';
 
-const MiscStack = createStackNavigator({
-  Home,
-  ElectricityReadingsList,
-  LargeDisplay,
-});
-
-class Misc extends React.Component {
-  static router = MiscStack.router;
-
-  render() {
-    return <MiscStack navigation={this.props.navigation} />;
-  }
+const Stack = createStackNavigator();
+export default function Misc() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{ header: () => null }}
+      />
+      <Stack.Screen
+        name="ElectricityReadingsList"
+        component={ElectricityReadingsList}
+        options={{ title: 'Readings' }}
+      />
+      <Stack.Screen
+        name="LargeDisplay"
+        component={LargeDisplay}
+        options={{ header: () => null }}
+      />
+    </Stack.Navigator>
+  );
 }
-
-Misc.navigationOptions = {
-  // eslint-disable-next-line react/display-name
-  tabBarIcon: ({ horizontal, tintColor }) => {
-    return <Icon name="edit" size={horizontal ? 20 : 25} color={tintColor} />;
-  },
-};
-
-export default Misc;

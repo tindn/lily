@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,17 +10,16 @@ import {
   View,
 } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
-import { NavigationEvents } from 'react-navigation';
 import MoneyDisplay from '../../components/moneyDisplay';
 import Screen from '../../components/screen';
+import { getTransactionSummaryByCategory } from '../../db/categories';
 import { calculateAnalyticsForMonth } from '../../db/monthlyAnalytics';
 import { getAllFromTable } from '../../db/shared';
-import { getTransactionSummaryByCategory } from '../../db/categories';
 import useToggle from '../../hooks/useToggle';
 import sharedStyles from '../../sharedStyles';
 import theme from '../../theme';
 
-function MonthlyAnalytics(props) {
+export default function MonthlyAnalytics(props) {
   const [data, setData] = useState([]);
   var [refreshing, setRefreshing] = useState(false);
   var [calculatingIndex, setCalculatingIndex] = useState(-1);
@@ -32,13 +32,11 @@ function MonthlyAnalytics(props) {
       });
   }, []);
 
+  useFocusEffect(function() {
+    fetchData({ useLocadingIndicator: false });
+  });
   return (
     <Screen>
-      <NavigationEvents
-        onWillFocus={function() {
-          fetchData({ useLocadingIndicator: false });
-        }}
-      />
       <FlatList
         data={data}
         keyExtractor={item => item.id}
@@ -101,12 +99,6 @@ function MonthlyAnalytics(props) {
     </Screen>
   );
 }
-
-MonthlyAnalytics.navigationOptions = {
-  headerTitle: 'Monthly Analytics',
-};
-
-export default MonthlyAnalytics;
 
 const styles = StyleSheet.create({
   emptyComponent: {

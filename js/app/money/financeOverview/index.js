@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { differenceInCalendarDays } from 'date-fns';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
@@ -7,7 +8,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { NavigationEvents } from 'react-navigation';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
 import { getActiveAccounts } from '../../../db/accounts';
@@ -24,7 +24,7 @@ import Category from './category';
 import LineItem from './lineItem';
 import OverviewCard from './overviewCard';
 
-function FinanceOverview(props) {
+export default function FinanceOverview(props) {
   var [overview, setOverview] = useState({});
   var [earliestSnapshot, setEarliestSnapshot] = useState({});
   var [latestSnapshot, setLatestSnapshot] = useState({});
@@ -119,13 +119,10 @@ function FinanceOverview(props) {
     });
   }, []);
 
+  useFocusEffect(fetchData);
+
   return (
     <Screen>
-      <NavigationEvents
-        onWillFocus={function() {
-          fetchData();
-        }}
-      />
       <ScrollView contentContainerStyle={{ marginHorizontal: 5 }}>
         <OverviewCard
           overview={overview}
@@ -246,9 +243,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-FinanceOverview.navigationOptions = {
-  headerTitle: 'Overview',
-};
-
-export default FinanceOverview;

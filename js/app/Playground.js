@@ -2,7 +2,6 @@ import firebase from 'firebase';
 import React, { useContext } from 'react';
 import { Clipboard, StatusBar } from 'react-native';
 import { Button, Layout } from 'react-native-ui-kitten';
-import Icon from 'react-native-vector-icons/AntDesign';
 import rnfb from 'rn-fetch-blob';
 import { runMigrations } from '../db';
 import { upload } from '../LILYFirebaseStorage';
@@ -103,12 +102,3 @@ export default function Playground() {
     </Layout>
   );
 }
-
-Playground.navigationOptions = {
-  // eslint-disable-next-line react/display-name
-  tabBarIcon: ({ horizontal, tintColor }) => {
-    return (
-      <Icon name="setting" size={horizontal ? 20 : 25} color={tintColor} />
-    );
-  },
-};

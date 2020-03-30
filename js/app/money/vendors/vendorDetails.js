@@ -27,7 +27,7 @@ function VendorDetails(props) {
   var [locations, setLocations] = useState([]);
   var [category, setCategory] = useState('');
   useState(function() {
-    var vendor = props.navigation.getParam('vendor');
+    var vendor = (props.route.params || {}).vendor;
     if (vendor) {
       setName(vendor.name);
       setLocations(vendor.locations || []);
@@ -198,12 +198,5 @@ function VendorDetails(props) {
     </Screen>
   );
 }
-
-VendorDetails.navigationOptions = function({ navigation }) {
-  const { params } = navigation.state;
-  return {
-    title: params && params.vendor ? params.vendor.name : 'New Vendor',
-  };
-};
 
 export default connect(null, mapDispatchToProps)(VendorDetails);

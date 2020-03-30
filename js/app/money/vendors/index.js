@@ -6,12 +6,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import { connect } from 'react-redux';
+import OutlineButton from '../../../components/outlineButton';
 import Screen from '../../../components/screen';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
 import theme from '../../../theme';
-import OutlineButton from '../../../components/outlineButton';
 
 function mapStateToProps(state) {
   return {
@@ -55,18 +54,6 @@ function Vendors(props) {
     </Screen>
   );
 }
-
-Vendors.navigationOptions = ({ navigation }) => ({
-  title: 'Vendors',
-  headerRight: (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('VendorDetails', {})}
-      style={{ marginRight: 10 }}
-    >
-      <Icon name="plus" size={25} color={theme.colors.iosBlue} />
-    </TouchableOpacity>
-  ),
-});
 
 const styles = StyleSheet.create({
   emptyComponent: {

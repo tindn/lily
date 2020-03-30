@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { getTransactionSumForCategory } from '../../../db/categories';
-import { getMonthStartEndFor } from '../../../utils/date';
+import { useNavigation } from '@react-navigation/native';
 import { addMonths, startOfMonth } from 'date-fns';
+import React, { useEffect, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import MoneyDisplay from '../../../components/moneyDisplay';
-import theme from '../../../theme';
+import { getTransactionSumForCategory } from '../../../db/categories';
 import sharedStyles from '../../../sharedStyles';
-import navigation from '../../navigation';
+import theme from '../../../theme';
+import { getMonthStartEndFor } from '../../../utils/date';
 
 export default function CategoryHistory(props) {
   const [lastMonth, setLastMonth] = useState(0);
   const [lastThreeMonth, setLastThreeMonth] = useState(0);
   var [lastMonthStart, setLastMonthStart] = useState();
-
+  const navigation = useNavigation();
   useEffect(
     function() {
       const today = new Date();

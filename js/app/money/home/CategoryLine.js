@@ -1,14 +1,15 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
+import BottomSheet from '../../../components/bottomSheet';
 import MoneyDisplay from '../../../components/moneyDisplay';
+import { useToggle } from '../../../hooks';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
-import { useToggle } from '../../../hooks';
-import BottomSheet from '../../../components/bottomSheet';
 import CategoryHistory from './CategoryHistory';
 
 export default function CategoryLine(props) {
   const [showHistory, toggleShowHistory] = useToggle();
+
   return (
     <>
       <TouchableOpacity

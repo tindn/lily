@@ -13,9 +13,6 @@ const commonPhrases = {
 };
 
 class LargeDisplay extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
   state = {
     value: '',
     fontSize: 75,

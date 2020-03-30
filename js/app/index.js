@@ -11,14 +11,12 @@ import {
 import DropdownAlert from 'react-native-dropdownalert';
 import 'react-native-gesture-handler';
 import { ApplicationProvider } from 'react-native-ui-kitten';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setRef } from '../log';
 import { persistor, store } from '../redux';
 import CurrentUserContext from './currentUserContext';
 import LoadingScreen from './loading';
-import navigation from './navigation';
 import SignInScreen from './signIn';
 import UserApp from './userApp';
 
@@ -29,19 +27,6 @@ firebase.initializeApp({
   projectId: FIREBASE_PROJECT_ID,
 });
 
-var AppRoutes = createAppContainer(
-  createSwitchNavigator(
-    {
-      Loading: LoadingScreen,
-      UserApp: UserApp,
-      SignIn: SignInScreen,
-    },
-    {
-      initialRouteName: 'Loading',
-    }
-  )
-);
-
 firebase.firestore();
 
 function App() {
@@ -51,9 +36,8 @@ function App() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         setCurrentUser(user);
-        navigation.navigate('UserApp');
       } else {
-        navigation.navigate('SignIn');
+        setCurrentUser(null);
       }
     });
   }, []);
@@ -64,11 +48,13 @@ function App() {
           <CurrentUserContext.Provider
             value={{ user: currentUser, setCurrentUser }}
           >
-            <AppRoutes
-              ref={navigatorRef => {
-                navigation.setTopLevelNavigator(navigatorRef);
-              }}
-            />
+            {currentUser == undefined ? (
+              <LoadingScreen />
+            ) : currentUser == null ? (
+              <SignInScreen />
+            ) : (
+              <UserApp />
+            )}
           </CurrentUserContext.Provider>
         </ApplicationProvider>
         <DropdownAlert ref={ref => setRef(ref)} />

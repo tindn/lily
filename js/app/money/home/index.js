@@ -1,19 +1,19 @@
+import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 import Card from '../../../components/card';
 import Screen from '../../../components/screen';
-import { getAllFromTable } from '../../../db/shared';
 import { getTransactionSummaryByCategory } from '../../../db/categories';
+import { getAllFromTable } from '../../../db/shared';
 import useToggle from '../../../hooks/useToggle';
 import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
 import theme from '../../../theme';
 import { getMonthStartEndFor } from '../../../utils/date';
+import AddTransactionButton from './AddTransactionButton';
 import CategoryLine from './CategoryLine';
 import MonthlyAnalyticsOverview from './MonthlyAnalyticsOverview';
-import AddTransactionButton from './AddTransactionButton';
 import TransactionForm from './TransactionForm';
 
 var mapDispatchToProps = {
@@ -53,9 +53,9 @@ function Home(props) {
     props.loadCategoriesFromDbToRedux();
   }, []);
 
+  useFocusEffect(updateData);
   return (
     <Screen>
-      <NavigationEvents onWillFocus={updateData} />
       <ScrollView
         keyboardDismissMode="on-drag"
         keyboardShuldPersistTaps="always"
@@ -178,8 +178,5 @@ function Home(props) {
     </Screen>
   );
 }
-Home.navigationOptions = {
-  header: null,
-};
 
 export default connect(null, mapDispatchToProps)(Home);

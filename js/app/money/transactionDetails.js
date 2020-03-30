@@ -14,9 +14,9 @@ import MoneyInput from '../../components/moneyInput';
 import Screen from '../../components/screen';
 import VendorInput from '../../components/vendorInput';
 import { deleteTransaction, updateTransaction } from '../../db/transactions';
+import { error } from '../../log';
 import sharedStyles from '../../sharedStyles';
 import theme from '../../theme';
-import { error } from '../../log';
 
 export default function TransactionDetails(props) {
   var [date_time, setDateTime] = useState(new Date());
@@ -29,7 +29,7 @@ export default function TransactionDetails(props) {
 
   useEffect(
     function() {
-      var transactionFromParam = props.navigation.getParam('transaction');
+      var transactionFromParam = (props.route.params || {}).transaction;
       setTransaction(transactionFromParam);
       setDateTime(new Date(transactionFromParam.date_time));
       setMemo(transactionFromParam.memo);
@@ -60,7 +60,7 @@ export default function TransactionDetails(props) {
           <DateInput
             onChange={setDateTime}
             date={date_time}
-            style={[{ alignItems: 'flex-end' }]}
+            style={{ alignItems: 'flex-end' }}
           />
           <MoneyInput onChange={setAmount} amount={amount} editable={true} />
         </View>
