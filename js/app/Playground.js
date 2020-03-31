@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import React, { useContext } from 'react';
 import { Clipboard, StatusBar } from 'react-native';
-import { Button, Layout } from 'react-native-ui-kitten';
+import { Button, Layout } from '@ui-kitten/components';
 import rnfb from 'rn-fetch-blob';
 import { runMigrations } from '../db';
 import { upload } from '../LILYFirebaseStorage';

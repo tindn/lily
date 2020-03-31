@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ImageBackground, View } from 'react-native';
-import { Button, Input, Layout, Text } from 'react-native-ui-kitten';
+import { Button, Input, Layout, Text } from '@ui-kitten/components';
 import firebase from 'firebase';
 import { useToggle } from '../hooks';
 

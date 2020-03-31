@@ -24,7 +24,11 @@ export default function Money() {
         component={Home}
         options={{ header: () => null }}
       />
-      <Stack.Screen name="TransactionDetails" component={TransactionDetails} />
+      <Stack.Screen
+        name="TransactionDetails"
+        component={TransactionDetails}
+        options={{ title: 'Details' }}
+      />
       <Stack.Screen
         name="MonthTransactions"
         component={MonthTransactions}
