@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ImageBackground, View } from 'react-native';
+import { ImageBackground, StatusBar, View } from 'react-native';
 import { Button, Input, Layout, Text } from '@ui-kitten/components';
 import firebase from 'firebase';
 import { useToggle } from '../hooks';
@@ -10,8 +10,9 @@ export default function LoadingScreen() {
   var [errorMessage, setErrorMessage] = useState('');
   var [hidePassword, toggleHidePassword] = useToggle(true);
 
+  StatusBar.setBarStyle('light-content');
   return (
-    <Layout style={{ flex: 1, marginBottom: 20 }}>
+    <Layout style={{ flex: 1 }}>
       <View
         style={{
           backgroundColor: '#3366FF',
@@ -34,7 +35,7 @@ export default function LoadingScreen() {
             }}
             category="h1"
           >
-            Hello
+            Meowww
           </Text>
           <Text
             category="h6"
@@ -90,7 +91,7 @@ export default function LoadingScreen() {
         <Text status="danger">{errorMessage}</Text>
       </View>
       <Button
-        style={{ marginHorizontal: 40 }}
+        style={{ marginHorizontal: 40, marginBottom: 20 }}
         size="large"
         onPress={function() {
           firebase
