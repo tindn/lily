@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { ImageBackground, StatusBar, View } from 'react-native';
-import { Button, Input, Layout, Text } from '@ui-kitten/components';
+import { Button, Input, Text } from '@ui-kitten/components';
 import firebase from 'firebase';
+import React, { useState } from 'react';
+import { ImageBackground, View } from 'react-native';
+import Screen from '../components/screen';
 import { useToggle } from '../hooks';
 
 export default function LoadingScreen() {
@@ -10,9 +11,12 @@ export default function LoadingScreen() {
   var [errorMessage, setErrorMessage] = useState('');
   var [hidePassword, toggleHidePassword] = useToggle(true);
 
-  StatusBar.setBarStyle('light-content');
   return (
-    <Layout style={{ flex: 1 }}>
+    <Screen
+      isFullScreen
+      lightModeStatusBar="light-content"
+      darkModeStatusBar="light-content"
+    >
       <View
         style={{
           backgroundColor: '#3366FF',
@@ -110,6 +114,6 @@ export default function LoadingScreen() {
       >
         SIGN IN
       </Button>
-    </Layout>
+    </Screen>
   );
 }

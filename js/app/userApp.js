@@ -1,18 +1,52 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import {
+  BottomNavigation,
+  BottomNavigationTab,
+  Icon,
+} from '@ui-kitten/components';
 import React, { useContext, useEffect, useState } from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { SafeAreaView } from 'react-native';
 import {
   closeDatabaseConnection,
   openDatabaseConnection,
   runMigrations,
 } from '../db';
-import theme from '../theme';
 import Contact from './contact';
 import CurrentUserContext from './currentUserContext';
 import Misc from './misc';
 import Money from './money';
 import Playground from './Playground';
+
+function UiKittenBottomTabBar(props) {
+  function onSelect(index) {
+    props.navigation.navigate(props.state.routeNames[index]);
+  }
+  return (
+    <SafeAreaView>
+      <BottomNavigation selectedIndex={props.state.index} onSelect={onSelect}>
+        <BottomNavigationTab
+          icon={style => (
+            <Icon {...style} width={30} height={30} name="credit-card" />
+          )}
+        />
+        <BottomNavigationTab
+          icon={style => <Icon {...style} width={30} height={30} name="list" />}
+        />
+        <BottomNavigationTab
+          icon={style => (
+            <Icon {...style} width={30} height={30} name="person" />
+          )}
+        />
+        <BottomNavigationTab
+          icon={style => (
+            <Icon {...style} width={30} height={30} name="settings" />
+          )}
+        />
+      </BottomNavigation>
+    </SafeAreaView>
+  );
+}
 
 const Tab = createBottomTabNavigator();
 export default function UserApp() {
@@ -34,16 +68,7 @@ export default function UserApp() {
 
   return isDbReady ? (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="Money"
-        tabBarOptions={{
-          activeTintColor: theme.colors.primary,
-          inactiveTintColor: 'gray',
-        }}
-        screenOptions={() => ({
-          tabBarLabel: () => null,
-        })}
-      >
+      <Tab.Navigator initialRouteName="Money" tabBar={UiKittenBottomTabBar}>
         <Tab.Screen
           name="Money"
           component={Money}
@@ -84,5 +109,3 @@ export default function UserApp() {
     </NavigationContainer>
   ) : null;
 }
-
-// UserApp.router = TabNavigator.router;

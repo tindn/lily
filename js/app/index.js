@@ -1,9 +1,9 @@
-import { dark, light, mapping } from '@eva-design/eva';
-import { ApplicationProvider } from '@ui-kitten/components';
+import { mapping } from '@eva-design/eva';
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { useColorScheme } from 'react-native';
 import {
   FIREBASE_API_KEY,
   FIREBASE_AUTH_DOMAIN,
@@ -16,6 +16,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setRef } from '../log';
 import { persistor, store } from '../redux';
+import { useTheme } from '../uiKittenTheme';
 import CurrentUserContext from './currentUserContext';
 import LoadingScreen from './loading';
 import SignInScreen from './SignIn';
@@ -42,14 +43,12 @@ function App() {
       }
     });
   }, []);
-  const color = useColorScheme();
+  const theme = useTheme();
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ApplicationProvider
-          mapping={mapping}
-          theme={color == 'dark' ? dark : light}
-        >
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider mapping={mapping} theme={theme}>
           <CurrentUserContext.Provider
             value={{ user: currentUser, setCurrentUser }}
           >

@@ -38,7 +38,7 @@ export default function TransactionDetails(props) {
       setVendorId(transactionFromParam.vendor_id);
       setCategory(transactionFromParam.category);
     },
-    [props]
+    [props.route.params]
   );
 
   return (

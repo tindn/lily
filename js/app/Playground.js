@@ -1,8 +1,9 @@
+import { Button } from '@ui-kitten/components';
 import firebase from 'firebase';
 import React, { useContext } from 'react';
-import { Clipboard, StatusBar } from 'react-native';
-import { Button, Layout } from '@ui-kitten/components';
+import { Clipboard } from 'react-native';
 import rnfb from 'rn-fetch-blob';
+import Screen from '../components/screen';
 import { runMigrations } from '../db';
 import { upload } from '../LILYFirebaseStorage';
 import CurrentUserContext from './currentUserContext';
@@ -10,8 +11,7 @@ import CurrentUserContext from './currentUserContext';
 export default function Playground() {
   var currentUser = useContext(CurrentUserContext);
   return (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <StatusBar barStyle="dark-content" />
+    <Screen style={{ justifyContent: 'center', alignItems: 'center' }}>
       <Button
         style={{ marginVertical: 5 }}
         onPress={() => runMigrations()}
@@ -99,6 +99,6 @@ export default function Playground() {
       >
         SIGN OUT
       </Button>
-    </Layout>
+    </Screen>
   );
 }

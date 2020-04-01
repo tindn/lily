@@ -13,10 +13,13 @@ import MonthTransactions from './MonthTransactions';
 import TransactionDetails from './TransactionDetails';
 import Vendors from './vendors';
 import VendorDetails from './vendors/vendorDetails';
+import { useColor } from '../../uiKittenTheme';
 
 const Stack = createStackNavigator();
 
 export default function Money() {
+  const backgroundColor = useColor('background-basic-color-1');
+  const headerTintColor = useColor('text-basic-color');
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -27,7 +30,12 @@ export default function Money() {
       <Stack.Screen
         name="TransactionDetails"
         component={TransactionDetails}
-        options={{ title: 'Details' }}
+        options={{
+          title: 'Details',
+          headerStyle: {
+            backgroundColor,
+          },
+        }}
       />
       <Stack.Screen
         name="MonthTransactions"
@@ -39,6 +47,10 @@ export default function Money() {
               month: 'long',
             }
           ),
+          headerStyle: {
+            backgroundColor,
+          },
+          headerTintColor: headerTintColor,
         })}
       />
       <Stack.Screen

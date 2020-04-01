@@ -8,7 +8,7 @@ import TransactionList from './TransactionList';
 export default function MonthTransactions(props) {
   const [data, setData] = useState([]);
   var [refreshing, setRefreshing] = useState(false);
-  var date = (props.route.params || {}).date || new Date();
+  const [date] = useState((props.route.params || {}).date || new Date());
   var category = (props.route.params || {}).category;
   var fetchData = useCallback(
     function(params = { useLoadingIndicator: true }) {
@@ -24,12 +24,10 @@ export default function MonthTransactions(props) {
           params.useLoadingIndicator && setRefreshing(false);
         });
     },
-    [date.getTime()]
+    [date]
   );
 
-  useFocusEffect(function() {
-    fetchData({ useLoadingIndicator: false });
-  });
+  useFocusEffect(fetchData);
 
   return (
     <Screen>
