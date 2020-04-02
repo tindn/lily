@@ -10,7 +10,7 @@ function Screen(props) {
     colorScheme === 'dark' ? darkModeStatusBar : lightModeStatusBar;
   StatusBar.setBarStyle(currentStatusBar);
   const ContentWrapper = props.isFullScreen ? View : SafeAreaView;
-  const backgroundLevel = props.backgroundLevel || '2';
+  const backgroundLevel = props.backgroundLevel || '4';
   return (
     <Layout style={{ flex: 1 }} level={backgroundLevel}>
       <ContentWrapper style={[{ flex: 1 }, props.style]}>

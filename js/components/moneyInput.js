@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text } from '@ui-kitten/components';
 import { formatAmountToDisplay } from '../utils/money';
 import theme from '../theme';
 
@@ -41,16 +36,9 @@ class MoneyInput extends React.PureComponent {
           }}
         >
           <Text
-            style={[
-              styles.display,
-              this.props.type && {
-                color:
-                  this.props.type === 'credit'
-                    ? theme.colors.green
-                    : theme.colors.red,
-              },
-              this.props.textStyle,
-            ]}
+            status={this.props.type === 'credit' ? 'success' : 'danger'}
+            category="h5"
+            style={[styles.display, this.props.textStyle]}
           >
             {formatAmountToDisplay(this.props.amount)}
           </Text>
@@ -62,7 +50,6 @@ class MoneyInput extends React.PureComponent {
 
 const styles = StyleSheet.create({
   display: {
-    fontSize: 26,
     fontWeight: '500',
     textAlign: 'right',
   },

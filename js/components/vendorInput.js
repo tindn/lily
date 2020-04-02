@@ -1,10 +1,10 @@
+import { Button, Text } from '@ui-kitten/components';
 import React, { useRef, useState } from 'react';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import sharedStyles from '../sharedStyles';
 import theme from '../theme';
 import BottomSheet from './bottomSheet';
-import OutlineButton from './outlineButton';
 
 function mapStateToProps(state) {
   var vendorIds = Object.keys(state.vendors);
@@ -84,7 +84,6 @@ function VendorInput(props) {
                 style={[
                   sharedStyles.borderBottom,
                   { paddingLeft: 10, paddingVertical: 15 },
-                  selected && { backgroundColor: theme.colors.secondary },
                 ]}
                 onPress={() => {
                   props.onVendorPress(item);
@@ -115,8 +114,10 @@ function VendorInput(props) {
           renderItem={function({ item }) {
             let selected = filter == item;
             return (
-              <OutlineButton
-                label={item}
+              <Button
+                key={item}
+                appearance="outline"
+                status={selected ? 'success' : 'basic'}
                 onPress={function() {
                   if (selected) {
                     setFilter('all');
@@ -124,34 +125,31 @@ function VendorInput(props) {
                     setFilter(item);
                   }
                 }}
-                color={
-                  selected ? theme.colors.primary : theme.colors.darkerGray
-                }
-                style={[
-                  {
-                    padding: 7,
-                    margin: 5,
-                  },
-                ]}
-              />
+                style={{
+                  padding: 7,
+                  margin: 5,
+                }}
+              >
+                {item}
+              </Button>
             );
           }}
         />
 
-        <OutlineButton
+        <Button
           onPress={() => setShowModal(false)}
-          label="Cancel"
-          color={theme.colors.primary}
-          style={[
-            {
-              alignSelf: 'flex-end',
-              marginTop: 20,
-              marginRight: 20,
-              marginBottom: 20,
-            },
-          ]}
+          appearance="outline"
+          status="basic"
+          style={{
+            alignSelf: 'flex-end',
+            marginTop: 20,
+            marginRight: 20,
+            marginBottom: 20,
+          }}
           textStyle={{ textAlign: 'center' }}
-        />
+        >
+          Cancel
+        </Button>
       </BottomSheet>
     </View>
   );

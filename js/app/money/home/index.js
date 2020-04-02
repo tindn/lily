@@ -1,4 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
+import { Button } from '@ui-kitten/components';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
@@ -11,7 +12,6 @@ import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
 import theme from '../../../theme';
 import { getMonthStartEndFor } from '../../../utils/date';
-import AddTransactionButton from './AddTransactionButton';
 import CategoryLine from './CategoryLine';
 import MonthlyAnalyticsOverview from './MonthlyAnalyticsOverview';
 import TransactionForm from './TransactionForm';
@@ -165,7 +165,21 @@ function Home(props) {
         ) : null}
       </ScrollView>
       {!showTransactionForm ? (
-        <AddTransactionButton
+        <Button
+          style={{
+            position: 'absolute',
+            bottom: 18,
+            borderRadius: 50,
+            width: 70,
+            height: 70,
+            alignSelf: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.23,
+            shadowRadius: 2.62,
+            elevation: 4,
+          }}
+          status="primary"
           onPress={() => {
             setShowTransactionForm(true);
             // eslint-disable-next-line no-undef
@@ -173,7 +187,9 @@ function Home(props) {
               scrollViewRef.current.scrollToEnd({ animated: true });
             }, 100);
           }}
-        />
+        >
+          Add
+        </Button>
       ) : null}
     </Screen>
   );

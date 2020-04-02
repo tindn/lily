@@ -5,13 +5,14 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { Layout } from '@ui-kitten/components';
 
 export default function BottomSheet(props) {
   return (
     <Modal animationType="fade" transparent={true} visible={props.show}>
       <View
         style={{
-          backgroundColor: '#00000033',
+          backgroundColor: '#00000053',
           flex: 1,
           justifyContent: 'flex-end',
         }}
@@ -19,10 +20,8 @@ export default function BottomSheet(props) {
         <TouchableWithoutFeedback onPress={props.hide}>
           <View style={{ flex: 1 }} />
         </TouchableWithoutFeedback>
-        <SafeAreaView
-          style={[{ backgroundColor: '#fff' }, props.contentContainerStyle]}
-        >
-          {props.children}
+        <SafeAreaView style={props.contentContainerStyle}>
+          <Layout level="1">{props.children}</Layout>
         </SafeAreaView>
       </View>
     </Modal>

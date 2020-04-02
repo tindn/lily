@@ -127,7 +127,7 @@ function Month({ month, navigation, isCalculating }) {
         style={{
           flexDirection: 'row',
           borderBottomColor: theme.colors.lighterGray,
-          borderBottomWidth: 1,
+          borderBottomWidth: StyleSheet.hairlineWidth,
         }}
       >
         <TouchableOpacity

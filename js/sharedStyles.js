@@ -9,12 +9,12 @@ export default StyleSheet.create({
     padding: 12,
   },
   borderBottom: {
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: theme.colors.lighterGray,
   },
   borderTop: {
     borderColor: theme.colors.lighterGray,
-    borderTopWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   formButtons: {
     flexDirection: 'row',
@@ -38,7 +38,6 @@ export default StyleSheet.create({
     borderTopRightRadius: 10,
   },
   formRow: {
-    backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 10,

@@ -1,19 +1,11 @@
 import geolocation from '@react-native-community/geolocation';
+import { Button, Layout } from '@ui-kitten/components';
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  FlatList,
-  LayoutAnimation,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { FlatList, LayoutAnimation, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
 import CategoryInput from '../../../components/categoryInput';
 import DateInput from '../../../components/dateInput';
 import MoneyInput from '../../../components/moneyInput';
-import OutlineButton from '../../../components/outlineButton';
 import VendorInput from '../../../components/vendorInput';
 import { addTransaction } from '../../../db/transactions';
 import { getNearbyVendors } from '../../../db/vendors';
@@ -21,6 +13,7 @@ import { error } from '../../../log';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
+import { useThemeColors } from '../../../uiKittenTheme';
 import { getDistance, sortByDistance } from '../../../utils/location';
 
 function mapStateToProps(state) {
@@ -46,6 +39,7 @@ function TransactionForm(props) {
   var [category, setCategory] = useState('');
   var [nearbyVendors, setNearbyVendors] = useState([]);
   var [coords, setCoords] = useState();
+  var colors = useThemeColors();
   var resetFormState = useCallback(
     function(moneyInputKey) {
       setDateTime(new Date());
@@ -92,12 +86,24 @@ function TransactionForm(props) {
   }, []);
 
   return (
-    <View style={[sharedStyles.formContainer, props.style]}>
+    <Layout
+      style={[
+        props.style,
+        {
+          borderRadius: 10,
+          elevation: 4,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.23,
+          shadowRadius: 2.62,
+        },
+      ]}
+      backgroundLevel="3"
+    >
       <View
-        key="firstRow"
         style={[
           sharedStyles.formRow,
-          styles.borderBottom,
+          sharedStyles.borderBottom,
           sharedStyles.formFirstRow,
         ]}
       >
@@ -112,13 +118,13 @@ function TransactionForm(props) {
         />
       </View>
 
-      <View key="thirdRow" style={[sharedStyles.formRow, styles.borderBottom]}>
+      <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
         <TextInput
-          key="memoInput"
           style={[
             sharedStyles.formTextInput,
             {
               textAlign: 'left',
+              color: colors.textColor,
             },
           ]}
           value={memo}
@@ -142,6 +148,7 @@ function TransactionForm(props) {
             sharedStyles.formTextInput,
             {
               textAlign: 'right',
+              color: colors.textColor,
             },
           ]}
           nearbyVendors={nearbyVendors}
@@ -161,12 +168,11 @@ function TransactionForm(props) {
             renderItem={function({ item, index }) {
               let selected = item.id == vendor_id;
               return (
-                <OutlineButton
+                <Button
                   key={index.toString()}
-                  label={item.name}
-                  color={
-                    selected ? theme.colors.primary : theme.colors.darkerGray
-                  }
+                  size="small"
+                  appearance="outline"
+                  status={selected ? 'success' : 'basic'}
                   onPress={function() {
                     if (vendor_id == item.id) {
                       setVendorId('');
@@ -178,21 +184,42 @@ function TransactionForm(props) {
                     }
                   }}
                   style={{ margin: 5 }}
-                />
+                >
+                  {item.name}
+                </Button>
               );
             }}
           />
         </View>
       ) : null}
-      <View key="secondRow" style={[sharedStyles.formRow, styles.borderBottom]}>
-        <View style={sharedStyles.formSwitchRow}>
-          <Text style={{ color: theme.colors.darkGray, marginRight: 10 }}>
-            Income?
-          </Text>
-          <Switch value={isCredit} onValueChange={setIsCredit} />
-        </View>
+      <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
+        <Button
+          size="tiny"
+          status={isCredit ? 'success' : 'basic'}
+          appearance={isCredit ? 'filled' : 'outline'}
+          onPress={() => setIsCredit(true)}
+          style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+        >
+          Income
+        </Button>
+        <Button
+          size="tiny"
+          status={isCredit ? 'basic' : 'danger'}
+          appearance={isCredit ? 'outline' : 'filled'}
+          onPress={() => setIsCredit(false)}
+          style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+        >
+          Expense
+        </Button>
+
         <CategoryInput
-          displayStyle={{ alignItems: 'flex-end', marginTop: 2 }}
+          displayStyle={{
+            marginTop: 2,
+          }}
+          displayTextStyle={{
+            textAlign: 'right',
+            color: colors.textColor,
+          }}
           current={category}
           onPress={function(name) {
             if (category == name) {
@@ -204,22 +231,25 @@ function TransactionForm(props) {
         />
       </View>
 
-      <View key="buttons" style={sharedStyles.formButtons}>
-        <OutlineButton
-          label="Cancel"
+      <View style={[sharedStyles.formButtons, { marginTop: 10 }]}>
+        <Button
+          status="basic"
+          size="small"
+          appearance="outline"
           onPress={() => {
             LayoutAnimation.easeInEaseOut();
             resetFormState(moneyInputKey + 1);
             props.collapse && props.collapse();
           }}
           color={theme.colors.darkGray}
-        />
-        <OutlineButton
-          color={theme.colors.primary}
+        >
+          Cancel
+        </Button>
+        <Button
           disabled={
             !amount || amount === '00.00' || (memo === '' && vendor_id === '')
           }
-          label="Add"
+          size="small"
           onPress={() => {
             addTransaction({
               entry_type: isCredit ? 'credit' : 'debit',
@@ -240,17 +270,12 @@ function TransactionForm(props) {
                 error('Could not add transaction', e);
               });
           }}
-        />
+        >
+          Add
+        </Button>
       </View>
-    </View>
+    </Layout>
   );
 }
-
-const styles = StyleSheet.create({
-  borderBottom: {
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
-  },
-});
 
 export default connect(mapStateToProps)(TransactionForm);

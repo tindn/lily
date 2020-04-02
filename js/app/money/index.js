@@ -1,8 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-import theme from '../../theme';
+import { Icon } from '@ui-kitten/components';
 import { useHeadStyles } from '../../uiKittenTheme';
 import Categories from './categories';
 import FinanceOverview from './financeOverview';
@@ -50,7 +49,7 @@ export default function Money() {
       <Stack.Screen
         name="MonthlyAnalytics"
         component={MonthlyAnalytics}
-        options={{ title: 'Monthly Analytics' }}
+        options={{ title: 'Monthly Analytics', ...headerStyles }}
       />
       <Stack.Screen
         name="AccountDetails"
@@ -68,7 +67,7 @@ export default function Money() {
               onPress={() => navigation.navigate('VendorDetails', {})}
               style={{ marginRight: 10 }}
             >
-              <Icon name="plus" size={25} color={theme.colors.iosBlue} />
+              <Icon name="plus-outline" width={25} height={25} fill="#3366FF" />
             </TouchableOpacity>
           ),
           ...headerStyles,

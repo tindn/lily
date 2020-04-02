@@ -5,6 +5,7 @@ import sharedStyles from '../sharedStyles';
 import theme from '../theme';
 import OutlineButton from './outlineButton';
 import BottomSheet from './bottomSheet';
+import { Button } from '@ui-kitten/components';
 
 function mapStateToProps(state) {
   return {
@@ -42,12 +43,12 @@ function CategoryInput(props) {
           {props.categories.map(function(item) {
             let selected = item.name == props.current;
             return (
-              <OutlineButton
+              <Button
                 key={item.name}
                 label={item.name}
-                color={
-                  selected ? theme.colors.primary : theme.colors.darkerGray
-                }
+                appearance="outline"
+                size="small"
+                status={selected ? 'success' : 'basic'}
                 onPress={function() {
                   props.onPress(item.name);
                   // eslint-disable-next-line no-undef
@@ -55,25 +56,26 @@ function CategoryInput(props) {
                     setShowModal(false);
                   }, 150);
                 }}
-                style={{ margin: 5 }}
-              />
+                style={{ margin: 8 }}
+              >
+                {item.name}
+              </Button>
             );
           })}
         </View>
-        <OutlineButton
+        <Button
+          appearance="outline"
+          status="basic"
           onPress={() => setShowModal(false)}
-          label="Cancel"
-          color={theme.colors.primary}
-          style={[
-            {
-              alignSelf: 'flex-end',
-              marginTop: 20,
-              marginRight: 20,
-              marginBottom: 20,
-            },
-          ]}
-          textStyle={{ textAlign: 'center' }}
-        />
+          style={{
+            alignSelf: 'flex-end',
+            marginTop: 20,
+            marginRight: 20,
+            marginBottom: 20,
+          }}
+        >
+          Cancel
+        </Button>
       </BottomSheet>
     </>
   );

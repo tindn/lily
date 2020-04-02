@@ -1,8 +1,7 @@
+import { Icon } from '@ui-kitten/components';
 import React from 'react';
 import { Alert, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import Icon from 'react-native-vector-icons/AntDesign';
-import theme from '../../theme';
 
 function MapLocationInput(props) {
   const {
@@ -19,7 +18,7 @@ function MapLocationInput(props) {
   } = props;
 
   return (
-    <View style={[style]}>
+    <View style={style}>
       <TouchableOpacity
         style={{
           position: 'absolute',
@@ -45,7 +44,7 @@ function MapLocationInput(props) {
           ]);
         }}
       >
-        <Icon name="close" color={theme.colors.red} size={25} />
+        <Icon name="close-outline" width={25} height={25} fill="#3366FF" />
       </TouchableOpacity>
 
       <MapView
