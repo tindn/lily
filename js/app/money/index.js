@@ -3,6 +3,7 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import theme from '../../theme';
+import { useHeadStyles } from '../../uiKittenTheme';
 import Categories from './categories';
 import FinanceOverview from './financeOverview';
 import AccountDetails from './financeOverview/accountDetails';
@@ -13,13 +14,11 @@ import MonthTransactions from './MonthTransactions';
 import TransactionDetails from './TransactionDetails';
 import Vendors from './vendors';
 import VendorDetails from './vendors/vendorDetails';
-import { useColor } from '../../uiKittenTheme';
 
 const Stack = createStackNavigator();
 
 export default function Money() {
-  const backgroundColor = useColor('background-basic-color-1');
-  const headerTintColor = useColor('text-basic-color');
+  const headerStyles = useHeadStyles();
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -32,9 +31,7 @@ export default function Money() {
         component={TransactionDetails}
         options={{
           title: 'Details',
-          headerStyle: {
-            backgroundColor,
-          },
+          ...headerStyles,
         }}
       />
       <Stack.Screen
@@ -47,10 +44,7 @@ export default function Money() {
               month: 'long',
             }
           ),
-          headerStyle: {
-            backgroundColor,
-          },
-          headerTintColor: headerTintColor,
+          ...headerStyles,
         })}
       />
       <Stack.Screen
@@ -77,6 +71,7 @@ export default function Money() {
               <Icon name="plus" size={25} color={theme.colors.iosBlue} />
             </TouchableOpacity>
           ),
+          ...headerStyles,
         })}
       />
       <Stack.Screen
@@ -84,19 +79,24 @@ export default function Money() {
         component={VendorDetails}
         options={({ route }) => ({
           title: ((route.params || {}).vendor || { name: 'New Vendor' }).name,
+          ...headerStyles,
         })}
       />
       <Stack.Screen
         name="SnapshotList"
         component={SnapshotList}
-        options={{ title: 'Snapshots' }}
+        options={{ title: 'Snapshots', ...headerStyles }}
       />
       <Stack.Screen
         name="FinanceOverview"
         component={FinanceOverview}
-        options={{ title: 'Overview' }}
+        options={{ title: 'Overview', ...headerStyles }}
       />
-      <Stack.Screen name="Categories" component={Categories} />
+      <Stack.Screen
+        name="Categories"
+        component={Categories}
+        options={headerStyles}
+      />
     </Stack.Navigator>
   );
 }

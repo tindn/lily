@@ -11,6 +11,16 @@ export function useColor(color) {
   return getValueFromTheme(color, theme);
 }
 
+export function useThemeColors() {
+  const theme = useTheme();
+  const backgroundColor1 = getValueFromTheme('background-basic-color-1', theme);
+  const textColor = getValueFromTheme('text-basic-color', theme);
+  return {
+    backgroundColor1,
+    textColor,
+  };
+}
+
 function getValueFromTheme(key, theme) {
   let value = theme[key];
   if (value[0] === '$') {
@@ -18,4 +28,14 @@ function getValueFromTheme(key, theme) {
     return getValueFromTheme(newKey, theme);
   }
   return value;
+}
+
+export function useHeadStyles() {
+  const colors = useThemeColors();
+  return {
+    headerStyle: {
+      backgroundColor: colors.backgroundColor1,
+    },
+    headerTitleStyle: { color: colors.textColor },
+  };
 }
