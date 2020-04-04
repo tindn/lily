@@ -1,17 +1,18 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import Card from '../../../components/card';
+import MoneyDisplay from '../../../components/moneyDisplay';
 import Screen from '../../../components/screen';
 import { getTransactionSummaryByCategory } from '../../../db/categories';
 import { getAllFromTable } from '../../../db/shared';
 import useToggle from '../../../hooks/useToggle';
 import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
+import { useThemeColors } from '../../../uiKittenTheme';
 import { getMonthStartEndFor } from '../../../utils/date';
 import CategoryLine from './CategoryLine';
-import MonthlyAnalyticsOverview from './MonthlyAnalyticsOverview';
 import TransactionForm from './TransactionForm';
 
 var mapDispatchToProps = {
@@ -23,7 +24,7 @@ function Home(props) {
   var [lastThreeMonths, setLastThreeMonths] = useState([]);
   var [showSummaries, toggleSummaries] = useToggle();
   var [categorySummaries, setCategorySummaries] = useState([]);
-
+  const themeColors = useThemeColors();
   var scrollViewRef = useRef(null);
 
   var updateData = useCallback(
@@ -51,38 +52,51 @@ function Home(props) {
   }, []);
 
   useFocusEffect(updateData);
+  const currentMonth = lastThreeMonths[0];
   return (
     <Screen>
+      {currentMonth ? (
+        <TouchableOpacity
+          onPress={toggleSummaries}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 10,
+            marginTop: 15,
+          }}
+        >
+          <MoneyDisplay
+            amount={currentMonth.earned}
+            style={{
+              textAlign: 'left',
+              fontWeight: '500',
+              color: themeColors.textSuccessColor,
+              fontSize: 16,
+            }}
+          />
+          <MoneyDisplay
+            amount={currentMonth.earned - currentMonth.spent}
+            style={{
+              textAlign: 'center',
+              fontSize: 20,
+            }}
+            useParentheses
+          />
+          <MoneyDisplay
+            amount={currentMonth.spent}
+            style={{
+              textAlign: 'right',
+              color: themeColors.textDangerColor,
+              fontSize: 16,
+            }}
+          />
+        </TouchableOpacity>
+      ) : null}
       <ScrollView
         keyboardDismissMode="on-drag"
         keyboardShuldPersistTaps="always"
         ref={scrollViewRef}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            marginVertical: 7,
-            justifyContent: 'space-around',
-          }}
-        >
-          {lastThreeMonths.length
-            ? lastThreeMonths.map((month, index) => (
-                <Card
-                  key={month.id}
-                  onPress={() => {
-                    if (index == 0) {
-                      toggleSummaries();
-                    } else {
-                      props.navigation.navigate('MonthlyAnalytics');
-                    }
-                  }}
-                  style={{ paddingHorizontal: 15 }}
-                >
-                  <MonthlyAnalyticsOverview month={month} />
-                </Card>
-              ))
-            : null}
-        </View>
         {showSummaries ? (
           <Card style={{ marginVertical: 7 }}>
             {categorySummaries.map(function(category, index) {

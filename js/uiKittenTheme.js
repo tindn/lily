@@ -15,9 +15,21 @@ export function useThemeColors() {
   const theme = useTheme();
   const backgroundColor1 = getValueFromTheme('background-basic-color-1', theme);
   const textColor = getValueFromTheme('text-basic-color', theme);
+  const textPrimaryColor = getValueFromTheme('text-primary-color', theme);
+  const textSuccessColor = getValueFromTheme('text-success-color', theme);
+  const textInfoColor = getValueFromTheme('text-info-color', theme);
+  const textWarningColor = getValueFromTheme('text-warning-color', theme);
+  const textDangerColor = getValueFromTheme('text-danger-color', theme);
+  const textControlColor = getValueFromTheme('text-control-color', theme);
   return {
     backgroundColor1,
     textColor,
+    textPrimaryColor,
+    textSuccessColor,
+    textInfoColor,
+    textWarningColor,
+    textDangerColor,
+    textControlColor,
   };
 }
 

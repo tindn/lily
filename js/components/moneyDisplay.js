@@ -1,15 +1,10 @@
+import { Text } from '@ui-kitten/components';
 import React from 'react';
-import { Text } from 'react-native';
-import theme from '../theme';
 import { formatAmountToDisplay } from '../utils/money';
 
 function MoneyDisplay(props) {
   const color =
-    props.amount == 0
-      ? theme.colors.darkerGray
-      : props.amount < 0
-      ? theme.colors.red
-      : theme.colors.green;
+    props.amount == 0 ? 'basic' : props.amount < 0 ? 'danger' : 'success';
   if (props.useParentheses == undefined) {
     props.useParentheses = true;
   }
@@ -17,14 +12,7 @@ function MoneyDisplay(props) {
     props.toFixed = 2;
   }
   return (
-    <Text
-      style={[
-        {
-          color,
-        },
-        props.style,
-      ]}
-    >
+    <Text status={color} style={props.style}>
       {formatAmountToDisplay(props.amount, props.useParentheses, props.toFixed)}
     </Text>
   );
