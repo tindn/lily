@@ -1,26 +1,23 @@
+import { Layout } from '@ui-kitten/components';
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
-import theme from '../theme';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 function Card(props) {
-  const { style, children, onPress } = props;
   return (
     <TouchableOpacity
-      disabled={!onPress}
-      onPress={onPress}
-      style={[styles.card, style]}
+      disabled={!props.onPress}
+      onPress={props.onPress}
+      style={props.style}
     >
-      {children}
+      <Layout style={styles.card}>{props.children}</Layout>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: theme.colors.secondary,
-    borderRadius: 5,
+    borderRadius: 10,
     elevation: 3,
-    marginHorizontal: 5,
     padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },

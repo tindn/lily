@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import Card from '../../../components/card';
 import MoneyDisplay from '../../../components/MoneyDisplay';
@@ -21,7 +21,7 @@ var mapDispatchToProps = {
 };
 
 function Home(props) {
-  var [lastThreeMonths, setLastThreeMonths] = useState([]);
+  var [currentMonth, setCurrentMonth] = useState([]);
   var [showSummaries, toggleSummaries] = useToggle();
   var [categorySummaries, setCategorySummaries] = useState([]);
   const themeColors = useThemeColors();
@@ -38,10 +38,14 @@ function Home(props) {
 
       getAllFromTable(
         'monthly_analytics',
-        ` WHERE end_date <= ${end.getTime()} ORDER BY start_date DESC LIMIT 3`
-      ).then(setLastThreeMonths);
+        ` WHERE end_date <= ${end.getTime()} ORDER BY start_date DESC LIMIT 1`
+      ).then(res => {
+        if (res && res.length) {
+          setCurrentMonth(res[0]);
+        }
+      });
     },
-    [setLastThreeMonths]
+    [setCurrentMonth]
   );
 
   // Will focus is not called on first load
@@ -52,12 +56,14 @@ function Home(props) {
   }, []);
 
   useFocusEffect(updateData);
-  const currentMonth = lastThreeMonths[0];
   return (
     <Screen>
       {currentMonth ? (
         <TouchableOpacity
-          onPress={toggleSummaries}
+          onPress={() => {
+            toggleSummaries();
+            LayoutAnimation.easeInEaseOut();
+          }}
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -70,9 +76,9 @@ function Home(props) {
             style={{
               textAlign: 'left',
               fontWeight: '500',
-              color: themeColors.textSuccessColor,
               fontSize: 16,
             }}
+            type="credit"
           />
           <MoneyDisplay
             amount={currentMonth.earned - currentMonth.spent}
@@ -89,6 +95,7 @@ function Home(props) {
               color: themeColors.textDangerColor,
               fontSize: 16,
             }}
+            type="debit"
           />
         </TouchableOpacity>
       ) : null}
@@ -98,7 +105,7 @@ function Home(props) {
         ref={scrollViewRef}
       >
         {showSummaries ? (
-          <Card style={{ marginVertical: 7 }}>
+          <Card style={{ marginTop: 10, marginHorizontal: 10 }}>
             {categorySummaries.map(function(category, index) {
               return (
                 <CategoryLine

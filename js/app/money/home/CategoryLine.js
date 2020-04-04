@@ -1,5 +1,6 @@
+import { Text } from '@ui-kitten/components';
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import BottomSheet from '../../../components/bottomSheet';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 import { useToggle } from '../../../hooks';
@@ -30,12 +31,8 @@ export default function CategoryLine(props) {
         <MoneyDisplay
           amount={props.category.amount}
           useParentheses={false}
-          style={[
-            { fontSize: 16 },
-            props.category.entry_type == 'debit' && {
-              color: theme.colors.red,
-            },
-          ]}
+          style={{ fontSize: 16 }}
+          type="debit"
         />
       </TouchableOpacity>
       <BottomSheet show={showHistory} hide={toggleShowHistory}>
