@@ -5,12 +5,10 @@ import BottomSheet from '../../../components/bottomSheet';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 import { useToggle } from '../../../hooks';
 import sharedStyles from '../../../sharedStyles';
-import theme from '../../../theme';
 import CategoryHistory from './CategoryHistory';
 
 export default function CategoryLine(props) {
   const [showHistory, toggleShowHistory] = useToggle();
-
   return (
     <>
       <TouchableOpacity
@@ -32,7 +30,7 @@ export default function CategoryLine(props) {
           amount={props.category.amount}
           useParentheses={false}
           style={{ fontSize: 16 }}
-          type="debit"
+          type={props.category.entry_type}
         />
       </TouchableOpacity>
       <BottomSheet show={showHistory} hide={toggleShowHistory}>

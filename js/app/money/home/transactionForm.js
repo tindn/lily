@@ -5,6 +5,7 @@ import { FlatList, LayoutAnimation, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
 import CategoryInput from '../../../components/categoryInput';
 import DateInput from '../../../components/dateInput';
+import EntryTypeInput from '../../../components/EntryTypeInput';
 import MoneyInput from '../../../components/moneyInput';
 import VendorInput from '../../../components/vendorInput';
 import { addTransaction } from '../../../db/transactions';
@@ -30,10 +31,11 @@ function mapStateToProps(state) {
 }
 
 function TransactionForm(props) {
+  var [isExpanded, setIsExpanded] = useState(false);
   var [date_time, setDateTime] = useState(new Date());
   var [memo, setMemo] = useState('');
   var [amount, setAmount] = useState('');
-  var [isCredit, setIsCredit] = useState(false);
+  var [entryType, setEntryType] = useState('debit');
   var [moneyInputKey, setMoneyInputKey] = useState(0);
   var [vendor_id, setVendorId] = useState('');
   var [category, setCategory] = useState('');
@@ -45,7 +47,7 @@ function TransactionForm(props) {
       setDateTime(new Date());
       setMemo('');
       setAmount('');
-      setIsCredit(false);
+      setEntryType('debit');
       setMoneyInputKey(moneyInputKey);
       setVendorId('');
       setCoords(null);
@@ -55,7 +57,7 @@ function TransactionForm(props) {
       setDateTime,
       setMemo,
       setAmount,
-      setIsCredit,
+      setEntryType,
       setMoneyInputKey,
       setVendorId,
       setCoords,
@@ -103,7 +105,7 @@ function TransactionForm(props) {
       <View
         style={[
           sharedStyles.formRow,
-          sharedStyles.borderBottom,
+          isExpanded && sharedStyles.borderBottom,
           sharedStyles.formFirstRow,
         ]}
       >
@@ -113,54 +115,51 @@ function TransactionForm(props) {
           key={moneyInputKey}
           amount={amount}
           editable
-          type={isCredit ? 'credit' : 'debit'}
-        />
-      </View>
-
-      <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
-        <TextInput
-          style={[
-            sharedStyles.formTextInput,
-            {
-              textAlign: 'left',
-              color: colors.textColor,
-            },
-          ]}
-          value={memo}
-          placeholder="Memo"
-          onChangeText={setMemo}
-          placeholderTextColor={theme.colors.lightGray}
-        />
-        <VendorInput
-          selectedVendorId={vendor_id}
-          onVendorPress={function(v) {
-            if (vendor_id == v.id) {
-              setVendorId('');
-            } else {
-              setVendorId(v.id);
-            }
-            if (v.category && !category) {
-              setCategory(v.category);
-            }
+          type={entryType}
+          onFocus={() => {
+            LayoutAnimation.easeInEaseOut();
+            setIsExpanded(true);
           }}
-          displayTextStyle={[
-            sharedStyles.formTextInput,
-            {
-              textAlign: 'right',
-              color: colors.textColor,
-            },
-          ]}
-          nearbyVendors={nearbyVendors}
         />
       </View>
-      {nearbyVendors && nearbyVendors.length ? (
-        <View
-          style={[
-            sharedStyles.formRow,
-            sharedStyles.borderBottom,
-            { flexDirection: 'column' },
-          ]}
-        >
+      {isExpanded ? (
+        <>
+          <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
+            <TextInput
+              style={[
+                sharedStyles.formTextInput,
+                {
+                  textAlign: 'left',
+                  color: colors.textColor,
+                },
+              ]}
+              value={memo}
+              placeholder="Memo"
+              onChangeText={setMemo}
+              placeholderTextColor={theme.colors.lightGray}
+            />
+            <VendorInput
+              selectedVendorId={vendor_id}
+              onVendorPress={function(v) {
+                if (vendor_id == v.id) {
+                  setVendorId('');
+                  setCategory('');
+                } else {
+                  setVendorId(v.id);
+                  if (v.category && !category) {
+                    setCategory(v.category);
+                  }
+                }
+              }}
+              displayTextStyle={[
+                sharedStyles.formTextInput,
+                {
+                  textAlign: 'right',
+                  color: colors.textColor,
+                },
+              ]}
+            />
+          </View>
           <FlatList
             data={nearbyVendors}
             horizontal
@@ -188,91 +187,76 @@ function TransactionForm(props) {
                 </Button>
               );
             }}
+            contentContainerStyle={[!nearbyVendors.length && { padding: 0 }]}
+            ListEmptyComponent={null}
           />
-        </View>
-      ) : null}
-      <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
-        <Button
-          size="tiny"
-          status={isCredit ? 'success' : 'basic'}
-          appearance={isCredit ? 'filled' : 'outline'}
-          onPress={() => setIsCredit(true)}
-          style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-        >
-          Income
-        </Button>
-        <Button
-          size="tiny"
-          status={isCredit ? 'basic' : 'danger'}
-          appearance={isCredit ? 'outline' : 'filled'}
-          onPress={() => setIsCredit(false)}
-          style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        >
-          Expense
-        </Button>
-
-        <CategoryInput
-          displayStyle={{
-            marginTop: 2,
-          }}
-          displayTextStyle={{
-            textAlign: 'right',
-            color: colors.textColor,
-          }}
-          current={category}
-          onPress={function(name) {
-            if (category == name) {
-              setCategory('');
-            } else {
-              setCategory(name);
-            }
-          }}
-        />
-      </View>
-
-      <View style={[sharedStyles.formButtons, { marginTop: 10 }]}>
-        <Button
-          status="basic"
-          size="small"
-          appearance="outline"
-          onPress={() => {
-            LayoutAnimation.easeInEaseOut();
-            resetFormState(moneyInputKey + 1);
-            props.collapse && props.collapse();
-          }}
-          color={theme.colors.darkGray}
-        >
-          Cancel
-        </Button>
-        <Button
-          disabled={
-            !amount || amount === '00.00' || (memo === '' && vendor_id === '')
-          }
-          size="small"
-          onPress={() => {
-            addTransaction({
-              entry_type: isCredit ? 'credit' : 'debit',
-              amount: parseFloat(amount),
-              date_time: date_time,
-              coords,
-              memo,
-              vendor_id,
-              category,
-            })
-              .then(function() {
+          <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
+            <EntryTypeInput type={entryType} setType={setEntryType} />
+            <CategoryInput
+              displayStyle={{
+                marginTop: 2,
+              }}
+              displayTextStyle={{
+                textAlign: 'right',
+                color: colors.textColor,
+              }}
+              current={category}
+              onPress={function(name) {
+                if (category == name) {
+                  setCategory('');
+                } else {
+                  setCategory(name);
+                }
+              }}
+            />
+          </View>
+          <View style={[sharedStyles.formButtons, { marginTop: 10 }]}>
+            <Button
+              status="basic"
+              size="small"
+              appearance="outline"
+              onPress={() => {
                 LayoutAnimation.easeInEaseOut();
                 resetFormState(moneyInputKey + 1);
-                props.onTransactionAdded && props.onTransactionAdded();
-                props.collapse && props.collapse();
-              })
-              .catch(function(e) {
-                error('Could not add transaction', e);
-              });
-          }}
-        >
-          Add
-        </Button>
-      </View>
+                setIsExpanded(false);
+              }}
+              color={theme.colors.darkGray}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={
+                !amount ||
+                amount === '00.00' ||
+                (memo === '' && vendor_id === '')
+              }
+              size="small"
+              onPress={() => {
+                addTransaction({
+                  entry_type: entryType,
+                  amount: parseFloat(amount),
+                  date_time: date_time,
+                  coords,
+                  memo,
+                  vendor_id,
+                  category,
+                })
+                  .then(function() {
+                    LayoutAnimation.easeInEaseOut();
+                    resetFormState(moneyInputKey + 1);
+                    props.onTransactionAdded && props.onTransactionAdded();
+                    setIsExpanded(false);
+                  })
+                  .catch(function(e) {
+                    error('Could not add transaction', e);
+                  });
+              }}
+            >
+              Add
+            </Button>
+          </View>
+        </>
+      ) : null}
     </Layout>
   );
 }

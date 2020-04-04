@@ -48,7 +48,6 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   formTextInput: {
-    color: theme.colors.dark,
     flex: 1,
     fontSize: 18,
     fontWeight: '500',

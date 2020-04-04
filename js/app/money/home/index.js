@@ -68,7 +68,7 @@ function Home(props) {
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingHorizontal: 10,
-            marginTop: 15,
+            paddingVertical: 20,
           }}
         >
           <MoneyDisplay
@@ -126,7 +126,7 @@ function Home(props) {
           onTransactionAdded={updateData}
           style={{
             marginBottom: 235,
-            marginTop: 20,
+            marginTop: 10,
             marginHorizontal: 10,
             paddingHorizontal: 5,
           }}

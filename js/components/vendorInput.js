@@ -1,6 +1,6 @@
 import { Button, Text } from '@ui-kitten/components';
 import React, { useRef, useState } from 'react';
-import { FlatList, TouchableOpacity, View } from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import sharedStyles from '../sharedStyles';
 import theme from '../theme';
@@ -31,7 +31,7 @@ function VendorInput(props) {
   var filterScrollRef = useRef(null);
   var vendorScrollRef = useRef(null);
   return (
-    <View style={{ flexDirection: 'row', flex: 1 }}>
+    <>
       <TouchableOpacity
         onPress={function() {
           setShowModal(true);
@@ -63,7 +63,14 @@ function VendorInput(props) {
           {props.selectedVendorId ? (
             props.vendors[props.selectedVendorId].name
           ) : (
-            <Text style={{ color: theme.colors.lightGray }}>Vendor</Text>
+            <Text
+              style={[
+                props.displayTextStyle,
+                { color: theme.colors.lightGray },
+              ]}
+            >
+              Vendor
+            </Text>
           )}
         </Text>
       </TouchableOpacity>
@@ -151,7 +158,7 @@ function VendorInput(props) {
           Cancel
         </Button>
       </BottomSheet>
-    </View>
+    </>
   );
 }
 

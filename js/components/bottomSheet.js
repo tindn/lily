@@ -21,7 +21,12 @@ export default function BottomSheet(props) {
           <View style={{ flex: 1 }} />
         </TouchableWithoutFeedback>
         <SafeAreaView style={props.contentContainerStyle}>
-          <Layout level="1">{props.children}</Layout>
+          <Layout
+            level="1"
+            style={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}
+          >
+            {props.children}
+          </Layout>
         </SafeAreaView>
       </View>
     </Modal>

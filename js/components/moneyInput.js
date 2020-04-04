@@ -1,51 +1,54 @@
-import React from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
-import { formatAmountToDisplay } from '../utils/money';
+import React, { useCallback, useRef } from 'react';
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import theme from '../theme';
+import { formatAmountToDisplay } from '../utils/money';
 
-class MoneyInput extends React.PureComponent {
-  onChangeText = text => {
-    if (text.length < 4) {
-      text = text.padStart(4, '0');
-    }
-    let arr = text.split('');
-    // adding decimal delimiter (.)
-    arr.splice(arr.length - 2, 0, '.');
-    if (this.props.onChange) {
-      this.props.onChange(arr.join(''));
-    }
-  };
+function MoneyInput(props) {
+  const onChangeText = useCallback(
+    text => {
+      if (text.length < 4) {
+        text = text.padStart(4, '0');
+      }
+      let arr = text.split('');
+      // adding decimal delimiter (.)
+      arr.splice(arr.length - 2, 0, '.');
+      if (props.onChange) {
+        props.onChange(arr.join(''));
+      }
+    },
+    [props.onChange]
+  );
 
-  render() {
-    return (
-      <View style={this.props.style}>
-        <TextInput
-          ref={input => (this.textInput = input)}
-          style={{ display: 'none' }}
-          keyboardType="number-pad"
-          onChangeText={this.onChangeText}
-          autoFocus={this.props.autoFocus}
-          editable={this.props.editable}
-          placeholderTextColor={theme.colors.lightGray}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            this.textInput && this.textInput.focus();
-            this.props.onFocus && this.props.onFocus();
-          }}
+  var inputRef = useRef(null);
+
+  return (
+    <View style={props.style}>
+      <TextInput
+        ref={inputRef}
+        style={{ display: 'none' }}
+        keyboardType="number-pad"
+        onChangeText={onChangeText}
+        autoFocus={props.autoFocus}
+        editable={props.editable}
+        placeholderTextColor={theme.colors.lightGray}
+      />
+      <TouchableOpacity
+        onPress={() => {
+          inputRef && inputRef.current && inputRef.current.focus();
+          props.onFocus && props.onFocus();
+        }}
+      >
+        <Text
+          status={props.type === 'credit' ? 'success' : 'danger'}
+          category="h5"
+          style={[styles.display, props.textStyle]}
         >
-          <Text
-            status={this.props.type === 'credit' ? 'success' : 'danger'}
-            category="h5"
-            style={[styles.display, this.props.textStyle]}
-          >
-            {formatAmountToDisplay(this.props.amount)}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+          {formatAmountToDisplay(props.amount)}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

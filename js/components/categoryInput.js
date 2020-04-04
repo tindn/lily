@@ -1,11 +1,10 @@
+import { Button, Text } from '@ui-kitten/components';
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import sharedStyles from '../sharedStyles';
 import theme from '../theme';
-import OutlineButton from './outlineButton';
 import BottomSheet from './bottomSheet';
-import { Button } from '@ui-kitten/components';
 
 function mapStateToProps(state) {
   return {

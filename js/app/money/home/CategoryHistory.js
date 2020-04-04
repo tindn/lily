@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
+import { Text } from '@ui-kitten/components';
 import { addMonths, startOfMonth } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 import { getTransactionSumForCategory } from '../../../db/categories';
 import sharedStyles from '../../../sharedStyles';
-import theme from '../../../theme';
 import { getMonthStartEndFor } from '../../../utils/date';
 
 export default function CategoryHistory(props) {
@@ -38,7 +38,12 @@ export default function CategoryHistory(props) {
     [props.name, props.entry_type]
   );
   return (
-    <View style={{ paddingVertical: 20, paddingHorizontal: 10 }}>
+    <View
+      style={{
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+      }}
+    >
       <View
         style={[
           sharedStyles.borderBottom,
@@ -65,12 +70,8 @@ export default function CategoryHistory(props) {
         <MoneyDisplay
           amount={lastMonth}
           useParentheses={false}
-          style={[
-            { fontSize: 16 },
-            props.entry_type == 'debit' && {
-              color: theme.colors.red,
-            },
-          ]}
+          style={{ fontSize: 16, fontWeight: '500' }}
+          type={props.entry_type}
         />
       </TouchableOpacity>
       <View
@@ -84,12 +85,8 @@ export default function CategoryHistory(props) {
         <MoneyDisplay
           amount={lastThreeMonth}
           useParentheses={false}
-          style={[
-            { fontSize: 16 },
-            props.entry_type == 'debit' && {
-              color: theme.colors.red,
-            },
-          ]}
+          style={{ fontSize: 16, fontWeight: '500' }}
+          type={props.entry_type}
         />
       </View>
     </View>
