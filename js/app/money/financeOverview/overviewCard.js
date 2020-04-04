@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import Card from '../../../components/card';
-import MoneyDisplay from '../../../components/moneyDisplay';
+import MoneyDisplay from '../../../components/MoneyDisplay';
 import theme from '../../../theme';
 
 export default function OverviewCard({

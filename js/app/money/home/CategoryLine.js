@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import BottomSheet from '../../../components/bottomSheet';
-import MoneyDisplay from '../../../components/moneyDisplay';
+import MoneyDisplay from '../../../components/MoneyDisplay';
 import { useToggle } from '../../../hooks';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';

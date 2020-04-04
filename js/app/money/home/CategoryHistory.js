@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { addMonths, startOfMonth } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import MoneyDisplay from '../../../components/moneyDisplay';
+import MoneyDisplay from '../../../components/MoneyDisplay';
 import { getTransactionSumForCategory } from '../../../db/categories';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';

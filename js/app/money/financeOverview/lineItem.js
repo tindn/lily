@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import MoneyDisplay from '../../../components/moneyDisplay';
+import MoneyDisplay from '../../../components/MoneyDisplay';
 
 function LineItem(props) {
   let { text, amount, style, textStyle, negative, onPress } = props;

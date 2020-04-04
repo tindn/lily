@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
-import MoneyDisplay from '../../components/moneyDisplay';
+import MoneyDisplay from '../../components/MoneyDisplay';
 import Screen from '../../components/screen';
 import { getTransactionSummaryByCategory } from '../../db/categories';
 import { calculateAnalyticsForMonth } from '../../db/monthlyAnalytics';

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import Card from '../../../components/card';
-import MoneyDisplay from '../../../components/moneyDisplay';
+import MoneyDisplay from '../../../components/MoneyDisplay';
 import Screen from '../../../components/screen';
 import { getTransactionSummaryByCategory } from '../../../db/categories';
 import { getAllFromTable } from '../../../db/shared';

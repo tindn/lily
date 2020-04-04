@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import MoneyDisplay from '../../../components/moneyDisplay';
+import MoneyDisplay from '../../../components/MoneyDisplay';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
 import { getAccountEntriesForAccount } from '../../../db/accountEntries';

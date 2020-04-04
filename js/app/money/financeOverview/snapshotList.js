@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
-import MoneyDisplay from '../../../components/moneyDisplay';
+import MoneyDisplay from '../../../components/MoneyDisplay';
 import Screen from '../../../components/screen';
 import SwipeToDeleteContent from '../../../components/Swipeable/SwipeToDeleteContent';
 import {
