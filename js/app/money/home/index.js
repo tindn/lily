@@ -1,7 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { Button } from '@ui-kitten/components';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { connect } from 'react-redux';
 import Card from '../../../components/card';
 import Screen from '../../../components/screen';
@@ -10,7 +9,6 @@ import { getAllFromTable } from '../../../db/shared';
 import useToggle from '../../../hooks/useToggle';
 import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
-import theme from '../../../theme';
 import { getMonthStartEndFor } from '../../../utils/date';
 import CategoryLine from './CategoryLine';
 import MonthlyAnalyticsOverview from './MonthlyAnalyticsOverview';
@@ -22,7 +20,6 @@ var mapDispatchToProps = {
 };
 
 function Home(props) {
-  var [showTransactionForm, setShowTransactionForm] = useState(false);
   var [lastThreeMonths, setLastThreeMonths] = useState([]);
   var [showSummaries, toggleSummaries] = useToggle();
   var [categorySummaries, setCategorySummaries] = useState([]);
@@ -103,94 +100,17 @@ function Home(props) {
             })}
           </Card>
         ) : null}
-        <Card
-          style={{
-            paddingVertical: 15,
-            marginVertical: 7,
-            alignItems: 'center',
-          }}
-          onPress={() => {
-            props.navigation.navigate('MonthTransactions');
-          }}
-        >
-          <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
-            Transactions
-          </Text>
-        </Card>
-        <Card
-          style={{
-            paddingVertical: 15,
-            marginVertical: 7,
-            alignItems: 'center',
-          }}
-          onPress={() => props.navigation.navigate('Vendors')}
-        >
-          <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
-            Vendors
-          </Text>
-        </Card>
-        <Card
-          style={{
-            paddingVertical: 15,
-            marginVertical: 7,
-            alignItems: 'center',
-          }}
-          onPress={() => props.navigation.navigate('Categories')}
-        >
-          <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
-            Categories
-          </Text>
-        </Card>
-        <Card
-          style={{
-            paddingVertical: 15,
-            marginVertical: 7,
-            alignItems: 'center',
-          }}
-          onPress={() => props.navigation.navigate('FinanceOverview')}
-        >
-          <Text style={{ fontWeight: 'bold', color: theme.colors.primary }}>
-            Overview
-          </Text>
-        </Card>
 
-        {showTransactionForm ? (
-          <TransactionForm
-            collapse={() => {
-              setShowTransactionForm(false);
-            }}
-            onTransactionAdded={updateData}
-            style={{ marginBottom: 235, marginTop: 20 }}
-          />
-        ) : null}
-      </ScrollView>
-      {!showTransactionForm ? (
-        <Button
+        <TransactionForm
+          onTransactionAdded={updateData}
           style={{
-            position: 'absolute',
-            bottom: 18,
-            borderRadius: 50,
-            width: 70,
-            height: 70,
-            alignSelf: 'center',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.23,
-            shadowRadius: 2.62,
-            elevation: 4,
+            marginBottom: 235,
+            marginTop: 20,
+            marginHorizontal: 10,
+            paddingHorizontal: 5,
           }}
-          status="primary"
-          onPress={() => {
-            setShowTransactionForm(true);
-            // eslint-disable-next-line no-undef
-            setTimeout(() => {
-              scrollViewRef.current.scrollToEnd({ animated: true });
-            }, 100);
-          }}
-        >
-          Add
-        </Button>
-      ) : null}
+        />
+      </ScrollView>
     </Screen>
   );
 }

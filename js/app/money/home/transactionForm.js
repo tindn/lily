@@ -114,7 +114,6 @@ function TransactionForm(props) {
           amount={amount}
           editable
           type={isCredit ? 'credit' : 'debit'}
-          autoFocus
         />
       </View>
 

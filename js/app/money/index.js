@@ -1,7 +1,9 @@
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Drawer as UIKittenDrawer, Icon } from '@ui-kitten/components';
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Icon } from '@ui-kitten/components';
+import { TouchableOpacity, View } from 'react-native';
+import Screen from '../../components/screen';
 import { useHeadStyles } from '../../uiKittenTheme';
 import Categories from './categories';
 import FinanceOverview from './financeOverview';
@@ -15,15 +17,65 @@ import Vendors from './vendors';
 import VendorDetails from './vendors/vendorDetails';
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+const drawerContentItems = [
+  { title: 'Home', route: 'Home' },
+  { title: 'Transactions', route: 'MonthTransactions' },
+  { title: 'Past Months', route: 'MonthlyAnalytics' },
+  { title: 'Vendors', route: 'Vendors' },
+  { title: 'Categories', route: 'Categories' },
+  { title: 'Overview', route: 'FinanceOverview' },
+];
+
+function DrawerContent({ navigation, state }) {
+  return (
+    <Screen>
+      <View style={{ marginTop: 10 }}>
+        <UIKittenDrawer
+          data={drawerContentItems}
+          selectedIndex={state.index}
+          onSelect={index => {
+            navigation.navigate(drawerContentItems[index].route);
+          }}
+        />
+      </View>
+    </Screen>
+  );
+}
 
 export default function Money() {
+  return (
+    <Drawer.Navigator drawerContent={DrawerContent}>
+      <Drawer.Screen name="April" component={MoneyStack} />
+    </Drawer.Navigator>
+  );
+}
+
+function MoneyStack(props) {
   const headerStyles = useHeadStyles();
+  const currentMonth = new Date().toLocaleString('en-US', {
+    month: 'long',
+  });
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{ header: () => null }}
+        options={{
+          title: currentMonth,
+          ...headerStyles,
+          headerLeft: () => (
+            <Icon
+              name="menu-outline"
+              width={25}
+              height={25}
+              fill="#3366FF"
+              onPress={props.navigation.toggleDrawer}
+              style={{ marginLeft: 10 }}
+            />
+          ),
+        }}
       />
       <Stack.Screen
         name="TransactionDetails"
