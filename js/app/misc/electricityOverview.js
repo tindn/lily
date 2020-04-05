@@ -1,6 +1,6 @@
+import { Text } from '@ui-kitten/components';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import theme from '../../theme';
+import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import { watchData } from '../../firebaseHelper';
 
@@ -53,18 +53,7 @@ class ElectricityOverview extends React.Component {
   render() {
     return (
       <>
-        <View>
-          {/* <Text
-            style={{
-              fontWeight: '700',
-              color: theme.colors.green,
-              fontSize: 17,
-              textAlign: 'center',
-            }}
-          >
-            Electricity
-          </Text> */}
-        </View>
+        <View></View>
         <View style={styles.electricityReadings}>
           <View>
             <Text style={styles.electricityReading}>
@@ -107,9 +96,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   electricityReadingAnnotation: {
-    color: theme.colors.darkGray,
     fontSize: 12,
-    fontWeight: '500',
     textAlign: 'center',
   },
   electricityReadings: {

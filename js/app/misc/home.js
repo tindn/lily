@@ -1,48 +1,34 @@
+import { Button } from '@ui-kitten/components';
 import React from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import Card from '../../components/card';
 import Screen from '../../components/screen';
 import ElectricityOverview from './electricityOverview';
 import ElectricityReadingAdd from './electricityReadingAdd';
 
-class Home extends React.PureComponent {
-  static navigationOptions = {
-    header: null,
-  };
-
-  state = {};
-
-  navigate = route => {
-    return () => {
-      this.props.navigation.navigate(route);
-    };
-  };
-
-  render() {
-    return (
-      <Screen>
-        <ScrollView
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="always"
+function Home(props) {
+  return (
+    <Screen>
+      <ScrollView
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="always"
+      >
+        <Card
+          onPress={() => props.navigation.navigate('ElectricityReadingsList')}
+          style={styles.electricityReadingCard}
         >
-          <Card
-            onPress={this.navigate('ElectricityReadingsList')}
-            style={styles.electricityReadingCard}
-          >
-            <ElectricityOverview />
-            <ElectricityReadingAdd />
-          </Card>
-
-          <Card
-            style={{ paddingVertical: 15, marginTop: 25, alignItems: 'center' }}
-            onPress={this.navigate('LargeDisplay')}
-          >
-            <Text style={{}}>Large Display</Text>
-          </Card>
-        </ScrollView>
-      </Screen>
-    );
-  }
+          <ElectricityOverview />
+          <ElectricityReadingAdd />
+        </Card>
+        <Button
+          style={{ marginTop: 20, marginHorizontal: 10 }}
+          onPress={() => props.navigation.navigate('LargeDisplay')}
+        >
+          Large Display
+        </Button>
+      </ScrollView>
+    </Screen>
+  );
 }
 
 const styles = StyleSheet.create({

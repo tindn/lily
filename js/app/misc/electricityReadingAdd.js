@@ -1,8 +1,7 @@
+import { Button, Input } from '@ui-kitten/components';
 import React, { useState } from 'react';
-import { Switch, View, TextInput } from 'react-native';
+import { Switch, View } from 'react-native';
 import { addDocument } from '../../firebaseHelper';
-import theme from '../../theme';
-import OutlineButton from '../../components/outlineButton';
 import sharedStyles from '../../sharedStyles';
 
 function ElectricityReadingAdd() {
@@ -31,20 +30,16 @@ function ElectricityReadingAdd() {
           { backgroundColor: 'transparent' },
         ]}
       >
-        <TextInput
-          key="valueInput"
+        <Input
           keyboardType="number-pad"
           value={value}
           onChangeText={text => setValue(text)}
           style={{
             flex: 3,
             fontSize: 16,
-            backgroundColor: '#dddddd80',
             marginRight: 20,
-            padding: 10,
             borderRadius: 5,
           }}
-          placeholderTextColor={theme.colors.lightGray}
         />
         <Switch
           value={cycleEnd}
@@ -53,18 +48,12 @@ function ElectricityReadingAdd() {
         />
       </View>
       <View style={sharedStyles.formButtons}>
-        <OutlineButton
-          color={theme.colors.primary}
-          label="Cancel"
-          onPress={resetForm}
-          style={[{ backgroundColor: 'transparent' }]}
-        />
-        <OutlineButton
-          color={theme.colors.iosBlue}
-          label="Add"
-          onPress={add}
-          style={[{ backgroundColor: 'transparent' }]}
-        />
+        <Button size="small" status="basic" onPress={resetForm}>
+          Cancel
+        </Button>
+        <Button size="small" onPress={add}>
+          Add
+        </Button>
       </View>
     </>
   );

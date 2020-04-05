@@ -1,19 +1,15 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button, ListItem, Text } from '@ui-kitten/components';
 import React from 'react';
 import {
-  // eslint-disable-next-line react-native/split-platform-components
-  DatePickerIOS,
   LayoutAnimation,
   StyleSheet,
   Switch,
-  Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { deleteDocument, updateDocument } from '../../firebaseHelper';
-import theme from '../../theme';
-import OutlineButton from '../../components/outlineButton';
 
 class ElectricityReadingItem extends React.Component {
   constructor(props) {
@@ -35,18 +31,15 @@ class ElectricityReadingItem extends React.Component {
 
   render() {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          this.setState({ expanded: !this.state.expanded });
-          LayoutAnimation.easeInEaseOut();
-        }}
-        style={[
-          styles.item,
-          { backgroundColor: this.state.expanded ? '#fff' : 'transparent' },
-        ]}
-      >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ color: theme.colors.darkGray }}>
+      <>
+        <ListItem
+          onPress={() => {
+            this.setState({ expanded: !this.state.expanded });
+            LayoutAnimation.easeInEaseOut();
+          }}
+          style={styles.item}
+        >
+          <Text>
             {this.state.timestamp &&
               this.state.timestamp.toLocaleDateString('en-US', {
                 weekday: 'short',
@@ -56,6 +49,7 @@ class ElectricityReadingItem extends React.Component {
                 minute: 'numeric',
               })}
           </Text>
+
           {this.state.increase && (
             <Text>
               {this.state.increase} (
@@ -64,24 +58,27 @@ class ElectricityReadingItem extends React.Component {
           )}
           <TextInput
             editable={this.state.expanded}
-            key="valueInput"
             style={{ fontWeight: '500' }}
             keyboardType="number-pad"
             value={this.state.value.toString()}
             onChangeText={text => this.setState({ value: text })}
-            placeholderTextColor={theme.colors.lightGray}
           />
-        </View>
+        </ListItem>
         {this.state.expanded && [
           <View key="datepicker" style={{ flex: 1 }}>
-            <DatePickerIOS
-              date={this.state.timestamp}
-              onDateChange={date => this.setState({ timestamp: date })}
+            <DateTimePicker
+              mode="datetime"
+              value={this.state.timestamp}
+              onChange={date => this.setState({ timestamp: date })}
             />
           </View>,
           <View
             key="cycleEnd"
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginHorizontal: 10,
+            }}
           >
             <Text>End of month</Text>
             <Switch
@@ -90,27 +87,28 @@ class ElectricityReadingItem extends React.Component {
             />
           </View>,
           <View key="buttons" style={styles.buttons}>
-            <OutlineButton
-              label="Cancel"
+            <Button
+              size="small"
+              status="basic"
               onPress={() => {
                 LayoutAnimation.easeInEaseOut();
                 this.setState({ expanded: !this.state.expanded });
               }}
-              style={[styles.button]}
-              color={theme.colors.darkGray}
-            />
-            <OutlineButton
-              color={theme.colors.red}
-              label="Delete"
+            >
+              Cancel
+            </Button>
+            <Button
+              size="small"
+              status="danger"
               onPress={() => {
                 LayoutAnimation.easeInEaseOut();
                 deleteDocument('electricityReadings', this.state.id);
               }}
-              style={[styles.button]}
-            />
-            <OutlineButton
-              color={theme.colors.iosBlue}
-              label="Save"
+            >
+              Delete
+            </Button>
+            <Button
+              size="small"
               onPress={() => {
                 updateDocument('electricityReadings', this.state.id, {
                   timestamp: this.state.timestamp,
@@ -120,11 +118,12 @@ class ElectricityReadingItem extends React.Component {
                 this.setState({ expanded: false });
                 LayoutAnimation.easeInEaseOut();
               }}
-              style={[styles.button]}
-            />
+            >
+              Save
+            </Button>
           </View>,
         ]}
-      </TouchableOpacity>
+      </>
     );
   }
 }
@@ -138,22 +137,15 @@ function mapStateToProps(state, ownProps) {
 export default connect(mapStateToProps)(ElectricityReadingItem);
 
 const styles = StyleSheet.create({
-  button: {
-    paddingBottom: 7,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 7,
-  },
   buttons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    marginBottom: 20,
     marginTop: 30,
   },
   item: {
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
-    flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingBottom: 20,
     paddingHorizontal: 10,
     paddingTop: 20,
