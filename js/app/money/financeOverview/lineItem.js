@@ -1,5 +1,6 @@
+import { Text } from '@ui-kitten/components';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 
 function LineItem(props) {

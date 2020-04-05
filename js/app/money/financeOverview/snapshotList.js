@@ -1,6 +1,7 @@
 import { useFocusEffect } from '@react-navigation/native';
+import { ListItem, Text } from '@ui-kitten/components';
 import React, { useCallback, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, View } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 import Screen from '../../../components/screen';
@@ -10,7 +11,6 @@ import {
   getAccountSnapshots,
 } from '../../../db/accountSnapshots';
 import { error, success } from '../../../log';
-import theme from '../../../theme';
 import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
 import { calculateFinanceOverview } from '../../../utils/money';
 
@@ -80,13 +80,30 @@ export default function SnapshotList() {
               }}
               rightContent={<SwipeToDeleteContent />}
             >
-              <View style={styles.listItem}>
-                <Text style={{ fontWeight: '500' }}>
+              <ListItem style={{ justifyContent: 'space-between' }}>
+                <Text category="c2" style={{ flex: 4 }}>
                   {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
                 </Text>
-                <MoneyDisplay amount={item.liquidity} />
-                <MoneyDisplay amount={item.networth} />
-              </View>
+                <View
+                  style={{
+                    flex: 5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <MoneyDisplay
+                    amount={item.liquidity}
+                    style={{ marginRight: 25 }}
+                    useParentheses
+                    toFixed={0}
+                  />
+                  <MoneyDisplay
+                    amount={item.networth}
+                    useParentheses
+                    toFixed={0}
+                  />
+                </View>
+              </ListItem>
             </Swipeable>
           );
         }}
@@ -100,14 +117,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 20,
-  },
-  listItem: {
-    backgroundColor: theme.colors.backgroundColor,
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 15,
   },
 });

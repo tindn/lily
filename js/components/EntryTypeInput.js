@@ -1,10 +1,13 @@
-import React from 'react';
 import { Button } from '@ui-kitten/components';
+import React from 'react';
+import { View } from 'react-native';
 
 export default function EntryTypeInput(props) {
   var isCredit = props.type == 'credit';
+  var creditText = props.creditText || 'Credit';
+  var debitText = props.debitText || 'Debit';
   return (
-    <>
+    <View style={[{ flexDirection: 'row' }, props.style]}>
       <Button
         size="tiny"
         status={isCredit ? 'success' : 'basic'}
@@ -12,7 +15,7 @@ export default function EntryTypeInput(props) {
         onPress={() => props.setType('credit')}
         style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
       >
-        Income
+        {creditText}
       </Button>
       <Button
         size="tiny"
@@ -21,8 +24,8 @@ export default function EntryTypeInput(props) {
         onPress={() => props.setType('debit')}
         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
       >
-        Expense
+        {debitText}
       </Button>
-    </>
+    </View>
   );
 }

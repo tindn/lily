@@ -1,4 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
+import { Button } from '@ui-kitten/components';
 import { differenceInCalendarDays } from 'date-fns';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
@@ -8,7 +9,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
 import { getActiveAccounts } from '../../../db/accounts';
 import {
@@ -18,7 +18,6 @@ import {
 } from '../../../db/accountSnapshots';
 import { useToggle } from '../../../hooks';
 import { error, success } from '../../../log';
-import theme from '../../../theme';
 import { calculateFinanceOverview } from '../../../utils/money';
 import Category from './category';
 import LineItem from './lineItem';
@@ -198,7 +197,7 @@ export default function FinanceOverview(props) {
           />,
         ]}
 
-        <Pill
+        <Button
           onPress={() =>
             Alert.alert('Confirm', 'Do you want to create a new snapshot?', [
               {
@@ -221,16 +220,14 @@ export default function FinanceOverview(props) {
               },
             ])
           }
-          label="Create snapshot"
           style={{
             padding: 12,
             marginTop: 25,
             marginHorizontal: 50,
           }}
-          color={theme.colors.secondary}
-          backgroundColor={theme.colors.primary}
-          textStyle={{ textAlign: 'center' }}
-        />
+        >
+          Create Snapshot
+        </Button>
         <View style={{ paddingVertical: 25 }} />
       </ScrollView>
     </Screen>

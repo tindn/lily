@@ -89,17 +89,7 @@ function TransactionForm(props) {
 
   return (
     <Layout
-      style={[
-        props.style,
-        {
-          borderRadius: 10,
-          elevation: 4,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.23,
-          shadowRadius: 2.62,
-        },
-      ]}
+      style={[sharedStyles.formContainer, props.style]}
       backgroundLevel="3"
     >
       <View
@@ -191,7 +181,12 @@ function TransactionForm(props) {
             ListEmptyComponent={null}
           />
           <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
-            <EntryTypeInput type={entryType} setType={setEntryType} />
+            <EntryTypeInput
+              type={entryType}
+              setType={setEntryType}
+              creditText="Income"
+              debitText="Expense"
+            />
             <CategoryInput
               displayStyle={{
                 marginTop: 2,

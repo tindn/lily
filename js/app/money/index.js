@@ -111,6 +111,7 @@ function MoneyStack(props) {
         component={AccountDetails}
         options={({ route }) => ({
           title: route.params.accountName || 'Account Details',
+          ...headerStyles,
         })}
       />
       <Stack.Screen

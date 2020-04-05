@@ -22,11 +22,8 @@ export default StyleSheet.create({
     padding: 12,
   },
   formContainer: {
-    backgroundColor: theme.colors.backgroundColor,
     borderRadius: 10,
     elevation: 4,
-    marginHorizontal: 5,
-    marginVertical: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.23,

@@ -1,8 +1,9 @@
 import geolocation from '@react-native-community/geolocation';
+import { Button } from '@ui-kitten/components';
 import React, { useState } from 'react';
 import { Alert, ScrollView, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
-import Pill from '../../../components/pill';
+import CategoryInput from '../../../components/categoryInput';
 import Screen from '../../../components/screen';
 import {
   addVendorToDb,
@@ -13,8 +14,6 @@ import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
 import { cleanCoordinate } from '../../../utils/location';
 import MapLocationInput from '../mapLocationInput';
-import CategoryInput from '../../../components/categoryInput';
-import { Button } from '@ui-kitten/components';
 
 var mapDispatchToProps = {
   addVendorToDb,

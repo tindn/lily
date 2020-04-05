@@ -1,14 +1,13 @@
+import { Button, Text } from '@ui-kitten/components';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import MoneyDisplay from '../../../components/MoneyDisplay';
-import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
 import { getAccountEntriesForAccount } from '../../../db/accountEntries';
 import {
@@ -16,7 +15,6 @@ import {
   getAccountById,
   updateBalanceForAccount,
 } from '../../../db/accounts';
-import theme from '../../../theme';
 import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
 
@@ -53,10 +51,7 @@ export default function AccountDetails(props) {
         <View style={styles.row}>
           <Text style={{ fontSize: 17 }}>{name}</Text>
           <ActivityIndicator animating={updatingBalance} />
-          <MoneyDisplay
-            amount={balance}
-            style={{ color: '#000', fontSize: 17 }}
-          />
+          <MoneyDisplay amount={balance} style={{ fontSize: 17 }} />
         </View>
         <View style={styles.row}>
           <Text style={{ fontSize: 17 }}>{category}</Text>
@@ -70,7 +65,8 @@ export default function AccountDetails(props) {
             marginTop: 10,
           }}
         >
-          <Pill
+          <Button
+            size="small"
             onPress={() => {
               Alert.alert('Confirm', 'Do you want to archive the account?', [
                 {
@@ -87,13 +83,13 @@ export default function AccountDetails(props) {
             }}
             style={{
               flex: 1,
-              paddingHorizontal: 7,
-              justifyContent: 'center',
               marginHorizontal: 3,
             }}
-            label="Archive"
-          />
-          <Pill
+          >
+            Archive
+          </Button>
+          <Button
+            size="small"
             onPress={() => {
               setUpdatingBalance(true);
               updateBalanceForAccount(id)
@@ -109,25 +105,25 @@ export default function AccountDetails(props) {
             }}
             style={{
               flex: 1,
-              paddingHorizontal: 7,
-              justifyContent: 'center',
               marginHorizontal: 3,
             }}
-            label="Update Balance"
-          />
-          <Pill
+          >
+            Update Balance
+          </Button>
+          <Button
+            size="small"
             onPress={toggleAccountEntry}
             style={{
-              paddingHorizontal: 7,
               flex: 1,
-              justifyContent: 'center',
               marginHorizontal: 3,
             }}
-            label="Add Entry"
-          />
+          >
+            Add Entry
+          </Button>
         </View>
         {showNewEntryForm ? (
           <AccountEntryForm
+            style={{ marginTop: 10, marginHorizontal: 5 }}
             onCancel={toggleAccountEntry}
             accountBalance={balance}
             accountId={account.id}
@@ -137,9 +133,7 @@ export default function AccountDetails(props) {
         ) : null}
         <View
           style={{
-            borderTopColor: theme.colors.lighterGray,
-            borderTopWidth: 1,
-            marginTop: 10,
+            marginTop: 20,
             marginBottom: 30,
           }}
         >
@@ -161,9 +155,6 @@ export default function AccountDetails(props) {
 
 const styles = StyleSheet.create({
   row: {
-    backgroundColor: '#fff',
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 12,

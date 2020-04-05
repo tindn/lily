@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Alert, Switch, Text, TextInput, View } from 'react-native';
+import { Button, Layout } from '@ui-kitten/components';
+import React, { useEffect, useState } from 'react';
+import { Alert, Text, TextInput, View } from 'react-native';
 import DateInput from '../../../components/dateInput';
+import EntryTypeInput from '../../../components/EntryTypeInput';
 import MoneyInput from '../../../components/moneyInput';
-import OutlineButton from '../../../components/outlineButton';
 import {
   addAccountEntry,
   removeAccountEntry,
@@ -37,14 +38,6 @@ function AccountEntryForm(props) {
   function onBalancePressed() {
     toggleBalanceUpdate();
     setMemo(isBalanceUpdate ? '' : 'Balance update');
-  }
-
-  function updateType(val) {
-    setEntryType(val ? 'credit' : 'debit');
-
-    if (isBalanceUpdate) {
-      setBalance(props.accountBalance + (val ? 1 : -1) * amount);
-    }
   }
 
   function updateBalanceAmount(amount) {
@@ -91,7 +84,7 @@ function AccountEntryForm(props) {
   }
 
   return (
-    <View style={sharedStyles.formContainer}>
+    <Layout style={[sharedStyles.formContainer, props.style]}>
       <View
         style={[
           sharedStyles.formRow,
@@ -108,11 +101,7 @@ function AccountEntryForm(props) {
         <MoneyInput
           onChange={setAmount}
           amount={amount}
-          textStyle={{
-            flex: 10,
-            color:
-              entry_type === 'debit' ? theme.colors.red : theme.colors.green,
-          }}
+          type={entry_type}
           autoFocus={props.autoFocus}
         />
       </View>
@@ -125,15 +114,13 @@ function AccountEntryForm(props) {
         />
       </View>
       <View
-        key="creditSwitch"
         style={[
           sharedStyles.formRow,
           sharedStyles.borderBottom,
-          sharedStyles.formSwitchRow,
+          { justifyContent: 'flex-end' },
         ]}
       >
-        <Text style={{ color: theme.colors.darkGray }}>{entry_type}</Text>
-        <Switch value={entry_type === 'credit'} onValueChange={updateType} />
+        <EntryTypeInput type={entry_type} setType={setEntryType} />
       </View>
       {isBalanceUpdate && (
         <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
@@ -151,42 +138,23 @@ function AccountEntryForm(props) {
         </View>
       )}
       <View key="buttons" style={sharedStyles.formButtons}>
-        <OutlineButton
-          label="Cancel"
-          onPress={props.onCancel}
-          color={theme.colors.darkGray}
-        />
+        <Button size="small" status="basic" onPress={props.onCancel}>
+          Cancel
+        </Button>
         {id ? (
-          <OutlineButton
-            label="Delete"
-            onPress={confirmDelete}
-            color={theme.colors.red}
-          />
+          <Button size="small" status="danger" onPress={confirmDelete}>
+            Delete
+          </Button>
         ) : (
-          <OutlineButton
-            label="Balance"
-            onPress={onBalancePressed}
-            color="#000"
-            labelElement={
-              <View style={{ flexDirection: 'row' }}>
-                <Text
-                  style={{
-                    color: '#000',
-                  }}
-                >
-                  Balance
-                </Text>
-              </View>
-            }
-          />
+          <Button size="small" onPress={onBalancePressed} status="warning">
+            Balance
+          </Button>
         )}
-        <OutlineButton
-          label={id ? 'Save' : 'Add'}
-          onPress={save}
-          color={id ? theme.colors.primary : theme.colors.iosBlue}
-        />
+        <Button size="small" onPress={save}>
+          {id ? 'Save' : 'Add'}
+        </Button>
       </View>
-    </View>
+    </Layout>
   );
 }
 

@@ -1,5 +1,6 @@
+import { Text } from '@ui-kitten/components';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import Card from '../../../components/card';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 import theme from '../../../theme';
@@ -30,7 +31,6 @@ export default function OverviewCard({
             style={{
               textAlign: 'center',
               marginBottom: 10,
-              color: theme.colors.darkGray,
             }}
           >
             Current
@@ -57,7 +57,6 @@ export default function OverviewCard({
             style={{
               textAlign: 'center',
               marginBottom: 10,
-              color: theme.colors.darkGray,
             }}
           >
             {new Date(latestSnapshot.date_time).toLocaleDateString()}
@@ -84,7 +83,6 @@ export default function OverviewCard({
             style={{
               textAlign: 'center',
               marginBottom: 10,
-              color: theme.colors.darkGray,
             }}
           >
             Avg. monthly
@@ -120,7 +118,6 @@ export default function OverviewCard({
             style={{
               textAlign: 'center',
               marginBottom: 10,
-              color: theme.colors.darkGray,
             }}
           >
             1 year
@@ -139,7 +136,6 @@ export default function OverviewCard({
             style={{
               textAlign: 'center',
               marginBottom: 10,
-              color: theme.colors.darkGray,
             }}
           >
             3 years
@@ -158,7 +154,6 @@ export default function OverviewCard({
             style={{
               textAlign: 'center',
               marginBottom: 10,
-              color: theme.colors.darkGray,
             }}
           >
             5 years

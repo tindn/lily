@@ -1,15 +1,14 @@
+import { Text } from '@ui-kitten/components';
 import React from 'react';
 import {
   LayoutAnimation,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import DateInput from '../../../components/dateInput';
 import MoneyInput from '../../../components/moneyInput';
 import { useToggle } from '../../../hooks';
-import theme from '../../../theme';
 import AccountEntryForm from './accountEntryForm';
 
 function AccountEntry(props) {
@@ -27,7 +26,7 @@ function AccountEntry(props) {
     />
   ) : (
     <TouchableOpacity onPress={toggleExpanded} style={styles.item}>
-      <View key="1">
+      <View>
         <DateInput
           date={new Date(props.entry.date_time)}
           style={styles.date}
@@ -39,7 +38,7 @@ function AccountEntry(props) {
         amount={props.entry.amount}
         editable={false}
         textStyle={{
-          fontSize: 20,
+          fontSize: 18,
         }}
         type={props.entry.entry_type}
       />
@@ -49,13 +48,9 @@ function AccountEntry(props) {
 
 const styles = StyleSheet.create({
   date: {
-    fontSize: 18,
     marginBottom: 8,
   },
   item: {
-    backgroundColor: theme.colors.backgroundColor,
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
