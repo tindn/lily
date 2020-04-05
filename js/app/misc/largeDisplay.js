@@ -39,6 +39,7 @@ function LargeDisplay() {
                   key={id}
                   label={commonPhrases[id].text}
                   value={id}
+                  color={themeColors.textColor}
                 />
               ))}
             </Picker>
