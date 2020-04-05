@@ -1,7 +1,7 @@
 import React from 'react';
 import { LayoutAnimation, View } from 'react-native';
 import { useToggle } from '../../../hooks';
-import theme from '../../../theme';
+import sharedStyles from '../../../sharedStyles';
 import { by } from '../../../utils/sort';
 import LineItem from './lineItem';
 
@@ -23,7 +23,7 @@ function Category(props) {
         text={name}
         amount={sum}
         negative={negative}
-        style={{ borderBottomWidth: 1, borderColor: theme.colors.lightGray }}
+        style={sharedStyles.borderBottom}
         textStyle={{
           paddingBottom: 5,
           paddingLeft: 5,

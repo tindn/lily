@@ -1,6 +1,6 @@
-import { Button, Layout } from '@ui-kitten/components';
+import { Button, Layout, Text } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { Alert, Text, TextInput, View } from 'react-native';
+import { Alert, TextInput, View } from 'react-native';
 import DateInput from '../../../components/dateInput';
 import EntryTypeInput from '../../../components/EntryTypeInput';
 import MoneyInput from '../../../components/moneyInput';
@@ -125,7 +125,7 @@ function AccountEntryForm(props) {
       {isBalanceUpdate && (
         <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
           <View style={{ justifyContent: 'center' }}>
-            <Text style={{ color: theme.colors.darkGray }}>New balance</Text>
+            <Text>New balance</Text>
           </View>
           <MoneyInput
             onChange={updateBalanceAmount}

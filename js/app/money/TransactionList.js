@@ -6,7 +6,7 @@ import Swipeable from 'react-native-swipeable-row';
 import SwipeToDeleteContent from '../../components/Swipeable/SwipeToDeleteContent';
 import { deleteTransaction } from '../../db/transactions';
 import { error, success } from '../../log';
-import theme from '../../theme';
+import sharedStyles from '../../sharedStyles';
 import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
 import { formatAmountToDisplay } from '../../utils/money';
 
@@ -64,7 +64,7 @@ export default function TransactionList(props) {
             rightContent={<SwipeToDeleteContent />}
           >
             <ListItem
-              style={styles.transactionItem}
+              style={sharedStyles.borderBottom}
               title={(item.memo || item.vendor).slice(0, 25)}
               description={dateDisplay}
               accessory={() => (
@@ -104,10 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 20,
-  },
-  transactionItem: {
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   transactionItemAmount: {
     textAlign: 'right',

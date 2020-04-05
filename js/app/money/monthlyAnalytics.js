@@ -17,7 +17,6 @@ import { calculateAnalyticsForMonth } from '../../db/monthlyAnalytics';
 import { getAllFromTable } from '../../db/shared';
 import useToggle from '../../hooks/useToggle';
 import sharedStyles from '../../sharedStyles';
-import theme from '../../theme';
 import { useThemeColors } from '../../uiKittenTheme';
 
 export default function MonthlyAnalytics(props) {
@@ -82,7 +81,7 @@ export default function MonthlyAnalytics(props) {
                     style={{
                       fontWeight: '500',
                       fontSize: 18,
-                      color: theme.colors.white,
+                      color: '#fff',
                       paddingLeft: 10,
                     }}
                   >

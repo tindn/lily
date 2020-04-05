@@ -14,6 +14,7 @@ import {
 } from '../../../redux/actions/categories';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
+import { useThemeColors } from '../../../uiKittenTheme';
 
 function mapStateToProps(state) {
   return {
@@ -31,6 +32,7 @@ var mapDispatchToProps = {
 function Categories(props) {
   var [newCategory, setNewCategory] = useState('');
   var [oldCategory, setOldCategory] = useState();
+  var themeColors = useThemeColors();
   return (
     <Screen>
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
@@ -106,7 +108,7 @@ function Categories(props) {
               leftContent={
                 <View
                   style={{
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: themeColors.textDangerColor,
                     justifyContent: 'center',
                     flex: 1,
                   }}
@@ -115,7 +117,7 @@ function Categories(props) {
                     style={{
                       fontWeight: '500',
                       fontSize: 18,
-                      color: theme.colors.white,
+                      color: '#fff',
                       paddingLeft: 10,
                       textAlign: 'right',
                       paddingRight: 5,
