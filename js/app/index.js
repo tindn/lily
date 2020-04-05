@@ -18,7 +18,6 @@ import { setRef } from '../log';
 import { persistor, store } from '../redux';
 import { useTheme } from '../uiKittenTheme';
 import CurrentUserContext from './currentUserContext';
-import LoadingScreen from './loading';
 import SignInScreen from './SignIn';
 import UserApp from './userApp';
 
@@ -52,9 +51,7 @@ function App() {
           <CurrentUserContext.Provider
             value={{ user: currentUser, setCurrentUser }}
           >
-            {currentUser === undefined ? (
-              <LoadingScreen />
-            ) : currentUser === null ? (
+            {currentUser === undefined ? null : currentUser === null ? (
               <SignInScreen />
             ) : (
               <UserApp />

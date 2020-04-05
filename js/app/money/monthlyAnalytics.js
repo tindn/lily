@@ -1,11 +1,11 @@
 import { useFocusEffect } from '@react-navigation/native';
+import { ListItem, Text } from '@ui-kitten/components';
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -18,11 +18,14 @@ import { getAllFromTable } from '../../db/shared';
 import useToggle from '../../hooks/useToggle';
 import sharedStyles from '../../sharedStyles';
 import theme from '../../theme';
+import { useThemeColors } from '../../uiKittenTheme';
 
 export default function MonthlyAnalytics(props) {
   const [data, setData] = useState([]);
   var [refreshing, setRefreshing] = useState(false);
   var [calculatingIndex, setCalculatingIndex] = useState(-1);
+  var themeColors = useThemeColors();
+
   var fetchData = useCallback(function(params = { useLoadingIndicator: true }) {
     params.useLoadingIndicator && setRefreshing(true);
     return getAllFromTable('monthly_analytics', 'ORDER BY start_date DESC')
@@ -35,6 +38,7 @@ export default function MonthlyAnalytics(props) {
   useFocusEffect(function() {
     fetchData({ useLocadingIndicator: false });
   });
+
   return (
     <Screen>
       <FlatList
@@ -69,7 +73,7 @@ export default function MonthlyAnalytics(props) {
                 <View
                   key={`refresh ${item.id}`}
                   style={{
-                    backgroundColor: theme.colors.green,
+                    backgroundColor: themeColors.textSuccessColor,
                     justifyContent: 'center',
                     flex: 1,
                   }}
@@ -123,15 +127,10 @@ function Month({ month, navigation, isCalculating }) {
 
   return (
     <>
-      <View
-        style={{
-          flexDirection: 'row',
-          borderBottomColor: theme.colors.lighterGray,
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        }}
-      >
-        <TouchableOpacity
-          style={{
+      <ListItem
+        style={[
+          sharedStyles.borderBottom,
+          {
             alignItems: 'center',
             flex: 1,
             flexDirection: 'row',
@@ -139,47 +138,41 @@ function Month({ month, navigation, isCalculating }) {
             paddingBottom: 8,
             paddingLeft: 10,
             paddingRight: 10,
-            paddingTop: 8,
-          }}
-          onPress={() => {
-            if (showSummaries) {
-              toggleSummaries();
-            } else {
-              navigation.navigate('MonthTransactions', {
-                date: new Date(month.start_date),
-              });
-            }
-          }}
-          onLongPress={() => {
-            if (!showSummaries && summaries == undefined) {
-              getSummaries();
-            }
+          },
+        ]}
+        onPress={() => {
+          if (showSummaries) {
             toggleSummaries();
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontWeight: '500', color: theme.colors.darkGray }}>
-              {month.name}
-            </Text>
-          </View>
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            <MoneyDisplay amount={diff} />
-            <ActivityIndicator
-              style={{ width: 20, marginLeft: 10 }}
-              animating={isCalculating}
-            />
-          </View>
-          <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <MoneyDisplay amount={month.earned} />
-            <MoneyDisplay
-              amount={month.spent}
-              style={{ color: theme.colors.red }}
-            />
-          </View>
-        </TouchableOpacity>
-      </View>
+          } else {
+            navigation.navigate('MonthTransactions', {
+              date: new Date(month.start_date),
+            });
+          }
+        }}
+        onLongPress={() => {
+          if (!showSummaries && summaries == undefined) {
+            getSummaries();
+          }
+          toggleSummaries();
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <Text>{month.name}</Text>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <MoneyDisplay amount={diff} />
+          <ActivityIndicator
+            style={{ width: 20, marginLeft: 10 }}
+            animating={isCalculating}
+          />
+        </View>
+        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+          <MoneyDisplay amount={month.earned} type="credit" />
+          <MoneyDisplay amount={month.spent} type="debit" />
+        </View>
+      </ListItem>
       {showSummaries && summaries ? (
-        <View style={{ marginHorizontal: 10 }}>
+        <View style={{ marginHorizontal: 20, marginBottom: 20 }}>
           {summaries.map(function(category, index) {
             return (
               <TouchableOpacity
@@ -203,12 +196,7 @@ function Month({ month, navigation, isCalculating }) {
                 <MoneyDisplay
                   amount={category.amount}
                   useParentheses={false}
-                  style={[
-                    { fontSize: 16 },
-                    category.entry_type == 'debit' && {
-                      color: theme.colors.red,
-                    },
-                  ]}
+                  type={category.entry_type}
                 />
               </TouchableOpacity>
             );

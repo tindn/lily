@@ -60,9 +60,16 @@ function Home(props) {
     <Screen>
       {currentMonth ? (
         <TouchableOpacity
-          onPress={() => {
+          onLongPress={() => {
             toggleSummaries();
             LayoutAnimation.easeInEaseOut();
+          }}
+          onPress={() => {
+            if (showSummaries) {
+              toggleSummaries();
+            } else {
+              props.navigation.navigate('MonthTransactions');
+            }
           }}
           style={{
             flexDirection: 'row',

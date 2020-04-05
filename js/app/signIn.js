@@ -5,7 +5,7 @@ import { ImageBackground, View } from 'react-native';
 import Screen from '../components/screen';
 import { useToggle } from '../hooks';
 
-export default function LoadingScreen() {
+export default function SignIn() {
   var [email, setEmail] = useState('');
   var [password, setPassword] = useState('');
   var [errorMessage, setErrorMessage] = useState('');

@@ -21,7 +21,6 @@ const Drawer = createDrawerNavigator();
 
 const drawerContentItems = [
   { title: 'Home', route: 'Home' },
-  { title: 'Transactions', route: 'MonthTransactions' },
   { title: 'Past Months', route: 'MonthlyAnalytics' },
   { title: 'Vendors', route: 'Vendors' },
   { title: 'Categories', route: 'Categories' },
@@ -88,15 +87,19 @@ function MoneyStack(props) {
       <Stack.Screen
         name="MonthTransactions"
         component={MonthTransactions}
-        options={({ route }) => ({
-          title: ((route.params || {}).date || new Date()).toLocaleDateString(
-            'en-US',
-            {
+        options={({ route }) => {
+          var title = '';
+          if (route.params && route.params.date) {
+            title = route.params.date.toLocaleDateString('en-US', {
               month: 'long',
-            }
-          ),
-          ...headerStyles,
-        })}
+              year: 'numeric',
+            });
+          }
+          return {
+            title: title,
+            ...headerStyles,
+          };
+        }}
       />
       <Stack.Screen
         name="MonthlyAnalytics"
