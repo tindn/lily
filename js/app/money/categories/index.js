@@ -1,9 +1,8 @@
+import { Button, Input, ListItem } from '@ui-kitten/components';
 import React, { useState } from 'react';
-import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Alert, ScrollView, Text, View } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import { connect } from 'react-redux';
-import OutlineButton from '../../../components/outlineButton';
 import Screen from '../../../components/screen';
 import SwipeToArchiveContent from '../../../components/Swipeable/SwipeToArchiveContent';
 import { error } from '../../../log';
@@ -35,21 +34,13 @@ function Categories(props) {
   return (
     <Screen>
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
-        <View style={[sharedStyles.formContainer, props.style]}>
-          <View key="firstRow" style={[sharedStyles.formRow]}>
-            <TextInput
-              style={[
-                sharedStyles.formTextInput,
-                {
-                  textAlign: 'left',
-                },
-              ]}
-              value={newCategory}
-              placeholder="Name"
-              onChangeText={setNewCategory}
-              placeholderTextColor={theme.colors.lightGray}
-            />
-          </View>
+        <View level="4" style={{ marginVertical: 10, paddingHorizontal: 10 }}>
+          <Input
+            value={newCategory}
+            placeholder="Name"
+            onChangeText={setNewCategory}
+            placeholderTextColor={theme.colors.lightGray}
+          />
           <View
             style={{
               marginVertical: 7,
@@ -57,16 +48,19 @@ function Categories(props) {
               justifyContent: 'space-around',
             }}
           >
-            <OutlineButton
+            <Button
               label="Cancel"
               onPress={function() {
                 setNewCategory('');
                 setOldCategory(undefined);
               }}
-              color={theme.colors.darkGray}
-            />
-            <OutlineButton
-              label={oldCategory ? 'Save' : 'Add'}
+              status="basic"
+              size="small"
+            >
+              Cancel
+            </Button>
+            <Button
+              size="small"
               onPress={function() {
                 if (oldCategory) {
                   props
@@ -81,7 +75,9 @@ function Categories(props) {
                   });
                 }
               }}
-            />
+            >
+              {oldCategory ? 'Save' : 'Add'}
+            </Button>
           </View>
         </View>
 
@@ -153,27 +149,24 @@ function Categories(props) {
                 );
               }}
             >
-              <TouchableOpacity
-                style={[
-                  sharedStyles.formRow,
-                  sharedStyles.borderBottom,
-                  { paddingVertical: 15 },
-                ]}
+              <ListItem
+                style={[sharedStyles.borderBottom, { paddingVertical: 15 }]}
                 onPress={function() {
                   setOldCategory(item.name);
                   setNewCategory(item.name);
                 }}
                 disabled={item.is_archived}
-              >
-                <Text>{item.name}</Text>
-                {item.is_archived ? (
-                  <OutlineButton
-                    label="Archived"
-                    disabled
-                    style={{ position: 'absolute', right: 5, top: 5 }}
-                  />
-                ) : null}
-              </TouchableOpacity>
+                title={item.name}
+                accessory={() => {
+                  return item.is_archived ? (
+                    <Button disabled size="small">
+                      Archived
+                    </Button>
+                  ) : (
+                    <View />
+                  );
+                }}
+              />
             </Swipeable>
           );
         })}
@@ -181,9 +174,5 @@ function Categories(props) {
     </Screen>
   );
 }
-
-Categories.navigationOptions = {
-  headerTitle: 'Categories',
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);
