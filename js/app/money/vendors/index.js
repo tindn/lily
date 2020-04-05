@@ -1,16 +1,9 @@
+import { Button, ListItem } from '@ui-kitten/components';
 import React from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import OutlineButton from '../../../components/outlineButton';
 import Screen from '../../../components/screen';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
-import theme from '../../../theme';
 
 function mapStateToProps(state) {
   return {
@@ -30,24 +23,33 @@ function Vendors(props) {
           </View>
         }
         renderItem={({ item }) => {
+          var numberOfLocations = 0;
+          if (item.locations) {
+            numberOfLocations = item.locations.length;
+          }
           return (
-            <TouchableOpacity
-              style={styles.item}
+            <ListItem
+              title={item.name}
+              description={numberOfLocations + ' location(s)'}
               onPress={() => {
                 props.navigation.navigate('VendorDetails', {
                   vendor: item,
                 });
               }}
-            >
-              <Text style={styles.transactionItemMemo}>{item.name}</Text>
-              {item.category ? (
-                <OutlineButton
-                  disabled
-                  label={item.category}
-                  style={{ paddingHorizontal: 7, paddingVertical: 3 }}
-                />
-              ) : null}
-            </TouchableOpacity>
+              accessory={() => {
+                return item.category ? (
+                  <Button
+                    disabled
+                    style={{ paddingHorizontal: 7, paddingVertical: 3 }}
+                    size="small"
+                  >
+                    {item.category}
+                  </Button>
+                ) : (
+                  <View />
+                );
+              }}
+            ></ListItem>
           );
         }}
       />
@@ -60,20 +62,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 20,
-  },
-  item: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.backgroundColor,
-    borderBottomColor: theme.colors.lighterGray,
-    borderBottomWidth: 1,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-  },
-  transactionItemMemo: {
-    fontSize: 18,
-    marginBottom: 8,
   },
 });
 

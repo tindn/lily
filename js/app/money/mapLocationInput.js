@@ -22,7 +22,7 @@ function MapLocationInput(props) {
       <TouchableOpacity
         style={{
           position: 'absolute',
-          left: 5,
+          right: 5,
           top: 5,
           zIndex: 1,
           padding: 10,
@@ -44,7 +44,7 @@ function MapLocationInput(props) {
           ]);
         }}
       >
-        <Icon name="close-outline" width={25} height={25} fill="#3366FF" />
+        <Icon name="close-outline" width={30} height={30} fill="#3366FF" />
       </TouchableOpacity>
 
       <MapView

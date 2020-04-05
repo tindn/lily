@@ -1,6 +1,6 @@
 import geolocation from '@react-native-community/geolocation';
 import React, { useState } from 'react';
-import { Alert, Button, ScrollView, TextInput, View } from 'react-native';
+import { Alert, ScrollView, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
 import Pill from '../../../components/pill';
 import Screen from '../../../components/screen';
@@ -14,6 +14,7 @@ import theme from '../../../theme';
 import { cleanCoordinate } from '../../../utils/location';
 import MapLocationInput from '../mapLocationInput';
 import CategoryInput from '../../../components/categoryInput';
+import { Button } from '@ui-kitten/components';
 
 var mapDispatchToProps = {
   addVendorToDb,
@@ -37,7 +38,7 @@ function VendorDetails(props) {
   });
 
   return (
-    <Screen style={{ alignContent: 'space-around' }}>
+    <Screen>
       <ScrollView keyboardShouldPersistTaps="always">
         <View
           style={[
@@ -76,7 +77,7 @@ function VendorDetails(props) {
           />
         </View>
 
-        <View style={{ marginTop: 10, paddingHorizontal: 20 }}>
+        <View style={{ marginTop: 10, paddingLeft: 20, paddingRight: 50 }}>
           {locations &&
             locations.map((location, index) => (
               <View
@@ -85,17 +86,13 @@ function VendorDetails(props) {
                   height: 220,
                   marginBottom: 20,
                   flexDirection: 'row',
-                  alignItems: 'center',
                 }}
               >
                 <MapLocationInput
                   coord={location}
                   title={name}
-                  zoom={2000}
-                  style={[
-                    sharedStyles.shadow2,
-                    { flex: 1, marginHorizontal: 30 },
-                  ]}
+                  zoom={2500}
+                  style={[sharedStyles.shadow2, { flex: 1 }]}
                   mapStyle={{ borderRadius: 10 }}
                   removeLocation={() => {
                     const newLocations = [...locations];
@@ -113,32 +110,32 @@ function VendorDetails(props) {
                 />
               </View>
             ))}
+          <Button
+            status="basic"
+            appearance="outline"
+            onPress={() => {
+              geolocation.getCurrentPosition(
+                position => {
+                  locations.push(position.coords);
+                  setLocations([...locations]);
+                },
+                null,
+                { enableHighAccuracy: false }
+              );
+            }}
+            style={{
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              alignSelf: 'center',
+            }}
+          >
+            Add location
+          </Button>
         </View>
-        <Pill
-          onPress={() => {
-            geolocation.getCurrentPosition(
-              position => {
-                locations.push(position.coords);
-                setLocations([...locations]);
-              },
-              null,
-              { enableHighAccuracy: false }
-            );
-          }}
-          label="Add location"
-          style={{
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            alignSelf: 'center',
-          }}
-          color={theme.colors.secondary}
-          backgroundColor={theme.colors.primary}
-          textStyle={{ textAlign: 'center' }}
-        />
-        <View style={[{ marginTop: 40 }, sharedStyles.actionButton]}>
+
+        <View style={{ marginTop: 40, marginHorizontal: 10 }}>
           {id ? (
             <Button
-              title="Save"
               onPress={() => {
                 props
                   .saveVendorToDb({
@@ -151,10 +148,11 @@ function VendorDetails(props) {
                     props.navigation.pop();
                   });
               }}
-            />
+            >
+              Save
+            </Button>
           ) : (
             <Button
-              title="Add"
               onPress={() => {
                 props
                   .addVendorToDb({
@@ -166,13 +164,15 @@ function VendorDetails(props) {
                     props.navigation.pop();
                   });
               }}
-            />
+            >
+              Add
+            </Button>
           )}
         </View>
         {id && (
-          <View style={[sharedStyles.actionButton, { borderBottomWidth: 0 }]}>
+          <View style={{ marginTop: 20, marginHorizontal: 10 }}>
             <Button
-              title="Delete"
+              status="danger"
               onPress={() => {
                 Alert.alert('Confirm', 'Do you want to delete this vendor?', [
                   {
@@ -190,8 +190,9 @@ function VendorDetails(props) {
                   },
                 ]);
               }}
-              color={theme.colors.red}
-            />
+            >
+              Delete
+            </Button>
           </View>
         )}
       </ScrollView>

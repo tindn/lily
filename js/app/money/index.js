@@ -14,7 +14,7 @@ import MonthlyAnalytics from './MonthlyAnalytics';
 import MonthTransactions from './MonthTransactions';
 import TransactionDetails from './TransactionDetails';
 import Vendors from './vendors';
-import VendorDetails from './vendors/vendorDetails';
+import VendorDetails from './vendors/VendorDetails';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
