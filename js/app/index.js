@@ -19,7 +19,7 @@ import { persistor, store } from '../redux';
 import { useTheme } from '../uiKittenTheme';
 import CurrentUserContext from './currentUserContext';
 import SignInScreen from './SignIn';
-import UserApp from './userApp';
+import UserApp from './UserApp';
 
 firebase.initializeApp({
   apiKey: FIREBASE_API_KEY,

@@ -1,14 +1,15 @@
-import { useColorScheme } from 'react-native';
+// import { useColorScheme } from 'react-native';
 import { dark, light } from '@eva-design/eva';
 
 export function useTheme() {
-  const mode = useColorScheme();
-  return mode === 'dark' ? dark : light;
+  // const mode = useColorScheme();
+  // return mode === 'dark' ? dark : light;
+  return dark;
 }
 
 export function useColor(color) {
-  const theme = useTheme();
-  return getValueFromTheme(color, theme);
+  // const theme = useTheme();
+  return getValueFromTheme(color, dark);
 }
 
 export function useThemeColors() {

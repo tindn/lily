@@ -65,27 +65,33 @@ function TransactionForm(props) {
     ]
   );
 
-  useEffect(function() {
-    geolocation.getCurrentPosition(
-      function({ coords }) {
-        setCoords(coords);
-        getNearbyVendors(coords)
-          .then(function(nearbyVendors) {
-            nearbyVendors.forEach(function(v) {
-              v.distance = getDistance(coords, v);
-            });
-            return nearbyVendors;
-          })
-          .then(function(nearbyVendors) {
-            nearbyVendors.sort(sortByDistance);
-            return nearbyVendors;
-          })
-          .then(setNearbyVendors);
-      },
-      function() {},
-      { enableHighAccuracy: true }
-    );
-  }, []);
+  useEffect(
+    function() {
+      if (!isExpanded) {
+        return;
+      }
+      geolocation.getCurrentPosition(
+        function({ coords }) {
+          setCoords(coords);
+          getNearbyVendors(coords)
+            .then(function(nearbyVendors) {
+              nearbyVendors.forEach(function(v) {
+                v.distance = getDistance(coords, v);
+              });
+              return nearbyVendors;
+            })
+            .then(function(nearbyVendors) {
+              nearbyVendors.sort(sortByDistance);
+              return nearbyVendors;
+            })
+            .then(setNearbyVendors);
+        },
+        function() {},
+        { enableHighAccuracy: true }
+      );
+    },
+    [isExpanded]
+  );
 
   return (
     <Layout
@@ -99,7 +105,14 @@ function TransactionForm(props) {
           sharedStyles.formFirstRow,
         ]}
       >
-        <DateInput onChange={setDateTime} date={date_time} />
+        <DateInput
+          onFocus={() => {
+            LayoutAnimation.easeInEaseOut();
+            setIsExpanded(true);
+          }}
+          onChange={setDateTime}
+          date={date_time}
+        />
         <MoneyInput
           onChange={setAmount}
           key={moneyInputKey}

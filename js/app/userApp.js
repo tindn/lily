@@ -12,11 +12,11 @@ import {
   openDatabaseConnection,
   runMigrations,
 } from '../db';
-import Contact from './contact';
 import CurrentUserContext from './currentUserContext';
 import Misc from './misc';
 import Money from './money';
 import Playground from './Playground';
+import Tesla from './tesla';
 
 function UiKittenBottomTabBar(props) {
   function onSelect(index) {
@@ -27,16 +27,16 @@ function UiKittenBottomTabBar(props) {
       <BottomNavigation selectedIndex={props.state.index} onSelect={onSelect}>
         <BottomNavigationTab
           icon={style => (
-            <Icon {...style} width={30} height={30} name="credit-card" />
+            <Icon {...style} width={30} height={30} name="shopping-cart" />
+          )}
+        />
+        <BottomNavigationTab
+          icon={style => (
+            <Icon {...style} width={30} height={30} name="text-outline" />
           )}
         />
         <BottomNavigationTab
           icon={style => <Icon {...style} width={30} height={30} name="list" />}
-        />
-        <BottomNavigationTab
-          icon={style => (
-            <Icon {...style} width={30} height={30} name="person" />
-          )}
         />
         <BottomNavigationTab
           icon={style => (
@@ -69,42 +69,10 @@ export default function UserApp() {
   return isDbReady ? (
     <NavigationContainer>
       <Tab.Navigator initialRouteName="Money" tabBar={UiKittenBottomTabBar}>
-        <Tab.Screen
-          name="Money"
-          component={Money}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="barschart" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Misc"
-          component={Misc}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="edit" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Contact"
-          component={Contact}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="user" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Playground"
-          component={Playground}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="setting" size={size} color={color} />
-            ),
-          }}
-        />
+        <Tab.Screen name="Money" component={Money} />
+        <Tab.Screen name="Tesla" component={Tesla} />
+        <Tab.Screen name="Misc" component={Misc} />
+        <Tab.Screen name="Playground" component={Playground} />
       </Tab.Navigator>
     </NavigationContainer>
   ) : null;

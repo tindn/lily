@@ -20,10 +20,13 @@ export default function BottomSheet(props) {
         <TouchableWithoutFeedback onPress={props.hide}>
           <View style={{ flex: 1 }} />
         </TouchableWithoutFeedback>
-        <SafeAreaView style={props.contentContainerStyle}>
+        <SafeAreaView>
           <Layout
             level="1"
-            style={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}
+            style={[
+              { borderTopRightRadius: 10, borderTopLeftRadius: 10 },
+              props.contentContainerStyle,
+            ]}
           >
             {props.children}
           </Layout>

@@ -5,6 +5,7 @@ import electricityReadings from './electricityReadings';
 import financeSnapshots from './financeSnapshots';
 import monthlyAnalytics from './monthlyAnalytics';
 import monthTransactions from './monthTransactions';
+import tesla from './tesla';
 import vendors from './vendors';
 
 export default combineReducers({
@@ -15,4 +16,5 @@ export default combineReducers({
   financeSnapshots,
   electricityReadings,
   categories,
+  tesla,
 });

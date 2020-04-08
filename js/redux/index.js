@@ -1,13 +1,13 @@
-import { applyMiddleware, createStore, compose } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
-import thunkMiddleware from 'redux-thunk';
+import { applyMiddleware, compose, createStore } from 'redux';
+import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
+import thunkMiddleware from 'redux-thunk';
 import reducers from './reducers';
 
 const persistConfig = {
   key: 'lily-app',
   storage,
-  whitelist: [],
+  whitelist: ['accounts', 'categories', 'vendors', 'tesla'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
