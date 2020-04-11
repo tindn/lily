@@ -69,7 +69,9 @@ class ElectricityReadingItem extends React.Component {
             <DateTimePicker
               mode="datetime"
               value={this.state.timestamp}
-              onChange={date => this.setState({ timestamp: date })}
+              onChange={(event, date) => {
+                this.setState({ timestamp: date });
+              }}
             />
           </View>,
           <View
