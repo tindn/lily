@@ -59,9 +59,7 @@ export default function UserApp() {
         .then(function() {
           setIsDbReady(true);
         });
-      return function() {
-        closeDatabaseConnection();
-      };
+      return closeDatabaseConnection;
     },
     [currentUser.user.uid]
   );

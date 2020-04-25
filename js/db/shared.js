@@ -19,7 +19,8 @@ export function openDatabaseConnection(uid) {
     location: 'Documents',
   }).then(DB => {
     db = DB;
-    DB.executeSql(`PRAGMA foreign_keys = ON;`);
+    DB.executeSql('PRAGMA foreign_keys = ON;');
+    DB.executeSql('PRAGMA journal_mode=DELETE;');
   });
 }
 
