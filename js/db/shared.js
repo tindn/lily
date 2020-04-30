@@ -17,6 +17,7 @@ export function openDatabaseConnection(uid) {
   return SQLite.openDatabase({
     name: userDatabaseFileName,
     location: 'Documents',
+    createFromLocation: 1,
   }).then(DB => {
     db = DB;
     DB.executeSql('PRAGMA foreign_keys = ON;');

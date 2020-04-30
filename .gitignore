@@ -31,6 +31,15 @@ build/
 local.properties
 *.iml
 
+# db backup
+**/*.db
+
+# Android release build
+android/app/release
+
+# Android keystore
+android/keystores
+
 # node.js
 #
 node_modules/

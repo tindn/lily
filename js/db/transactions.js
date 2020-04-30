@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import uuid from 'uuid/v1';
 import { getMonthStartEndFor } from '../utils/date';
 import { db, getAllFromTable, getById, queryResultToArray } from './shared';
@@ -96,10 +97,7 @@ export function getTransactionsBetweenTimestampsForCategory(
 export function addTransaction(transaction) {
   var transaction_id = uuid();
   var now = Date.now();
-  var monthName = transaction.date_time.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-  });
+  var monthName = format(transaction.date_time, 'LLL y');
 
   var vendor = 'NULL';
   if (transaction.vendor_id) {
@@ -153,10 +151,7 @@ export function addTransaction(transaction) {
  */
 export function updateTransaction(transaction) {
   var now = Date.now();
-  var monthName = transaction.date_time.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-  });
+  var monthName = format(transaction.date_time, 'LLL y');
   var vendor = 'NULL';
   if (transaction.vendor_id) {
     vendor = `'${transaction.vendor_id}'`;
@@ -198,10 +193,7 @@ export function deleteTransaction(transaction) {
   if (!(transaction.date_time instanceof Date)) {
     transaction.date_time = new Date(transaction.date_time);
   }
-  var monthName = transaction.date_time.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-  });
+  var monthName = format(transaction.date_time, 'LLL y');
   return getAllFromTable(
     'monthly_analytics',
     `WHERE name = '${monthName}'`

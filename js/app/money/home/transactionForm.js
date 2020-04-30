@@ -112,9 +112,11 @@ function TransactionForm(props) {
           }}
           onChange={setDateTime}
           date={date_time}
+          style={{ flex: 1 }}
         />
         <MoneyInput
           onChange={setAmount}
+          style={{ flex: 1 }}
           key={moneyInputKey}
           amount={amount}
           editable

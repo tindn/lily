@@ -1,6 +1,7 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Drawer as UIKittenDrawer, Icon } from '@ui-kitten/components';
+import { format } from 'date-fns';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Screen from '../../components/screen';
@@ -53,9 +54,7 @@ export default function Money() {
 
 function MoneyStack(props) {
   const headerStyles = useHeadStyles();
-  const currentMonth = new Date().toLocaleString('en-US', {
-    month: 'long',
-  });
+  const currentMonth = format(new Date(), 'LLLL');
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -90,10 +89,7 @@ function MoneyStack(props) {
         options={({ route }) => {
           var title = '';
           if (route.params && route.params.date) {
-            title = route.params.date.toLocaleDateString('en-US', {
-              month: 'long',
-              year: 'numeric',
-            });
+            title = format(route.params.date, 'LLLL y');
           }
           return {
             title: title,
