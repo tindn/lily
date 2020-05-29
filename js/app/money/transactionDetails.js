@@ -43,7 +43,12 @@ export default function TransactionDetails(props) {
       >
         <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
           <DateInput onChange={setDateTime} date={date_time} />
-          <MoneyInput onChange={setAmount} amount={amount} editable={true} />
+          <MoneyInput
+            onChange={setAmount}
+            amount={amount}
+            editable={true}
+            style={{ flex: 1 }}
+          />
         </View>
         <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
           <TextInput

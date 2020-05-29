@@ -95,7 +95,7 @@ function AccountEntryForm(props) {
         <DateInput
           onChange={setDateTime}
           date={date_time}
-          style={{ flex: 9 }}
+          style={{ flex: 3 }}
           mode="date"
         />
         <MoneyInput
@@ -103,6 +103,7 @@ function AccountEntryForm(props) {
           amount={amount}
           type={entry_type}
           autoFocus={props.autoFocus}
+          style={{ flex: 7 }}
         />
       </View>
       <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
@@ -124,15 +125,13 @@ function AccountEntryForm(props) {
       </View>
       {isBalanceUpdate && (
         <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
-          <View style={{ justifyContent: 'center' }}>
+          <View style={{ justifyContent: 'center', flex: 3 }}>
             <Text>New balance</Text>
           </View>
           <MoneyInput
             onChange={updateBalanceAmount}
             amount={balance}
-            textStyle={{
-              flex: 10,
-            }}
+            style={{ flex: 7 }}
             autoFocus={props.autoFocus}
           />
         </View>
