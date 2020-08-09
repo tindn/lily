@@ -2,16 +2,15 @@ import { Button } from '@ui-kitten/components';
 import firebase from 'firebase';
 import React, { useContext } from 'react';
 import { Clipboard, Image } from 'react-native';
-import { connect } from 'react-redux';
 import rnfb from 'rn-fetch-blob';
-import BottomSheet from '../components/bottomSheet';
-import Screen from '../components/screen';
-import { runMigrations } from '../db';
-import { useToggle } from '../hooks';
-import { upload } from '../LILYFirebaseStorage';
-import CurrentUserContext from './currentUserContext';
+import BottomSheet from '../../components/bottomSheet';
+import Screen from '../../components/screen';
+import { runMigrations } from '../../db';
+import { useToggle } from '../../hooks';
+import { upload } from '../../LILYFirebaseStorage';
+import CurrentUserContext from '../currentUserContext';
 
-function Playground() {
+function Home(props) {
   var currentUser = useContext(CurrentUserContext);
   var [showContact, toggleContact] = useToggle();
   return (
@@ -28,7 +27,7 @@ function Playground() {
 
           <Button
             style={{ marginVertical: 5 }}
-            onPress={function() {
+            onPress={function () {
               var dbFilePath =
                 rnfb.fs.dirs.DocumentDir +
                 '/lily-user-' +
@@ -98,7 +97,13 @@ function Playground() {
           </Button>
         </>
       ) : null}
-
+      <Button
+        size="large"
+        style={{ marginVertical: 20 }}
+        onPress={() => props.navigation.navigate('LargeDisplay')}
+      >
+        Large Display
+      </Button>
       <Button
         style={{ marginVertical: 10 }}
         size="large"
@@ -119,7 +124,7 @@ function Playground() {
       <BottomSheet show={showContact} hide={toggleContact}>
         <Image
           // eslint-disable-next-line no-undef
-          source={require('../../images/contact.png')}
+          source={require('../../../images/contact.png')}
           style={{ width: 320, height: 320, alignSelf: 'center', margin: 20 }}
         />
       </BottomSheet>
@@ -127,8 +132,4 @@ function Playground() {
   );
 }
 
-export default connect(function(state) {
-  return {
-    teslaAccessToken: state.tesla.access_token,
-  };
-})(Playground);
+export default Home;

@@ -13,9 +13,8 @@ import {
   runMigrations,
 } from '../db';
 import CurrentUserContext from './currentUserContext';
-import Misc from './misc';
 import Money from './money';
-import Playground from './Playground';
+import Settings from './settings';
 
 function UiKittenBottomTabBar(props) {
   function onSelect(index) {
@@ -27,11 +26,6 @@ function UiKittenBottomTabBar(props) {
         <BottomNavigationTab
           icon={(style) => (
             <Icon {...style} width={30} height={30} name="shopping-cart" />
-          )}
-        />
-        <BottomNavigationTab
-          icon={(style) => (
-            <Icon {...style} width={30} height={30} name="list" />
           )}
         />
         <BottomNavigationTab
@@ -64,8 +58,7 @@ export default function UserApp() {
     <NavigationContainer>
       <Tab.Navigator initialRouteName="Money" tabBar={UiKittenBottomTabBar}>
         <Tab.Screen name="Money" component={Money} />
-        <Tab.Screen name="Misc" component={Misc} />
-        <Tab.Screen name="Playground" component={Playground} />
+        <Tab.Screen name="Settings" component={Settings} />
       </Tab.Navigator>
     </NavigationContainer>
   ) : null;
