@@ -16,7 +16,6 @@ import CurrentUserContext from './currentUserContext';
 import Misc from './misc';
 import Money from './money';
 import Playground from './Playground';
-import Tesla from './tesla';
 
 function UiKittenBottomTabBar(props) {
   function onSelect(index) {
@@ -26,20 +25,17 @@ function UiKittenBottomTabBar(props) {
     <SafeAreaView>
       <BottomNavigation selectedIndex={props.state.index} onSelect={onSelect}>
         <BottomNavigationTab
-          icon={style => (
+          icon={(style) => (
             <Icon {...style} width={30} height={30} name="shopping-cart" />
           )}
         />
         <BottomNavigationTab
-          icon={style => (
-            <Icon {...style} width={30} height={30} name="text-outline" />
+          icon={(style) => (
+            <Icon {...style} width={30} height={30} name="list" />
           )}
         />
         <BottomNavigationTab
-          icon={style => <Icon {...style} width={30} height={30} name="list" />}
-        />
-        <BottomNavigationTab
-          icon={style => (
+          icon={(style) => (
             <Icon {...style} width={30} height={30} name="settings" />
           )}
         />
@@ -53,10 +49,10 @@ export default function UserApp() {
   var currentUser = useContext(CurrentUserContext);
   var [isDbReady, setIsDbReady] = useState(false);
   useEffect(
-    function() {
+    function () {
       openDatabaseConnection(currentUser.user.uid)
         .then(runMigrations)
-        .then(function() {
+        .then(function () {
           setIsDbReady(true);
         });
       return closeDatabaseConnection;
@@ -68,7 +64,6 @@ export default function UserApp() {
     <NavigationContainer>
       <Tab.Navigator initialRouteName="Money" tabBar={UiKittenBottomTabBar}>
         <Tab.Screen name="Money" component={Money} />
-        <Tab.Screen name="Tesla" component={Tesla} />
         <Tab.Screen name="Misc" component={Misc} />
         <Tab.Screen name="Playground" component={Playground} />
       </Tab.Navigator>
