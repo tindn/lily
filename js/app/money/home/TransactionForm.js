@@ -1,6 +1,5 @@
 import geolocation from '@react-native-community/geolocation';
 import { Button } from 'components';
-import { Layout } from '@ui-kitten/components';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, LayoutAnimation, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
@@ -95,9 +94,12 @@ function TransactionForm(props) {
   );
 
   return (
-    <Layout
-      style={[sharedStyles.formContainer, props.style]}
-      backgroundLevel="3"
+    <View
+      style={[
+        { backgroundColor: theme.colors.layerOne },
+        sharedStyles.formContainer,
+        props.style,
+      ]}
     >
       <View
         style={[
@@ -265,7 +267,7 @@ function TransactionForm(props) {
           </View>
         </>
       ) : null}
-    </Layout>
+    </View>
   );
 }
 

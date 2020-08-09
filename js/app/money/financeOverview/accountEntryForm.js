@@ -1,4 +1,3 @@
-import { Layout } from '@ui-kitten/components';
 import { Button, Text } from 'components';
 import React, { useEffect, useState } from 'react';
 import { Alert, TextInput, View } from 'react-native';
@@ -85,7 +84,13 @@ function AccountEntryForm(props) {
   }
 
   return (
-    <Layout style={[sharedStyles.formContainer, props.style]}>
+    <View
+      style={[
+        { backgroundColor: theme.colors.layerOne },
+        sharedStyles.formContainer,
+        props.style,
+      ]}
+    >
       <View
         style={[
           sharedStyles.formRow,
@@ -154,7 +159,7 @@ function AccountEntryForm(props) {
           {id ? 'Save' : 'Add'}
         </Button>
       </View>
-    </Layout>
+    </View>
   );
 }
 

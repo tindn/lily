@@ -5,7 +5,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { Layout } from '@ui-kitten/components';
+import theme from '../theme';
 
 export default function BottomSheet(props) {
   return (
@@ -21,15 +21,18 @@ export default function BottomSheet(props) {
           <View style={{ flex: 1 }} />
         </TouchableWithoutFeedback>
         <SafeAreaView>
-          <Layout
-            level="1"
+          <View
             style={[
-              { borderTopRightRadius: 10, borderTopLeftRadius: 10 },
+              {
+                backgroundColor: theme.colors.layerOne,
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              },
               props.contentContainerStyle,
             ]}
           >
             {props.children}
-          </Layout>
+          </View>
         </SafeAreaView>
       </View>
     </Modal>

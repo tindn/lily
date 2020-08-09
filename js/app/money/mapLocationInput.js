@@ -1,4 +1,4 @@
-import { Icon } from '@ui-kitten/components';
+import { Close } from 'components/Icons';
 import React from 'react';
 import { Alert, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -32,7 +32,7 @@ function MapLocationInput(props) {
             {
               text: 'Cancel',
               style: 'cancel',
-              onPress: function() {},
+              onPress: function () {},
             },
             {
               text: 'Delete',
@@ -44,7 +44,7 @@ function MapLocationInput(props) {
           ]);
         }}
       >
-        <Icon name="close-outline" width={30} height={30} fill="#3366FF" />
+        <Close width={30} height={30} color="#3366FF" />
       </TouchableOpacity>
 
       <MapView

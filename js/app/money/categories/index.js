@@ -1,4 +1,5 @@
-import { Button, Input, ListItem } from '@ui-kitten/components';
+import { ListItem } from '@ui-kitten/components';
+import { Button, Input } from 'components';
 import React, { useState } from 'react';
 import { Alert, ScrollView, Text, View } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
@@ -52,7 +53,7 @@ function Categories(props) {
           >
             <Button
               label="Cancel"
-              onPress={function() {
+              onPress={function () {
                 setNewCategory('');
                 setOldCategory(undefined);
               }}
@@ -63,16 +64,16 @@ function Categories(props) {
             </Button>
             <Button
               size="small"
-              onPress={function() {
+              onPress={function () {
                 if (oldCategory) {
                   props
                     .saveCategoryToDb(oldCategory, newCategory)
-                    .then(function() {
+                    .then(function () {
                       setOldCategory(undefined);
                       setNewCategory('');
                     });
                 } else {
-                  props.addCategoryToDb(newCategory).then(function() {
+                  props.addCategoryToDb(newCategory).then(function () {
                     setNewCategory('');
                   });
                 }
@@ -83,21 +84,21 @@ function Categories(props) {
           </View>
         </View>
 
-        {props.categories.map(function(item, index) {
+        {props.categories.map(function (item, index) {
           return (
             <Swipeable
               key={index.toString()}
               rightContent={<SwipeToArchiveContent />}
               rightActionActivationDistance={175}
-              onRightActionRelease={function() {
+              onRightActionRelease={function () {
                 Alert.alert('Confirm', `Do you want to archive ${item.name}?`, [
                   {
                     text: 'Cancel',
                   },
                   {
                     text: 'Archive',
-                    onPress: function() {
-                      props.archiveCategoryToDb(item.name).catch(function(e) {
+                    onPress: function () {
+                      props.archiveCategoryToDb(item.name).catch(function (e) {
                         error('Failed to archive category', e.message);
                       });
                     },
@@ -128,7 +129,7 @@ function Categories(props) {
                 </View>
               }
               leftActionActivationDistance={175}
-              onLeftActionRelease={function() {
+              onLeftActionRelease={function () {
                 Alert.alert(
                   'Confirm',
                   `Do you want to un-archive ${item.name}?`,
@@ -138,10 +139,10 @@ function Categories(props) {
                     },
                     {
                       text: 'Un-Archive',
-                      onPress: function() {
+                      onPress: function () {
                         props
                           .unarchiveCategoryToDb(item.name)
-                          .catch(function(e) {
+                          .catch(function (e) {
                             error('Failed to un-archive category', e.message);
                           });
                       },
@@ -153,7 +154,7 @@ function Categories(props) {
             >
               <ListItem
                 style={[sharedStyles.borderBottom, { paddingVertical: 15 }]}
-                onPress={function() {
+                onPress={function () {
                   setOldCategory(item.name);
                   setNewCategory(item.name);
                 }}

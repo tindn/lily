@@ -12,5 +12,7 @@ export default {
     primary: '#F58560',
     secondary: '#FAF5EB',
     dark: '#282929',
+    background: '#2c2c2f',
+    layerOne: '#202022',
   },
 };

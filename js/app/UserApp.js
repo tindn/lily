@@ -1,40 +1,66 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  BottomNavigation,
-  BottomNavigationTab,
-  Icon,
-} from '@ui-kitten/components';
+import { Settings as SettingsIcon, ShoppingCart } from 'components/Icons';
 import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native';
+import { View, SafeAreaView, TouchableOpacity } from 'react-native';
 import {
   closeDatabaseConnection,
   openDatabaseConnection,
   runMigrations,
 } from '../db';
+import theme from '../theme';
 import CurrentUserContext from './currentUserContext';
 import Money from './money';
 import Settings from './settings';
 
 function UiKittenBottomTabBar(props) {
-  function onSelect(index) {
-    props.navigation.navigate(props.state.routeNames[index]);
-  }
   return (
-    <SafeAreaView>
-      <BottomNavigation selectedIndex={props.state.index} onSelect={onSelect}>
-        <BottomNavigationTab
-          icon={(style) => (
-            <Icon {...style} width={30} height={30} name="shopping-cart" />
-          )}
-        />
-        <BottomNavigationTab
-          icon={(style) => (
-            <Icon {...style} width={30} height={30} name="settings" />
-          )}
-        />
-      </BottomNavigation>
-    </SafeAreaView>
+    <View
+      style={{
+        backgroundColor: theme.colors.layerOne,
+      }}
+      selectedIndex={props.state.index}
+    >
+      <SafeAreaView
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+        }}
+      >
+        <TouchableOpacity
+          style={{ paddingTop: 20 }}
+          onPress={() => {
+            props.navigation.navigate(props.state.routeNames[0]);
+          }}
+        >
+          <ShoppingCart
+            width={30}
+            height={30}
+            color={
+              props.state.index === 0
+                ? theme.colors.primary
+                : theme.colors.darkerGray
+            }
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ paddingTop: 20 }}
+          onPress={() => {
+            props.navigation.navigate(props.state.routeNames[1]);
+          }}
+        >
+          <SettingsIcon
+            width={30}
+            height={30}
+            color={
+              props.state.index === 1
+                ? theme.colors.primary
+                : theme.colors.darkerGray
+            }
+          />
+        </TouchableOpacity>
+      </SafeAreaView>
+    </View>
   );
 }
 

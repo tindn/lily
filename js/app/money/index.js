@@ -1,6 +1,7 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Drawer as UIKittenDrawer, Icon } from '@ui-kitten/components';
+import { Drawer as UIKittenDrawer } from '@ui-kitten/components';
+import { Menu, Plus } from 'components/Icons';
 import { format } from 'date-fns';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
@@ -35,7 +36,7 @@ function DrawerContent({ navigation, state }) {
         <UIKittenDrawer
           data={drawerContentItems}
           selectedIndex={state.index}
-          onSelect={index => {
+          onSelect={(index) => {
             navigation.navigate(drawerContentItems[index].route);
           }}
         />
@@ -64,14 +65,14 @@ function MoneyStack(props) {
           title: currentMonth,
           ...headerStyles,
           headerLeft: () => (
-            <Icon
-              name="menu-outline"
-              width={25}
-              height={25}
-              fill="#3366FF"
-              onPress={props.navigation.toggleDrawer}
-              style={{ marginLeft: 10 }}
-            />
+            <TouchableOpacity onPress={props.navigation.toggleDrawer}>
+              <Menu
+                width={25}
+                height={25}
+                color="#3366FF"
+                style={{ marginLeft: 10 }}
+              />
+            </TouchableOpacity>
           ),
         }}
       />
@@ -119,7 +120,7 @@ function MoneyStack(props) {
               onPress={() => navigation.navigate('VendorDetails', {})}
               style={{ marginRight: 10 }}
             >
-              <Icon name="plus-outline" width={25} height={25} fill="#3366FF" />
+              <Plus width={25} height={25} color="#3366FF" />
             </TouchableOpacity>
           ),
           ...headerStyles,

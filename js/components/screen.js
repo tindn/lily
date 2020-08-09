@@ -1,6 +1,6 @@
-import { Layout } from '@ui-kitten/components';
 import React from 'react';
 import { SafeAreaView, StatusBar, View } from 'react-native';
+import theme from '../theme';
 
 function Screen(props) {
   // const colorScheme = useColorScheme();
@@ -10,13 +10,12 @@ function Screen(props) {
   // colorScheme === 'dark' ? darkModeStatusBar : lightModeStatusBar;
   StatusBar.setBarStyle(currentStatusBar);
   const ContentWrapper = props.isFullScreen ? View : SafeAreaView;
-  const backgroundLevel = props.backgroundLevel || '4';
   return (
-    <Layout style={{ flex: 1 }} level={backgroundLevel}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <ContentWrapper style={[{ flex: 1 }, props.style]}>
         {props.children}
       </ContentWrapper>
-    </Layout>
+    </View>
   );
 }
 

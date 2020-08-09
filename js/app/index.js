@@ -1,6 +1,3 @@
-import { mapping } from '@eva-design/eva';
-import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
@@ -16,7 +13,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setRef } from '../log';
 import { persistor, store } from '../redux';
-import { useTheme } from '../uiKittenTheme';
 import CurrentUserContext from './currentUserContext';
 import SignInScreen from './SignIn';
 import UserApp from './UserApp';
@@ -33,8 +29,8 @@ firebase.firestore();
 function App() {
   var [currentUser, setCurrentUser] = useState();
 
-  useEffect(function() {
-    firebase.auth().onAuthStateChanged(function(user) {
+  useEffect(function () {
+    firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         setCurrentUser(user);
       } else {
@@ -42,23 +38,19 @@ function App() {
       }
     });
   }, []);
-  const theme = useTheme();
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <IconRegistry icons={EvaIconsPack} />
-        <ApplicationProvider mapping={mapping} theme={theme}>
-          <CurrentUserContext.Provider
-            value={{ user: currentUser, setCurrentUser }}
-          >
-            {currentUser === undefined ? null : currentUser === null ? (
-              <SignInScreen />
-            ) : (
-              <UserApp />
-            )}
-          </CurrentUserContext.Provider>
-        </ApplicationProvider>
-        <DropdownAlert ref={ref => setRef(ref)} />
+        <CurrentUserContext.Provider
+          value={{ user: currentUser, setCurrentUser }}
+        >
+          {currentUser === undefined ? null : currentUser === null ? (
+            <SignInScreen />
+          ) : (
+            <UserApp />
+          )}
+        </CurrentUserContext.Provider>
+        <DropdownAlert ref={(ref) => setRef(ref)} />
       </PersistGate>
     </Provider>
   );
