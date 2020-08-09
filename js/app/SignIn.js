@@ -1,4 +1,4 @@
-import { Button, Input, Text } from '@ui-kitten/components';
+import { Button, Text, Input } from 'components';
 import firebase from 'firebase';
 import React, { useState } from 'react';
 import { ImageBackground, View } from 'react-native';
@@ -67,26 +67,15 @@ export default function SignIn() {
           style={{
             marginTop: 16,
           }}
-          textStyle={{
-            fontWeight: 'normal',
-          }}
           placeholder="Password"
-          // icon={() => <Icon style={{}} name="eye-off" />}
           secureTextEntry={hidePassword}
           onChangeText={setPassword}
         />
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <Button
-            style={{
-              paddingHorizontal: 0,
-            }}
             textStyle={{
               fontSize: 15,
-              color: '#8F9BB3',
-              fontWeight: 'normal',
             }}
-            appearance="ghost"
-            activeOpacity={0.75}
             onPress={toggleHidePassword}
           >
             {hidePassword ? 'Show' : 'Hide'} password
@@ -96,17 +85,16 @@ export default function SignIn() {
       </View>
       <Button
         style={{ marginHorizontal: 40, marginBottom: 20 }}
-        size="large"
-        onPress={function() {
+        onPress={function () {
           firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then(function() {
+            .then(function () {
               setEmail('');
               setPassword('');
               setErrorMessage('');
             })
-            .catch(function(e) {
+            .catch(function (e) {
               setErrorMessage(e.message);
             });
         }}

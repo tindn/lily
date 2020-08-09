@@ -1,4 +1,4 @@
-import { Text } from '@ui-kitten/components';
+import { Text } from 'components';
 import React, { useRef } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import theme from '../theme';

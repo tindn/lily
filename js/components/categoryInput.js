@@ -1,4 +1,4 @@
-import { Button, Text } from '@ui-kitten/components';
+import { Button, Text } from 'components';
 import React, { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';

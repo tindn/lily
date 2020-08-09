@@ -1,5 +1,5 @@
 import geolocation from '@react-native-community/geolocation';
-import { Button } from '@ui-kitten/components';
+import { Button } from 'components';
 import React, { useState } from 'react';
 import { Alert, ScrollView, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';

@@ -1,4 +1,5 @@
-import { Button, ListItem } from '@ui-kitten/components';
+import { Button } from 'components';
+import { ListItem } from '@ui-kitten/components';
 import React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';

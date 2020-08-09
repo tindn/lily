@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { Button } from '@ui-kitten/components';
+import { Button } from 'components';
 import { differenceInCalendarDays } from 'date-fns';
 import React, { useCallback, useEffect, useState } from 'react';
 import {

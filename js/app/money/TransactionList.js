@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import { List, ListItem, Text } from '@ui-kitten/components';
+import { Text } from 'components';
+import { List, ListItem } from '@ui-kitten/components';
 import React from 'react';
 import { Alert, RefreshControl, StyleSheet, View } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
@@ -15,7 +16,7 @@ export default function TransactionList(props) {
   return (
     <List
       data={props.data}
-      keyExtractor={item => item.id}
+      keyExtractor={(item) => item.id}
       refreshControl={
         props.fetchData ? (
           <RefreshControl
@@ -34,7 +35,7 @@ export default function TransactionList(props) {
         return (
           <Swipeable
             rightActionActivationDistance={175}
-            onRightActionRelease={function() {
+            onRightActionRelease={function () {
               Alert.alert(
                 'Confirm',
                 'Do you want to delete this transaction?',
@@ -44,15 +45,15 @@ export default function TransactionList(props) {
                   },
                   {
                     text: 'Delete',
-                    onPress: function() {
+                    onPress: function () {
                       deleteTransaction(item)
-                        .then(function() {
+                        .then(function () {
                           props.onTransactionDeleted &&
                             props.onTransactionDeleted(item);
                           props.fetchData && props.fetchData();
                           success('Transaction removed');
                         })
-                        .catch(function(e) {
+                        .catch(function (e) {
                           error('Failed to remove transaction', e);
                         });
                     },

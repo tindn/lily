@@ -1,4 +1,4 @@
-import { Button, Text } from '@ui-kitten/components';
+import { Button, Text } from 'components';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,

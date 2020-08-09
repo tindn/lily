@@ -1,5 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { ListItem, Text } from '@ui-kitten/components';
+import { Text } from 'components';
+import { ListItem } from '@ui-kitten/components';
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
@@ -25,16 +26,19 @@ export default function MonthlyAnalytics(props) {
   var [calculatingIndex, setCalculatingIndex] = useState(-1);
   var themeColors = useThemeColors();
 
-  var fetchData = useCallback(function(params = { useLoadingIndicator: true }) {
+  var fetchData = useCallback(function (
+    params = { useLoadingIndicator: true }
+  ) {
     params.useLoadingIndicator && setRefreshing(true);
     return getAllFromTable('monthly_analytics', 'ORDER BY start_date DESC')
       .then(setData)
       .finally(() => {
         params.useLoadingIndicator && setRefreshing(false);
       });
-  }, []);
+  },
+  []);
 
-  useFocusEffect(function() {
+  useFocusEffect(function () {
     fetchData({ useLocadingIndicator: false });
   });
 
@@ -42,7 +46,7 @@ export default function MonthlyAnalytics(props) {
     <Screen>
       <FlatList
         data={data}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
         }
@@ -55,14 +59,14 @@ export default function MonthlyAnalytics(props) {
           return (
             <Swipeable
               rightActionActivationDistance={150}
-              onRightActionRelease={function() {
+              onRightActionRelease={function () {
                 setCalculatingIndex(index);
                 // eslint-disable-next-line no-undef
-                setTimeout(function() {
+                setTimeout(function () {
                   calculateAnalyticsForMonth(item).then(() =>
                     fetchData({
                       useLoadingIndicator: false,
-                    }).finally(function() {
+                    }).finally(function () {
                       setCalculatingIndex(-1);
                     })
                   );
@@ -116,7 +120,7 @@ function Month({ month, navigation, isCalculating }) {
   var [showSummaries, toggleSummaries] = useToggle();
   var [summaries, setSummaries] = useState();
   var getSummaries = useCallback(
-    function() {
+    function () {
       getTransactionSummaryByCategory(month.start_date, month.end_date).then(
         setSummaries
       );
@@ -172,7 +176,7 @@ function Month({ month, navigation, isCalculating }) {
       </ListItem>
       {showSummaries && summaries ? (
         <View style={{ marginHorizontal: 20, marginBottom: 20 }}>
-          {summaries.map(function(category, index) {
+          {summaries.map(function (category, index) {
             return (
               <TouchableOpacity
                 key={index.toString()}
@@ -184,7 +188,7 @@ function Month({ month, navigation, isCalculating }) {
                   },
                   sharedStyles.borderBottom,
                 ]}
-                onPress={function() {
+                onPress={function () {
                   navigation.navigate('MonthTransactions', {
                     date: new Date(month.start_date),
                     category: category.name,

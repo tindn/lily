@@ -10,7 +10,7 @@ import { deleteTransaction, updateTransaction } from '../../db/transactions';
 import { error } from '../../log';
 import sharedStyles from '../../sharedStyles';
 import theme from '../../theme';
-import { Button } from '@ui-kitten/components';
+import { Button } from 'components';
 
 export default function TransactionDetails(props) {
   var [date_time, setDateTime] = useState(new Date());

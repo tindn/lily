@@ -1,5 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { ListItem, Text } from '@ui-kitten/components';
+import { ListItem } from '@ui-kitten/components';
+import { Text } from 'components';
 import React, { useCallback, useState } from 'react';
 import { Alert, FlatList, StyleSheet, View } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
@@ -17,10 +18,10 @@ import { calculateFinanceOverview } from '../../../utils/money';
 export default function SnapshotList() {
   var [list, setList] = useState([]);
   var getData = useCallback(
-    function() {
+    function () {
       getAccountSnapshots()
-        .then(function(accountSnapshots) {
-          var snapshots = accountSnapshots.reduce(function(
+        .then(function (accountSnapshots) {
+          var snapshots = accountSnapshots.reduce(function (
             acc,
             accountSnapshot
           ) {
@@ -31,7 +32,7 @@ export default function SnapshotList() {
             return acc;
           },
           {});
-          return Object.entries(snapshots).map(function(snap) {
+          return Object.entries(snapshots).map(function (snap) {
             var overview = calculateFinanceOverview(snap[1]);
             overview.date_time = snap[0];
             return overview;
@@ -57,20 +58,20 @@ export default function SnapshotList() {
           return (
             <Swipeable
               rightActionActivationDistance={175}
-              onRightActionRelease={function() {
+              onRightActionRelease={function () {
                 Alert.alert('Confirm', 'Do you want to delete this snapshot?', [
                   {
                     text: 'Cancel',
                   },
                   {
                     text: 'Delete',
-                    onPress: function() {
+                    onPress: function () {
                       deleteAccountSnapshot(item.date_time)
-                        .then(function() {
+                        .then(function () {
                           getData();
                           success('Snapshot removed');
                         })
-                        .catch(function(e) {
+                        .catch(function (e) {
                           error('Failed to remove snapshot', e);
                         });
                     },

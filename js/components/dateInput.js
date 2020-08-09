@@ -1,5 +1,5 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Text } from '@ui-kitten/components';
+import { Button, Text } from 'components';
 import React, { useState } from 'react';
 import { Modal, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import sharedStyles from '../sharedStyles';

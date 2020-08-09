@@ -1,4 +1,5 @@
-import { Button, Layout, Text } from '@ui-kitten/components';
+import { Layout } from '@ui-kitten/components';
+import { Button, Text } from 'components';
 import React, { useEffect, useState } from 'react';
 import { Alert, TextInput, View } from 'react-native';
 import DateInput from '../../../components/dateInput';
@@ -23,7 +24,7 @@ function AccountEntryForm(props) {
   var [balance, setBalance] = useState(props.accountBalance);
 
   useEffect(
-    function() {
+    function () {
       if (props.entry) {
         setId(props.entry.id);
         setAmount(props.entry.amount);
@@ -56,7 +57,7 @@ function AccountEntryForm(props) {
       {
         text: 'Delete',
         onPress: () => {
-          removeAccountEntry(props.entry).then(function() {
+          removeAccountEntry(props.entry).then(function () {
             props.onCancel && props.onCancel();
             props.onEntryChange && props.onEntryChange();
           });
@@ -77,7 +78,7 @@ function AccountEntryForm(props) {
     };
     var saveFunction = id ? updateAccountEntry : addAccountEntry;
 
-    saveFunction(entry).then(function() {
+    saveFunction(entry).then(function () {
       props.onCancel && props.onCancel();
       props.onEntryChange && props.onEntryChange();
     });

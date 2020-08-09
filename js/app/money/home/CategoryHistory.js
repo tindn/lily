@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { Text } from '@ui-kitten/components';
+import { Text } from 'components';
 import { addMonths, startOfMonth } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';

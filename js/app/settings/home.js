@@ -1,4 +1,4 @@
-import { Button } from '@ui-kitten/components';
+import { Button } from 'components';
 import firebase from 'firebase';
 import React, { useContext } from 'react';
 import { Clipboard, Image } from 'react-native';

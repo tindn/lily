@@ -1,4 +1,4 @@
-import { Text } from '@ui-kitten/components';
+import { Text } from 'components';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import BottomSheet from '../../../components/bottomSheet';

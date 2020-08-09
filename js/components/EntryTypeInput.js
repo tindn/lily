@@ -1,6 +1,7 @@
-import { Button } from '@ui-kitten/components';
+import { Button } from 'components';
 import React from 'react';
 import { View } from 'react-native';
+import theme from '../theme';
 
 export default function EntryTypeInput(props) {
   var isCredit = props.type == 'credit';
@@ -9,18 +10,15 @@ export default function EntryTypeInput(props) {
   return (
     <View style={[{ flexDirection: 'row' }, props.style]}>
       <Button
-        size="tiny"
-        status={isCredit ? 'success' : 'basic'}
-        appearance={isCredit ? 'filled' : 'outline'}
+        color={isCredit ? theme.colors.green : theme.colors.darkGray}
         onPress={() => props.setType('credit')}
         style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
       >
         {creditText}
       </Button>
       <Button
-        size="tiny"
+        color={isCredit ? theme.colors.darkGray : theme.colors.red}
         status={isCredit ? 'basic' : 'danger'}
-        appearance={isCredit ? 'outline' : 'filled'}
         onPress={() => props.setType('debit')}
         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
       >

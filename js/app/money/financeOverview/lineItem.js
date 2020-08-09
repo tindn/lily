@@ -1,4 +1,4 @@
-import { Text } from '@ui-kitten/components';
+import { Text } from 'components';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import MoneyDisplay from '../../../components/MoneyDisplay';

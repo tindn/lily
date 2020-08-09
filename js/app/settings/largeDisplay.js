@@ -1,4 +1,4 @@
-import { Button } from '@ui-kitten/components';
+import { Button } from 'components';
 import React, { useState } from 'react';
 import { Picker, TextInput, View } from 'react-native';
 import Screen from '../../components/screen';

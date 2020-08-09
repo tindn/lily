@@ -1,5 +1,6 @@
 import geolocation from '@react-native-community/geolocation';
-import { Button, Layout } from '@ui-kitten/components';
+import { Button } from 'components';
+import { Layout } from '@ui-kitten/components';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, LayoutAnimation, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
@@ -20,7 +21,7 @@ import { getDistance, sortByDistance } from '../../../utils/location';
 function mapStateToProps(state) {
   var vendors = getVendorsArray(state);
   vendors.unshift({ id: '', name: '' });
-  var vendorPickerItems = vendors.map(v => ({
+  var vendorPickerItems = vendors.map((v) => ({
     label: v.name,
     value: v.id,
   }));
@@ -43,7 +44,7 @@ function TransactionForm(props) {
   var [coords, setCoords] = useState();
   var colors = useThemeColors();
   var resetFormState = useCallback(
-    function(moneyInputKey) {
+    function (moneyInputKey) {
       setDateTime(new Date());
       setMemo('');
       setAmount('');
@@ -66,27 +67,27 @@ function TransactionForm(props) {
   );
 
   useEffect(
-    function() {
+    function () {
       if (!isExpanded) {
         return;
       }
       geolocation.getCurrentPosition(
-        function({ coords }) {
+        function ({ coords }) {
           setCoords(coords);
           getNearbyVendors(coords)
-            .then(function(nearbyVendors) {
-              nearbyVendors.forEach(function(v) {
+            .then(function (nearbyVendors) {
+              nearbyVendors.forEach(function (v) {
                 v.distance = getDistance(coords, v);
               });
               return nearbyVendors;
             })
-            .then(function(nearbyVendors) {
+            .then(function (nearbyVendors) {
               nearbyVendors.sort(sortByDistance);
               return nearbyVendors;
             })
             .then(setNearbyVendors);
         },
-        function() {},
+        function () {},
         { enableHighAccuracy: true }
       );
     },
@@ -145,7 +146,7 @@ function TransactionForm(props) {
             />
             <VendorInput
               selectedVendorId={vendor_id}
-              onVendorPress={function(v) {
+              onVendorPress={function (v) {
                 if (vendor_id == v.id) {
                   setVendorId('');
                   setCategory('');
@@ -168,7 +169,7 @@ function TransactionForm(props) {
           <FlatList
             data={nearbyVendors}
             horizontal
-            renderItem={function({ item, index }) {
+            renderItem={function ({ item, index }) {
               let selected = item.id == vendor_id;
               return (
                 <Button
@@ -176,7 +177,7 @@ function TransactionForm(props) {
                   size="small"
                   appearance="outline"
                   status={selected ? 'success' : 'basic'}
-                  onPress={function() {
+                  onPress={function () {
                     if (vendor_id == item.id) {
                       setVendorId('');
                     } else {
@@ -211,7 +212,7 @@ function TransactionForm(props) {
                 color: colors.textColor,
               }}
               current={category}
-              onPress={function(name) {
+              onPress={function (name) {
                 if (category == name) {
                   setCategory('');
                 } else {
@@ -222,9 +223,7 @@ function TransactionForm(props) {
           </View>
           <View style={[sharedStyles.formButtons, { marginTop: 10 }]}>
             <Button
-              status="basic"
-              size="small"
-              appearance="outline"
+              isOutline
               onPress={() => {
                 LayoutAnimation.easeInEaseOut();
                 resetFormState(moneyInputKey + 1);
@@ -240,7 +239,6 @@ function TransactionForm(props) {
                 amount === '00.00' ||
                 (memo === '' && vendor_id === '')
               }
-              size="small"
               onPress={() => {
                 addTransaction({
                   entry_type: entryType,
@@ -251,13 +249,13 @@ function TransactionForm(props) {
                   vendor_id,
                   category,
                 })
-                  .then(function() {
+                  .then(function () {
                     LayoutAnimation.easeInEaseOut();
                     resetFormState(moneyInputKey + 1);
                     props.onTransactionAdded && props.onTransactionAdded();
                     setIsExpanded(false);
                   })
-                  .catch(function(e) {
+                  .catch(function (e) {
                     error('Could not add transaction', e);
                   });
               }}
