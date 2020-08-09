@@ -113,7 +113,7 @@ function TransactionForm(props) {
           }}
           onChange={setDateTime}
           date={date_time}
-          style={{ flex: 1 }}
+          mode="date"
         />
         <MoneyInput
           onChange={setAmount}

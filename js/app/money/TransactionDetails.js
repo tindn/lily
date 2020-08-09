@@ -22,7 +22,7 @@ export default function TransactionDetails(props) {
   var [category, setCategory] = useState(undefined);
 
   useEffect(
-    function() {
+    function () {
       var transactionFromParam = (props.route.params || {}).transaction;
       setTransaction(transactionFromParam);
       setDateTime(new Date(transactionFromParam.date_time));
@@ -42,7 +42,7 @@ export default function TransactionDetails(props) {
         keyboardShouldPersistTaps="always"
       >
         <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
-          <DateInput onChange={setDateTime} date={date_time} />
+          <DateInput onChange={setDateTime} date={date_time} mode="date" />
           <MoneyInput
             onChange={setAmount}
             amount={amount}
@@ -66,7 +66,7 @@ export default function TransactionDetails(props) {
               },
             ]}
             selectedVendorId={vendor_id}
-            onVendorPress={function(v) {
+            onVendorPress={function (v) {
               if (vendor_id == v.id) {
                 setVendorId('');
                 setCategory('');
@@ -89,7 +89,7 @@ export default function TransactionDetails(props) {
               textAlign: 'right',
             }}
             current={category}
-            onPress={function(name) {
+            onPress={function (name) {
               if (category == name) {
                 setCategory('');
               } else {
@@ -111,10 +111,10 @@ export default function TransactionDetails(props) {
               vendor_id,
               category,
             })
-              .then(function() {
+              .then(function () {
                 props.navigation.pop();
               })
-              .catch(function(e) {
+              .catch(function (e) {
                 error('Error saving transaction', e.message);
               });
           }}
@@ -128,12 +128,12 @@ export default function TransactionDetails(props) {
             Alert.alert('Confirm', 'Do you want to delete this transaction?', [
               {
                 text: 'Cancel',
-                onPress: function() {},
+                onPress: function () {},
               },
               {
                 text: 'Delete',
                 onPress: () => {
-                  deleteTransaction(transaction).then(function() {
+                  deleteTransaction(transaction).then(function () {
                     props.navigation.pop();
                   });
                 },

@@ -27,11 +27,7 @@ function AccountEntry(props) {
   ) : (
     <TouchableOpacity onPress={toggleExpanded} style={styles.item}>
       <View>
-        <DateInput
-          date={new Date(props.entry.date_time)}
-          style={styles.date}
-          disabled
-        />
+        <DateInput date={new Date(props.entry.date_time)} style={styles.date} />
         <Text style={{ fontSize: 16 }}>{props.entry.memo}</Text>
       </View>
       <MoneyInput
