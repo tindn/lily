@@ -1,12 +1,8 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Drawer as UIKittenDrawer } from '@ui-kitten/components';
 import { Menu, Plus } from 'components/Icons';
 import { format } from 'date-fns';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import Screen from '../../components/screen';
-import { useHeadStyles } from '../../uiKittenTheme';
+import { TouchableOpacity } from 'react-native';
 import Categories from './categories';
 import FinanceOverview from './financeOverview';
 import AccountDetails from './financeOverview/accountDetails';
@@ -17,44 +13,19 @@ import MonthTransactions from './MonthTransactions';
 import TransactionDetails from './TransactionDetails';
 import Vendors from './vendors';
 import VendorDetails from './vendors/VendorDetails';
+import theme from '../../theme';
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
 
-const drawerContentItems = [
-  { title: 'Home', route: 'Home' },
-  { title: 'Past Months', route: 'MonthlyAnalytics' },
-  { title: 'Vendors', route: 'Vendors' },
-  { title: 'Categories', route: 'Categories' },
-  { title: 'Overview', route: 'FinanceOverview' },
-];
-
-function DrawerContent({ navigation, state }) {
-  return (
-    <Screen>
-      <View style={{ marginTop: 10 }}>
-        <UIKittenDrawer
-          data={drawerContentItems}
-          selectedIndex={state.index}
-          onSelect={(index) => {
-            navigation.navigate(drawerContentItems[index].route);
-          }}
-        />
-      </View>
-    </Screen>
-  );
-}
-
-export default function Money() {
-  return (
-    <Drawer.Navigator drawerContent={DrawerContent}>
-      <Drawer.Screen name="April" component={MoneyStack} />
-    </Drawer.Navigator>
-  );
-}
+export default MoneyStack;
 
 function MoneyStack(props) {
-  const headerStyles = useHeadStyles();
+  const headerStyles = {
+    headerStyle: {
+      backgroundColor: theme.colors.layerOne,
+    },
+    headerTitleStyle: { color: theme.colors.white },
+  };
   const currentMonth = format(new Date(), 'LLLL');
   return (
     <Stack.Navigator>

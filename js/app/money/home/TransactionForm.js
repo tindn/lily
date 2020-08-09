@@ -14,7 +14,6 @@ import { error } from '../../../log';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
-import { useThemeColors } from '../../../uiKittenTheme';
 import { getDistance, sortByDistance } from '../../../utils/location';
 
 function mapStateToProps(state) {
@@ -41,7 +40,6 @@ function TransactionForm(props) {
   var [category, setCategory] = useState('');
   var [nearbyVendors, setNearbyVendors] = useState([]);
   var [coords, setCoords] = useState();
-  var colors = useThemeColors();
   var resetFormState = useCallback(
     function (moneyInputKey) {
       setDateTime(new Date());
@@ -138,7 +136,7 @@ function TransactionForm(props) {
                 sharedStyles.formTextInput,
                 {
                   textAlign: 'left',
-                  color: colors.textColor,
+                  color: theme.colors.white,
                 },
               ]}
               value={memo}
@@ -163,7 +161,7 @@ function TransactionForm(props) {
                 sharedStyles.formTextInput,
                 {
                   textAlign: 'right',
-                  color: colors.textColor,
+                  color: theme.colors.white,
                 },
               ]}
             />
@@ -211,7 +209,7 @@ function TransactionForm(props) {
               }}
               displayTextStyle={{
                 textAlign: 'right',
-                color: colors.textColor,
+                color: theme.colors.white,
               }}
               current={category}
               onPress={function (name) {

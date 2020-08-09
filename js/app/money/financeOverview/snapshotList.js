@@ -1,8 +1,13 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { ListItem } from '@ui-kitten/components';
 import { Text } from 'components';
 import React, { useCallback, useState } from 'react';
-import { Alert, FlatList, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 import Screen from '../../../components/screen';
@@ -81,7 +86,7 @@ export default function SnapshotList() {
               }}
               rightContent={<SwipeToDeleteContent />}
             >
-              <ListItem style={{ justifyContent: 'space-between' }}>
+              <TouchableOpacity style={{ justifyContent: 'space-between' }}>
                 <Text category="c2" style={{ flex: 4 }}>
                   {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
                 </Text>
@@ -104,7 +109,7 @@ export default function SnapshotList() {
                     toFixed={0}
                   />
                 </View>
-              </ListItem>
+              </TouchableOpacity>
             </Swipeable>
           );
         }}

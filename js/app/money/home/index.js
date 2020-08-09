@@ -1,4 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
+import { Button } from 'components';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
@@ -10,7 +11,7 @@ import { getAllFromTable } from '../../../db/shared';
 import useToggle from '../../../hooks/useToggle';
 import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
-import { useThemeColors } from '../../../uiKittenTheme';
+import theme from '../../../theme';
 import { getMonthStartEndFor } from '../../../utils/date';
 import CategoryLine from './CategoryLine';
 import TransactionForm from './TransactionForm';
@@ -24,11 +25,10 @@ function Home(props) {
   var [currentMonth, setCurrentMonth] = useState([]);
   var [showSummaries, toggleSummaries] = useToggle();
   var [categorySummaries, setCategorySummaries] = useState([]);
-  const themeColors = useThemeColors();
   var scrollViewRef = useRef(null);
 
   var updateData = useCallback(
-    function() {
+    function () {
       const today = new Date();
       var [start, end] = getMonthStartEndFor(today);
 
@@ -39,7 +39,7 @@ function Home(props) {
       getAllFromTable(
         'monthly_analytics',
         ` WHERE end_date <= ${end.getTime()} ORDER BY start_date DESC LIMIT 1`
-      ).then(res => {
+      ).then((res) => {
         if (res && res.length) {
           setCurrentMonth(res[0]);
         }
@@ -49,7 +49,7 @@ function Home(props) {
   );
 
   // Will focus is not called on first load
-  useEffect(function() {
+  useEffect(function () {
     updateData();
     props.loadVendorsFromDbToRedux();
     props.loadCategoriesFromDbToRedux();
@@ -99,7 +99,7 @@ function Home(props) {
             amount={currentMonth.spent}
             style={{
               textAlign: 'right',
-              color: themeColors.textDangerColor,
+              color: theme.colors.red,
               fontSize: 16,
             }}
             type="debit"
@@ -113,7 +113,7 @@ function Home(props) {
       >
         {showSummaries ? (
           <Card style={{ marginTop: 10, marginHorizontal: 10 }}>
-            {categorySummaries.map(function(category, index) {
+            {categorySummaries.map(function (category, index) {
               return (
                 <CategoryLine
                   key={index.toString()}
@@ -138,6 +138,30 @@ function Home(props) {
             paddingHorizontal: 5,
           }}
         />
+        <Button
+          style={{ marginVertical: 10, marginHorizontal: 20 }}
+          onPress={() => props.navigation.navigate('MonthlyAnalytics')}
+        >
+          Past Months
+        </Button>
+        <Button
+          style={{ marginVertical: 10, marginHorizontal: 20 }}
+          onPress={() => props.navigation.navigate('Vendors')}
+        >
+          Vendors
+        </Button>
+        <Button
+          style={{ marginVertical: 10, marginHorizontal: 20 }}
+          onPress={() => props.navigation.navigate('Categories')}
+        >
+          Categories
+        </Button>
+        <Button
+          style={{ marginVertical: 10, marginHorizontal: 20 }}
+          onPress={() => props.navigation.navigate('FinanceOverview')}
+        >
+          Overview
+        </Button>
       </ScrollView>
     </Screen>
   );

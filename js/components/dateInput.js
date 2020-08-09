@@ -3,12 +3,11 @@ import { Button, Text } from 'components';
 import React, { useState } from 'react';
 import { Modal, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import sharedStyles from '../sharedStyles';
-import { useThemeColors } from '../uiKittenTheme';
+import theme from '../theme';
 import { toSimpleDateString } from '../utils/date';
 
 function DateInput(props) {
   const [dateModalVisible, setDateModalVisible] = useState(false);
-  const colors = useThemeColors();
   return (
     <View style={props.style}>
       <TouchableOpacity
@@ -21,7 +20,7 @@ function DateInput(props) {
         <Text
           appearance="hint"
           category="h6"
-          style={{ fontWeight: 'normal', color: colors.textColor }}
+          style={{ fontWeight: 'normal', color: theme.colors.white }}
         >
           {toSimpleDateString(props.date)}
         </Text>
@@ -34,7 +33,7 @@ function DateInput(props) {
         <SafeAreaView
           style={[
             sharedStyles.modalContainer,
-            { backgroundColor: colors.backgroundColor1 },
+            { backgroundColor: theme.colors.layerOneO },
           ]}
         >
           <DateTimePicker

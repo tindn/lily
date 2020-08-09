@@ -1,6 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { Text } from 'components';
-import { ListItem } from '@ui-kitten/components';
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
@@ -18,19 +17,18 @@ import { calculateAnalyticsForMonth } from '../../db/monthlyAnalytics';
 import { getAllFromTable } from '../../db/shared';
 import useToggle from '../../hooks/useToggle';
 import sharedStyles from '../../sharedStyles';
-import { useThemeColors } from '../../uiKittenTheme';
+import theme from '../../theme';
 
 export default function MonthlyAnalytics(props) {
   const [data, setData] = useState([]);
   var [refreshing, setRefreshing] = useState(false);
   var [calculatingIndex, setCalculatingIndex] = useState(-1);
-  var themeColors = useThemeColors();
 
   var fetchData = useCallback(function (
     params = { useLoadingIndicator: true }
   ) {
     params.useLoadingIndicator && setRefreshing(true);
-    return getAllFromTable('monthly_analytics', 'ORDER BY start_date DESC')
+    getAllFromTable('monthly_analytics', 'ORDER BY start_date DESC')
       .then(setData)
       .finally(() => {
         params.useLoadingIndicator && setRefreshing(false);
@@ -38,9 +36,7 @@ export default function MonthlyAnalytics(props) {
   },
   []);
 
-  useFocusEffect(function () {
-    fetchData({ useLocadingIndicator: false });
-  });
+  useFocusEffect(fetchData);
 
   return (
     <Screen>
@@ -76,7 +72,7 @@ export default function MonthlyAnalytics(props) {
                 <View
                   key={`refresh ${item.id}`}
                   style={{
-                    backgroundColor: themeColors.textSuccessColor,
+                    backgroundColor: theme.colors.green,
                     justifyContent: 'center',
                     flex: 1,
                   }}
@@ -130,7 +126,7 @@ function Month({ month, navigation, isCalculating }) {
 
   return (
     <>
-      <ListItem
+      <TouchableOpacity
         style={[
           sharedStyles.borderBottom,
           {
@@ -173,7 +169,7 @@ function Month({ month, navigation, isCalculating }) {
           <MoneyDisplay amount={month.earned} type="credit" />
           <MoneyDisplay amount={month.spent} type="debit" />
         </View>
-      </ListItem>
+      </TouchableOpacity>
       {showSummaries && summaries ? (
         <View style={{ marginHorizontal: 20, marginBottom: 20 }}>
           {summaries.map(function (category, index) {

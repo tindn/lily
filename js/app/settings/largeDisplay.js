@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Picker, TextInput, View } from 'react-native';
 import Screen from '../../components/screen';
 import { useToggle } from '../../hooks';
-import { useThemeColors } from '../../uiKittenTheme';
+import theme from '../../theme';
 
 const commonPhrases = {
   0: { text: '', preferredFontSize: 75 },
@@ -18,7 +18,6 @@ function LargeDisplay() {
   var [fontSize, setFontSize] = useState(75);
   var [showFontSizePicker, toggleFontSizePicker] = useToggle();
   var [showCommonPhrasePicker, toggleCommonPhrasePicker] = useToggle();
-  var themeColors = useThemeColors();
 
   return (
     <Screen style={{ marginHorizontal: 5 }}>
@@ -28,18 +27,18 @@ function LargeDisplay() {
             <Picker
               style={{ height: 250 }}
               selectedValue={fontSize}
-              onValueChange={text => {
+              onValueChange={(text) => {
                 setValue(commonPhrases[text].text);
                 setFontSize(commonPhrases[text].preferredFontSize || 75);
                 toggleCommonPhrasePicker();
               }}
             >
-              {Object.keys(commonPhrases).map(id => (
+              {Object.keys(commonPhrases).map((id) => (
                 <Picker.Item
                   key={id}
                   label={commonPhrases[id].text}
                   value={id}
-                  color={themeColors.textColor}
+                  color={theme.colors.white}
                 />
               ))}
             </Picker>
@@ -52,16 +51,16 @@ function LargeDisplay() {
             <Picker
               style={{ height: 250 }}
               selectedValue={fontSize}
-              onValueChange={text => setFontSize(parseInt(text))}
+              onValueChange={(text) => setFontSize(parseInt(text))}
             >
-              {Array.from({ length: 200 }, function(val, index) {
+              {Array.from({ length: 200 }, function (val, index) {
                 let size = 40 + index;
                 return (
                   <Picker.Item
                     key={size}
                     label={`${size}`}
                     value={size}
-                    color={themeColors.textColor}
+                    color={theme.colors.white}
                   />
                 );
               })}
@@ -75,7 +74,7 @@ function LargeDisplay() {
         style={{
           fontSize: fontSize,
           marginTop: 10,
-          color: themeColors.textColor,
+          color: theme.colors.white,
           letterSpacing: 3,
         }}
         value={value}

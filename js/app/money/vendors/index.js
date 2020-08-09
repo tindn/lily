@@ -1,7 +1,6 @@
-import { Button } from 'components';
-import { ListItem } from '@ui-kitten/components';
+import { Button, Text } from 'components';
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import Screen from '../../../components/screen';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
@@ -29,14 +28,13 @@ function Vendors(props) {
             numberOfLocations = item.locations.length;
           }
           return (
-            <ListItem
-              title={item.name}
-              description={numberOfLocations + ' location(s)'}
+            <TouchableOpacity
               onPress={() => {
                 props.navigation.navigate('VendorDetails', {
                   vendor: item,
                 });
               }}
+              style={{marginVertical: 7}}
               accessory={() => {
                 return item.category ? (
                   <Button
@@ -50,7 +48,10 @@ function Vendors(props) {
                   <View />
                 );
               }}
-            ></ListItem>
+            >
+              <Text>{item.name}</Text>
+              <Text>{numberOfLocations + ' location(s)'}</Text>
+            </TouchableOpacity>
           );
         }}
       />

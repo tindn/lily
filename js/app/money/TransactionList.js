@@ -1,8 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import { Text } from 'components';
-import { List, ListItem } from '@ui-kitten/components';
 import React from 'react';
-import { Alert, RefreshControl, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import SwipeToDeleteContent from '../../components/Swipeable/SwipeToDeleteContent';
 import { deleteTransaction } from '../../db/transactions';
@@ -14,7 +20,7 @@ import { formatAmountToDisplay } from '../../utils/money';
 export default function TransactionList(props) {
   const navigation = useNavigation();
   return (
-    <List
+    <FlatList
       data={props.data}
       keyExtractor={(item) => item.id}
       refreshControl={
@@ -64,10 +70,8 @@ export default function TransactionList(props) {
             }}
             rightContent={<SwipeToDeleteContent />}
           >
-            <ListItem
+            <TouchableOpacity
               style={sharedStyles.borderBottom}
-              title={(item.memo || item.vendor).slice(0, 25)}
-              description={dateDisplay}
               accessory={() => (
                 <View>
                   <Text
@@ -92,7 +96,10 @@ export default function TransactionList(props) {
                   transaction: item,
                 });
               }}
-            />
+            >
+              <Text>{(item.memo || item.vendor).slice(0, 25)}</Text>
+              <Text>{dateDisplay}</Text>
+            </TouchableOpacity>
           </Swipeable>
         );
       }}

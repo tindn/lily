@@ -1,7 +1,6 @@
-import { ListItem } from '@ui-kitten/components';
-import { Button, Input } from 'components';
+import { Button, Input, Text } from 'components';
 import React, { useState } from 'react';
-import { Alert, ScrollView, Text, View } from 'react-native';
+import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import { connect } from 'react-redux';
 import Screen from '../../../components/screen';
@@ -15,7 +14,6 @@ import {
 } from '../../../redux/actions/categories';
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
-import { useThemeColors } from '../../../uiKittenTheme';
 
 function mapStateToProps(state) {
   return {
@@ -33,7 +31,6 @@ var mapDispatchToProps = {
 function Categories(props) {
   var [newCategory, setNewCategory] = useState('');
   var [oldCategory, setOldCategory] = useState();
-  var themeColors = useThemeColors();
   return (
     <Screen>
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
@@ -109,7 +106,7 @@ function Categories(props) {
               leftContent={
                 <View
                   style={{
-                    backgroundColor: themeColors.textDangerColor,
+                    backgroundColor: theme.colors.red,
                     justifyContent: 'center',
                     flex: 1,
                   }}
@@ -152,14 +149,13 @@ function Categories(props) {
                 );
               }}
             >
-              <ListItem
+              <TouchableOpacity
                 style={[sharedStyles.borderBottom, { paddingVertical: 15 }]}
                 onPress={function () {
                   setOldCategory(item.name);
                   setNewCategory(item.name);
                 }}
                 disabled={item.is_archived}
-                title={item.name}
                 accessory={() => {
                   return item.is_archived ? (
                     <Button disabled size="small">
@@ -169,7 +165,9 @@ function Categories(props) {
                     <View />
                   );
                 }}
-              />
+              >
+                <Text>{item.name}</Text>
+              </TouchableOpacity>
             </Swipeable>
           );
         })}
