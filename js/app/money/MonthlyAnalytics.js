@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { Text } from 'components';
+import { Button, Text } from 'components';
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Swipeable from 'react-native-swipeable-row';
 import MoneyDisplay from '../../components/MoneyDisplay';
 import Screen from '../../components/screen';
 import { getTransactionSummaryByCategory } from '../../db/categories';
@@ -22,7 +21,6 @@ import theme from '../../theme';
 export default function MonthlyAnalytics(props) {
   const [data, setData] = useState([]);
   var [refreshing, setRefreshing] = useState(false);
-  var [calculatingIndex, setCalculatingIndex] = useState(-1);
 
   var fetchData = useCallback(function (
     params = { useLoadingIndicator: true }
@@ -51,51 +49,13 @@ export default function MonthlyAnalytics(props) {
             <Text>No data.</Text>
           </View>
         }
-        renderItem={({ item, index }) => {
+        renderItem={({ item }) => {
           return (
-            <Swipeable
-              rightActionActivationDistance={150}
-              onRightActionRelease={function () {
-                setCalculatingIndex(index);
-                // eslint-disable-next-line no-undef
-                setTimeout(function () {
-                  calculateAnalyticsForMonth(item).then(() =>
-                    fetchData({
-                      useLoadingIndicator: false,
-                    }).finally(function () {
-                      setCalculatingIndex(-1);
-                    })
-                  );
-                }, 300);
-              }}
-              rightContent={
-                <View
-                  key={`refresh ${item.id}`}
-                  style={{
-                    backgroundColor: theme.colors.green,
-                    justifyContent: 'center',
-                    flex: 1,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontWeight: '500',
-                      fontSize: 18,
-                      color: '#fff',
-                      paddingLeft: 10,
-                    }}
-                  >
-                    Refresh
-                  </Text>
-                </View>
-              }
-            >
-              <Month
-                month={item}
-                isCalculating={index == calculatingIndex}
-                navigation={props.navigation}
-              />
-            </Swipeable>
+            <Month
+              month={item}
+              navigation={props.navigation}
+              fetchData={fetchData}
+            />
           );
         }}
       />
@@ -111,10 +71,11 @@ const styles = StyleSheet.create({
   },
 });
 
-function Month({ month, navigation, isCalculating }) {
+function Month({ month, navigation, fetchData }) {
   const diff = month.earned - month.spent;
   var [showSummaries, toggleSummaries] = useToggle();
   var [summaries, setSummaries] = useState();
+  var [isCalculating, setIsCalculating] = useState(false);
   var getSummaries = useCallback(
     function () {
       getTransactionSummaryByCategory(month.start_date, month.end_date).then(
@@ -127,18 +88,7 @@ function Month({ month, navigation, isCalculating }) {
   return (
     <>
       <TouchableOpacity
-        style={[
-          sharedStyles.borderBottom,
-          {
-            alignItems: 'center',
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingBottom: 8,
-            paddingLeft: 10,
-            paddingRight: 10,
-          },
-        ]}
+        style={sharedStyles.listItem}
         onPress={() => {
           if (showSummaries) {
             toggleSummaries();
@@ -155,19 +105,24 @@ function Month({ month, navigation, isCalculating }) {
           toggleSummaries();
         }}
       >
-        <View style={{ flex: 1 }}>
+        <View style={{ marginBottom: 10}}>
           <Text>{month.name}</Text>
         </View>
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <MoneyDisplay amount={diff} />
-          <ActivityIndicator
-            style={{ width: 20, marginLeft: 10 }}
-            animating={isCalculating}
-          />
-        </View>
-        <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <MoneyDisplay amount={month.earned} type="credit" />
-          <MoneyDisplay amount={month.spent} type="debit" />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <MoneyDisplay amount={month.earned} type="credit" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <MoneyDisplay amount={month.spent} type="debit" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <MoneyDisplay amount={diff} />
+          </View>
         </View>
       </TouchableOpacity>
       {showSummaries && summaries ? (
@@ -200,6 +155,25 @@ function Month({ month, navigation, isCalculating }) {
               </TouchableOpacity>
             );
           })}
+          <Button
+            style={{ marginTop: 20 }}
+            color={theme.colors.green}
+            onPress={() => {
+              setIsCalculating(true);
+              calculateAnalyticsForMonth(month).then(() => {
+                setIsCalculating(false);
+                fetchData({
+                  useLoadingIndicator: false,
+                });
+              });
+            }}
+          >
+            Refresh
+          </Button>
+          <ActivityIndicator
+            style={{ width: 20, marginLeft: 10 }}
+            animating={isCalculating}
+          />
         </View>
       ) : null}
     </>

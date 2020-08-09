@@ -12,15 +12,14 @@ export default function EntryTypeInput(props) {
       <Button
         color={isCredit ? theme.colors.green : theme.colors.darkGray}
         onPress={() => props.setType('credit')}
-        style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+        style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, paddingVertical: 6 }}
       >
         {creditText}
       </Button>
       <Button
         color={isCredit ? theme.colors.darkGray : theme.colors.red}
-        status={isCredit ? 'basic' : 'danger'}
         onPress={() => props.setType('debit')}
-        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, paddingVertical: 6 }}
       >
         {debitText}
       </Button>

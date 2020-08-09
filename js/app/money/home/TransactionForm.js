@@ -175,7 +175,7 @@ function TransactionForm(props) {
                 <Button
                   key={index.toString()}
                   size="small"
-                  appearance="outline"
+                  isOutline
                   status={selected ? 'success' : 'basic'}
                   onPress={function () {
                     if (vendor_id == item.id) {

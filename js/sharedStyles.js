@@ -111,4 +111,9 @@ export default StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
   },
+  listItem: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.lighterGray,
+    padding: 10,
+  },
 });

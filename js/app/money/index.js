@@ -1,8 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { Menu, Plus } from 'components/Icons';
+import { Plus } from 'components/Icons';
 import { format } from 'date-fns';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
+import theme from '../../theme';
 import Categories from './categories';
 import FinanceOverview from './financeOverview';
 import AccountDetails from './financeOverview/accountDetails';
@@ -13,7 +14,6 @@ import MonthTransactions from './MonthTransactions';
 import TransactionDetails from './TransactionDetails';
 import Vendors from './vendors';
 import VendorDetails from './vendors/VendorDetails';
-import theme from '../../theme';
 
 const Stack = createStackNavigator();
 
@@ -35,16 +35,6 @@ function MoneyStack(props) {
         options={{
           title: currentMonth,
           ...headerStyles,
-          headerLeft: () => (
-            <TouchableOpacity onPress={props.navigation.toggleDrawer}>
-              <Menu
-                width={25}
-                height={25}
-                color="#3366FF"
-                style={{ marginLeft: 10 }}
-              />
-            </TouchableOpacity>
-          ),
         }}
       />
       <Stack.Screen

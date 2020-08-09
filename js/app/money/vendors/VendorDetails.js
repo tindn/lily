@@ -1,7 +1,7 @@
 import geolocation from '@react-native-community/geolocation';
-import { Button } from 'components';
+import { Button, Input } from 'components';
 import React, { useState } from 'react';
-import { Alert, ScrollView, TextInput, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import { connect } from 'react-redux';
 import CategoryInput from '../../../components/categoryInput';
 import Screen from '../../../components/screen';
@@ -26,7 +26,7 @@ function VendorDetails(props) {
   var [id, setId] = useState();
   var [locations, setLocations] = useState([]);
   var [category, setCategory] = useState('');
-  useState(function() {
+  useState(function () {
     var vendor = (props.route.params || {}).vendor;
     if (vendor) {
       setName(vendor.name);
@@ -47,7 +47,7 @@ function VendorDetails(props) {
             { paddingVertical: 20 },
           ]}
         >
-          <TextInput
+          <Input
             value={name}
             placeholder="Name"
             onChangeText={setName}
@@ -65,7 +65,7 @@ function VendorDetails(props) {
         >
           <CategoryInput
             current={category}
-            onPress={function(name) {
+            onPress={function (name) {
               if (category == name) {
                 setCategory('');
               } else {
@@ -98,7 +98,7 @@ function VendorDetails(props) {
                     newLocations.splice(index, 1);
                     setLocations(newLocations);
                   }}
-                  updateLocation={e => {
+                  updateLocation={(e) => {
                     const newLocations = [...locations];
                     newLocations[index] = cleanCoordinate(
                       e.nativeEvent.coordinate
@@ -114,7 +114,7 @@ function VendorDetails(props) {
             appearance="outline"
             onPress={() => {
               geolocation.getCurrentPosition(
-                position => {
+                (position) => {
                   locations.push(position.coords);
                   setLocations([...locations]);
                 },
@@ -132,67 +132,66 @@ function VendorDetails(props) {
           </Button>
         </View>
 
-        <View style={{ marginTop: 40, marginHorizontal: 10 }}>
-          {id ? (
-            <Button
-              onPress={() => {
-                props
-                  .saveVendorToDb({
-                    id,
-                    name,
-                    locations,
-                    category,
-                  })
-                  .then(function() {
-                    props.navigation.pop();
-                  });
-              }}
-            >
-              Save
-            </Button>
-          ) : (
-            <Button
-              onPress={() => {
-                props
-                  .addVendorToDb({
-                    name,
-                    locations,
-                    category,
-                  })
-                  .then(function() {
-                    props.navigation.pop();
-                  });
-              }}
-            >
-              Add
-            </Button>
-          )}
-        </View>
+        {id ? (
+          <Button
+            color={theme.colors.iosBlue}
+            style={{ marginTop: 40, marginHorizontal: 10 }}
+            onPress={() => {
+              props
+                .saveVendorToDb({
+                  id,
+                  name,
+                  locations,
+                  category,
+                })
+                .then(function () {
+                  props.navigation.pop();
+                });
+            }}
+          >
+            Save
+          </Button>
+        ) : (
+          <Button
+            onPress={() => {
+              props
+                .addVendorToDb({
+                  name,
+                  locations,
+                  category,
+                })
+                .then(function () {
+                  props.navigation.pop();
+                });
+            }}
+          >
+            Add
+          </Button>
+        )}
         {id && (
-          <View style={{ marginTop: 20, marginHorizontal: 10 }}>
-            <Button
-              status="danger"
-              onPress={() => {
-                Alert.alert('Confirm', 'Do you want to delete this vendor?', [
-                  {
-                    text: 'Cancel',
-                    onPress: function() {},
+          <Button
+            color={theme.colors.red}
+            style={{ marginTop: 20, marginHorizontal: 10 }}
+            onPress={() => {
+              Alert.alert('Confirm', 'Do you want to delete this vendor?', [
+                {
+                  text: 'Cancel',
+                  onPress: function () {},
+                },
+                {
+                  text: 'Delete',
+                  onPress: () => {
+                    props.deleteVendorFromDb(id).then(function () {
+                      props.navigation.pop();
+                    });
                   },
-                  {
-                    text: 'Delete',
-                    onPress: () => {
-                      props.deleteVendorFromDb(id).then(function() {
-                        props.navigation.pop();
-                      });
-                    },
-                    style: 'destructive',
-                  },
-                ]);
-              }}
-            >
-              Delete
-            </Button>
-          </View>
+                  style: 'destructive',
+                },
+              ]);
+            }}
+          >
+            Delete
+          </Button>
         )}
       </ScrollView>
     </Screen>

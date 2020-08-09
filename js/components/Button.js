@@ -33,6 +33,7 @@ export function Button({
           paddingHorizontal: 12,
           borderColor,
           borderWidth: 1,
+          justifyContent: 'center'
         },
         style,
       ])}

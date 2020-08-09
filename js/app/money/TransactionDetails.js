@@ -48,6 +48,7 @@ export default function TransactionDetails(props) {
             amount={amount}
             editable={true}
             style={{ flex: 1 }}
+            textStyle={{ fontSize: 20 }}
           />
         </View>
         <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
@@ -100,7 +101,7 @@ export default function TransactionDetails(props) {
         </View>
 
         <Button
-          status="success"
+          color={theme.colors.iosBlue}
           onPress={() => {
             updateTransaction({
               ...transaction,
@@ -123,7 +124,7 @@ export default function TransactionDetails(props) {
           Save
         </Button>
         <Button
-          status="danger"
+          color={theme.colors.red}
           onPress={() => {
             Alert.alert('Confirm', 'Do you want to delete this transaction?', [
               {

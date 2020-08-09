@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { Text } from 'components';
+import { Swipeable, Text } from 'components';
 import React, { useCallback, useState } from 'react';
 import {
   Alert,
@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Swipeable from 'react-native-swipeable-row';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 import Screen from '../../../components/screen';
 import SwipeToDeleteContent from '../../../components/Swipeable/SwipeToDeleteContent';
@@ -17,6 +16,7 @@ import {
   getAccountSnapshots,
 } from '../../../db/accountSnapshots';
 import { error, success } from '../../../log';
+import sharedStyles from '../../../sharedStyles';
 import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
 import { calculateFinanceOverview } from '../../../utils/money';
 
@@ -86,29 +86,30 @@ export default function SnapshotList() {
               }}
               rightContent={<SwipeToDeleteContent />}
             >
-              <TouchableOpacity style={{ justifyContent: 'space-between' }}>
-                <Text category="c2" style={{ flex: 4 }}>
-                  {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
-                </Text>
-                <View
-                  style={{
-                    flex: 5,
+              <TouchableOpacity
+                style={StyleSheet.flatten([
+                  sharedStyles.listItem,
+                  {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                  }}
-                >
-                  <MoneyDisplay
-                    amount={item.liquidity}
-                    style={{ marginRight: 25 }}
-                    useParentheses
-                    toFixed={0}
-                  />
-                  <MoneyDisplay
-                    amount={item.networth}
-                    useParentheses
-                    toFixed={0}
-                  />
-                </View>
+                    paddingVertical: 20,
+                  },
+                ])}
+              >
+                <Text>
+                  {toWeekDayDateStringFromTimestamp(parseInt(item.date_time))}
+                </Text>
+
+                <MoneyDisplay
+                  amount={item.liquidity}
+                  useParentheses
+                  toFixed={0}
+                />
+                <MoneyDisplay
+                  amount={item.networth}
+                  useParentheses
+                  toFixed={0}
+                />
               </TouchableOpacity>
             </Swipeable>
           );

@@ -10,6 +10,7 @@ import DateInput from '../../../components/dateInput';
 import MoneyInput from '../../../components/moneyInput';
 import { useToggle } from '../../../hooks';
 import AccountEntryForm from './accountEntryForm';
+import { toSimpleDateString } from '../../../utils/date';
 
 function AccountEntry(props) {
   const [expanded, toggleExpanded] = useToggle();
@@ -27,7 +28,7 @@ function AccountEntry(props) {
   ) : (
     <TouchableOpacity onPress={toggleExpanded} style={styles.item}>
       <View>
-        <DateInput date={new Date(props.entry.date_time)} style={styles.date} />
+        <Text>{toSimpleDateString(new Date(props.entry.date_time))}</Text>
         <Text style={{ fontSize: 16 }}>{props.entry.memo}</Text>
       </View>
       <MoneyInput

@@ -1,7 +1,6 @@
-import { Button, Input, Text } from 'components';
+import { Button, Input, Swipeable, Text } from 'components';
 import React, { useState } from 'react';
 import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
-import Swipeable from 'react-native-swipeable-row';
 import { connect } from 'react-redux';
 import Screen from '../../../components/screen';
 import SwipeToArchiveContent from '../../../components/Swipeable/SwipeToArchiveContent';
@@ -49,13 +48,12 @@ function Categories(props) {
             }}
           >
             <Button
+              color={theme.colors.darkGray}
               label="Cancel"
               onPress={function () {
                 setNewCategory('');
                 setOldCategory(undefined);
               }}
-              status="basic"
-              size="small"
             >
               Cancel
             </Button>
@@ -150,7 +148,7 @@ function Categories(props) {
               }}
             >
               <TouchableOpacity
-                style={[sharedStyles.borderBottom, { paddingVertical: 15 }]}
+                style={sharedStyles.listItem}
                 onPress={function () {
                   setOldCategory(item.name);
                   setNewCategory(item.name);

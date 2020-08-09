@@ -4,7 +4,7 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import Screen from '../../../components/screen';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
-
+import sharedStyles from '../../../sharedStyles';
 function mapStateToProps(state) {
   return {
     vendors: getVendorsArray(state),
@@ -34,23 +34,25 @@ function Vendors(props) {
                   vendor: item,
                 });
               }}
-              style={{marginVertical: 7}}
-              accessory={() => {
-                return item.category ? (
-                  <Button
-                    disabled
-                    style={{ paddingHorizontal: 7, paddingVertical: 3 }}
-                    size="small"
-                  >
-                    {item.category}
-                  </Button>
-                ) : (
-                  <View />
-                );
-              }}
+              style={StyleSheet.flatten([
+                sharedStyles.listItem,
+                { flexDirection: 'row', justifyContent: 'space-between' },
+              ])}
             >
-              <Text>{item.name}</Text>
-              <Text>{numberOfLocations + ' location(s)'}</Text>
+              <View>
+                <Text>{item.name}</Text>
+                <Text>{numberOfLocations + ' location(s)'}</Text>
+              </View>
+              {item.category ? (
+                <Button
+                  disabled
+                  style={{ paddingHorizontal: 7, paddingVertical: 3 }}
+                >
+                  {item.category}
+                </Button>
+              ) : (
+                <View />
+              )}
             </TouchableOpacity>
           );
         }}

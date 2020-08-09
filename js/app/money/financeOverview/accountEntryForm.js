@@ -1,6 +1,6 @@
-import { Button, Text } from 'components';
+import { Button, Text, Input } from 'components';
 import React, { useEffect, useState } from 'react';
-import { Alert, TextInput, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import DateInput from '../../../components/dateInput';
 import EntryTypeInput from '../../../components/EntryTypeInput';
 import MoneyInput from '../../../components/moneyInput';
@@ -101,7 +101,7 @@ function AccountEntryForm(props) {
         <DateInput
           onChange={setDateTime}
           date={date_time}
-          style={{ flex: 3 }}
+          style={{ flex: 5 }}
           mode="date"
         />
         <MoneyInput
@@ -113,7 +113,7 @@ function AccountEntryForm(props) {
         />
       </View>
       <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
-        <TextInput
+        <Input
           value={memo}
           style={[sharedStyles.formTextInput, { textAlign: 'right' }]}
           onChangeText={setMemo}

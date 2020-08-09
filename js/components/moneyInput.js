@@ -8,12 +8,14 @@ function MoneyInput(props) {
   const inputRef = useRef();
 
   return (
-    <View style={props.style}>
+    <View
+      style={StyleSheet.flatten([{ justifyContent: 'center' }, props.style])}
+    >
       <TextInput
         ref={inputRef}
         style={{ display: 'none' }}
         keyboardType="number-pad"
-        onChangeText={text => {
+        onChangeText={(text) => {
           if (text.length < 4) {
             text = text.padStart(4, '0');
           }
@@ -40,8 +42,12 @@ function MoneyInput(props) {
       >
         <Text
           status={props.type === 'credit' ? 'success' : 'danger'}
-          category="h5"
-          style={[styles.display, props.textStyle]}
+          style={StyleSheet.flatten([
+            {
+              textAlign: 'right',
+            },
+            props.textStyle,
+          ])}
         >
           {formatAmountToDisplay(props.amount)}
         </Text>
@@ -49,12 +55,5 @@ function MoneyInput(props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  display: {
-    fontWeight: '500',
-    textAlign: 'right',
-  },
-});
 
 export default MoneyInput;
