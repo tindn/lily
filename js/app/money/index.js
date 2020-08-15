@@ -19,7 +19,7 @@ const Stack = createStackNavigator();
 
 export default MoneyStack;
 
-function MoneyStack(props) {
+function MoneyStack() {
   const headerStyles = {
     headerStyle: {
       backgroundColor: theme.colors.layerOne,

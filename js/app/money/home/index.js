@@ -1,18 +1,25 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { Button } from 'components';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  LayoutAnimation,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { connect } from 'react-redux';
 import Card from '../../../components/card';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 import Screen from '../../../components/screen';
 import { getTransactionSummaryByCategory } from '../../../db/categories';
 import { getAllFromTable } from '../../../db/shared';
+import { getLatestTransactions } from '../../../db/transactions';
 import useToggle from '../../../hooks/useToggle';
 import { loadCategoriesFromDbToRedux } from '../../../redux/actions/categories';
 import { loadVendorsFromDbToRedux } from '../../../redux/actions/vendors';
 import theme from '../../../theme';
 import { getMonthStartEndFor } from '../../../utils/date';
+import TransactionListItem from '../TransactionListItem';
 import CategoryLine from './CategoryLine';
 import TransactionForm from './TransactionForm';
 
@@ -26,27 +33,27 @@ function Home(props) {
   var [showSummaries, toggleSummaries] = useToggle();
   var [categorySummaries, setCategorySummaries] = useState([]);
   var scrollViewRef = useRef(null);
+  var [latestTransactions, setLatestTransactions] = useState([]);
 
-  var updateData = useCallback(
-    function () {
-      const today = new Date();
-      var [start, end] = getMonthStartEndFor(today);
+  var updateData = useCallback(function () {
+    const today = new Date();
+    var [start, end] = getMonthStartEndFor(today);
 
-      getTransactionSummaryByCategory(start.getTime(), end.getTime()).then(
-        setCategorySummaries
-      );
+    getTransactionSummaryByCategory(start.getTime(), end.getTime()).then(
+      setCategorySummaries
+    );
 
-      getAllFromTable(
-        'monthly_analytics',
-        ` WHERE end_date <= ${end.getTime()} ORDER BY start_date DESC LIMIT 1`
-      ).then((res) => {
-        if (res && res.length) {
-          setCurrentMonth(res[0]);
-        }
-      });
-    },
-    [setCurrentMonth]
-  );
+    getAllFromTable(
+      'monthly_analytics',
+      ` WHERE end_date <= ${end.getTime()} ORDER BY start_date DESC LIMIT 1`
+    ).then((res) => {
+      if (res && res.length) {
+        setCurrentMonth(res[0]);
+      }
+    });
+
+    getLatestTransactions(5).then(setLatestTransactions);
+  }, []);
 
   // Will focus is not called on first load
   useEffect(function () {
@@ -58,59 +65,53 @@ function Home(props) {
   useFocusEffect(updateData);
   return (
     <Screen>
-      {currentMonth ? (
-        <TouchableOpacity
-          onLongPress={() => {
-            toggleSummaries();
-            LayoutAnimation.easeInEaseOut();
-          }}
-          onPress={() => {
-            if (showSummaries) {
-              toggleSummaries();
-            } else {
-              props.navigation.navigate('MonthTransactions');
-            }
-          }}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingHorizontal: 10,
-            paddingVertical: 20,
-          }}
-        >
-          <MoneyDisplay
-            amount={currentMonth.earned}
-            style={{
-              textAlign: 'left',
-              fontWeight: '500',
-              fontSize: 16,
-            }}
-            type="credit"
-          />
-          <MoneyDisplay
-            amount={currentMonth.earned - currentMonth.spent}
-            style={{
-              textAlign: 'center',
-              fontSize: 20,
-            }}
-            useParentheses
-          />
-          <MoneyDisplay
-            amount={currentMonth.spent}
-            style={{
-              textAlign: 'right',
-              color: theme.colors.red,
-              fontSize: 16,
-            }}
-            type="debit"
-          />
-        </TouchableOpacity>
-      ) : null}
       <ScrollView
         keyboardDismissMode="on-drag"
         keyboardShuldPersistTaps="always"
         ref={scrollViewRef}
       >
+        {currentMonth ? (
+          <TouchableOpacity
+            onPress={() => {
+              toggleSummaries();
+              LayoutAnimation.easeInEaseOut();
+            }}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 20,
+              paddingTop: 20,
+              marginBottom: 20,
+            }}
+          >
+            <MoneyDisplay
+              amount={currentMonth.earned}
+              style={{
+                textAlign: 'left',
+                fontWeight: '500',
+                fontSize: 16,
+              }}
+              type="credit"
+            />
+            <MoneyDisplay
+              amount={currentMonth.spent}
+              style={{
+                textAlign: 'right',
+                color: theme.colors.red,
+                fontSize: 16,
+              }}
+              type="debit"
+            />
+            <MoneyDisplay
+              amount={currentMonth.earned - currentMonth.spent}
+              style={{
+                textAlign: 'center',
+                fontSize: 16,
+              }}
+              useParentheses
+            />
+          </TouchableOpacity>
+        ) : null}
         {showSummaries ? (
           <Card style={{ marginTop: 10, marginHorizontal: 10 }}>
             {categorySummaries.map(function (category, index) {
@@ -130,38 +131,74 @@ function Home(props) {
         ) : null}
 
         <TransactionForm
+          getNearByVendors
           onTransactionAdded={updateData}
           style={{
-            marginBottom: 235,
-            marginTop: 10,
             marginHorizontal: 10,
-            paddingHorizontal: 5,
+            paddingHorizontal: 10,
           }}
         />
-        <Button
-          style={{ marginVertical: 10, marginHorizontal: 20 }}
-          onPress={() => props.navigation.navigate('MonthlyAnalytics')}
+        <View
+          style={{
+            marginHorizontal: 10,
+            marginTop: 30,
+            marginBottom: 10,
+            height: 350,
+          }}
         >
-          Past Months
-        </Button>
-        <Button
-          style={{ marginVertical: 10, marginHorizontal: 20 }}
-          onPress={() => props.navigation.navigate('Vendors')}
+          {latestTransactions.map((item) => (
+            <TransactionListItem
+              key={item.id}
+              item={item}
+              onPress={() => {
+                props.navigation.navigate('TransactionDetails', {
+                  title: item.memo,
+                  transaction: item,
+                });
+              }}
+            />
+          ))}
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginVertical: 10,
+            marginHorizontal: 20,
+          }}
         >
-          Vendors
-        </Button>
-        <Button
-          style={{ marginVertical: 10, marginHorizontal: 20 }}
-          onPress={() => props.navigation.navigate('Categories')}
+          <Button
+            style={{ flex: 1, marginRight: 10 }}
+            onPress={() => props.navigation.navigate('MonthlyAnalytics')}
+          >
+            Past Months
+          </Button>
+          <Button
+            style={{ flex: 1, marginLeft: 10 }}
+            onPress={() => props.navigation.navigate('FinanceOverview')}
+          >
+            Overview
+          </Button>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginVertical: 10,
+            marginHorizontal: 20,
+          }}
         >
-          Categories
-        </Button>
-        <Button
-          style={{ marginVertical: 10, marginHorizontal: 20 }}
-          onPress={() => props.navigation.navigate('FinanceOverview')}
-        >
-          Overview
-        </Button>
+          <Button
+            style={{ flex: 1, marginRight: 10 }}
+            onPress={() => props.navigation.navigate('Vendors')}
+          >
+            Vendors
+          </Button>
+          <Button
+            style={{ flex: 1, marginLeft: 10 }}
+            onPress={() => props.navigation.navigate('Categories')}
+          >
+            Categories
+          </Button>
+        </View>
       </ScrollView>
     </Screen>
   );

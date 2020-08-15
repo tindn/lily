@@ -19,7 +19,7 @@ var selectTransactionsStatement = `
 `;
 
 function processTransactions(transactions) {
-  transactions.forEach(function(t) {
+  transactions.forEach(function (t) {
     t.memo = unescape(t.memo);
     if (t.category) {
       t.category = unescape(t.category);
@@ -83,6 +83,20 @@ export function getTransactionsBetweenTimestampsForCategory(
     .then(processTransactions);
 }
 
+export function getLatestTransactions(limit = 10) {
+  return db
+    .executeSql(
+      `
+    ${selectTransactionsStatement}
+    ORDER BY
+      date_time DESC
+    LIMIT ${limit};
+  `
+    )
+    .then(queryResultToArray)
+    .then(processTransactions);
+}
+
 /**
  *
  * @param {Object} transaction
@@ -116,7 +130,7 @@ export function addTransaction(transaction) {
   return getAllFromTable(
     'monthly_analytics',
     `WHERE name = '${monthName}'`
-  ).then(function([monthlyAnalytics]) {
+  ).then(function ([monthlyAnalytics]) {
     var analyticsScript;
     var [monthStartDate, monthEndDate] = getMonthStartEndFor(
       transaction.date_time
@@ -166,12 +180,12 @@ export function updateTransaction(transaction) {
       category = '${escape(transaction.category)}'
     WHERE id = '${transaction.id}';`;
   return getAllFromTable('monthly_analytics', `WHERE name = '${monthName}'`)
-    .then(function([monthlyAnalytics]) {
-      return getById('transactions', transaction.id).then(function([old]) {
+    .then(function ([monthlyAnalytics]) {
+      return getById('transactions', transaction.id).then(function ([old]) {
         return [monthlyAnalytics, old];
       });
     })
-    .then(function([monthlyAnalytics, oldTransaction]) {
+    .then(function ([monthlyAnalytics, oldTransaction]) {
       if (oldTransaction.entry_type == 'credit') {
         monthlyAnalytics.earned =
           monthlyAnalytics.earned - oldTransaction.amount;
@@ -197,7 +211,7 @@ export function deleteTransaction(transaction) {
   return getAllFromTable(
     'monthly_analytics',
     `WHERE name = '${monthName}'`
-  ).then(function([monthlyAnalytics]) {
+  ).then(function ([monthlyAnalytics]) {
     if (transaction.entry_type == 'credit') {
       monthlyAnalytics.earned = monthlyAnalytics.earned - transaction.amount;
     } else {

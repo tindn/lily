@@ -11,7 +11,7 @@ function DateInput(props) {
       onChange={(event, date) => {
         props.onChange(date);
       }}
-      style={StyleSheet.flatten([{ height: 30, flex: 1 }, props.style])}
+      style={StyleSheet.flatten([{ height: 40, flex: 1, color: 'red' }, props.style])}
     />
   );
 }

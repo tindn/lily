@@ -1,10 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { Text } from 'components';
 import React from 'react';
-import { FlatList, RefreshControl, TouchableOpacity, View } from 'react-native';
-import sharedStyles from '../../sharedStyles';
-import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
-import { formatAmountToDisplay } from '../../utils/money';
+import { FlatList, RefreshControl, View } from 'react-native';
+import TransactionListItem from './TransactionListItem';
 
 export default function TransactionList(props) {
   const navigation = useNavigation();
@@ -20,6 +18,7 @@ export default function TransactionList(props) {
           />
         ) : null
       }
+      style={props.style}
       ListEmptyComponent={
         <View
           style={{
@@ -32,36 +31,16 @@ export default function TransactionList(props) {
         </View>
       }
       renderItem={({ item }) => {
-        let dateDisplay = toWeekDayDateStringFromTimestamp(item.date_time);
         return (
-          <TouchableOpacity
-            style={[
-              sharedStyles.listItem,
-              { flexDirection: 'row', justifyContent: 'space-between' },
-            ]}
+          <TransactionListItem
+            item={item}
             onPress={() => {
               navigation.navigate('TransactionDetails', {
                 title: item.memo,
                 transaction: item,
               });
             }}
-          >
-            <View>
-              <Text>{dateDisplay}</Text>
-              <Text style={{ marginTop: 7 }}>{item.category}</Text>
-            </View>
-            <View>
-              <Text
-                status={item.entry_type == 'credit' ? 'success' : 'danger'}
-                style={{ textAlign: 'right' }}
-              >
-                {formatAmountToDisplay(item.amount)}
-              </Text>
-              <Text style={{ textAlign: 'right', marginTop: 7 }}>
-                {(item.memo || item.vendor).slice(0, 25)}
-              </Text>
-            </View>
-          </TouchableOpacity>
+          />
         );
       }}
     />

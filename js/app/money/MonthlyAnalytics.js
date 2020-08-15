@@ -23,7 +23,7 @@ export default function MonthlyAnalytics(props) {
   var [refreshing, setRefreshing] = useState(false);
 
   var fetchData = useCallback(function (
-    params = { useLoadingIndicator: true }
+    params = { useLoadingIndicator: false }
   ) {
     params.useLoadingIndicator && setRefreshing(true);
     getAllFromTable('monthly_analytics', 'ORDER BY start_date DESC')
@@ -105,7 +105,7 @@ function Month({ month, navigation, fetchData }) {
           toggleSummaries();
         }}
       >
-        <View style={{ marginBottom: 10}}>
+        <View style={{ marginBottom: 10 }}>
           <Text>{month.name}</Text>
         </View>
         <View

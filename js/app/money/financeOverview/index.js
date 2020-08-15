@@ -8,20 +8,28 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  useWindowDimensions,
 } from 'react-native';
+import { BarChart, LineChart, YAxis } from 'react-native-svg-charts';
 import Screen from '../../../components/screen';
 import { getActiveAccounts } from '../../../db/accounts';
 import {
   buildAccountSnapshot,
+  getAccountSnapshots,
   getEarliestSnapshot,
   getLatestSnapshot,
 } from '../../../db/accountSnapshots';
 import { useToggle } from '../../../hooks';
 import { error, success } from '../../../log';
-import { calculateFinanceOverview } from '../../../utils/money';
+import theme from '../../../theme';
+import {
+  calculateFinanceOverview,
+  formatAmountToDisplay,
+} from '../../../utils/money';
 import Category from './category';
 import LineItem from './lineItem';
 import OverviewCard from './overviewCard';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function FinanceOverview(props) {
   var [overview, setOverview] = useState({});
@@ -39,9 +47,10 @@ export default function FinanceOverview(props) {
     longTermLiabilities: [],
     retirements: [],
   });
-
+  var [allSnapshots, setAllSnapshots] = useState([]);
+  var windowWidth = useWindowDimensions().width;
   useEffect(
-    function() {
+    function () {
       if (earliestSnapshot.date_time && overview.liquidity) {
         const days = differenceInCalendarDays(
           new Date(),
@@ -57,8 +66,8 @@ export default function FinanceOverview(props) {
     [overview, earliestSnapshot]
   );
 
-  var fetchData = useCallback(function() {
-    getActiveAccounts().then(function(accounts) {
+  var fetchData = useCallback(function () {
+    getActiveAccounts().then(function (accounts) {
       var overview = calculateFinanceOverview(accounts);
       setOverview(overview);
       let liquidAssets = [],
@@ -69,7 +78,7 @@ export default function FinanceOverview(props) {
         retirements = [],
         totalAssetsBalance = 0,
         totalLiabilitiesBalance = 0;
-      accounts.forEach(function(account) {
+      accounts.forEach(function (account) {
         switch (account.category) {
           case 'Liquid Assets':
             liquidAssets.push(account);
@@ -106,30 +115,119 @@ export default function FinanceOverview(props) {
         totalLiabilitiesBalance,
       });
     });
-    getEarliestSnapshot().then(function(accounts) {
+    getEarliestSnapshot().then(function (accounts) {
       var overview = calculateFinanceOverview(accounts);
       overview.date_time = accounts[0].date_time;
       setEarliestSnapshot(overview);
     });
-    getLatestSnapshot().then(function(accounts) {
+    getLatestSnapshot().then(function (accounts) {
       var overview = calculateFinanceOverview(accounts);
       overview.date_time = accounts[0].date_time;
       setLatestSnapshot(overview);
     });
+    getAccountSnapshots('ASC')
+      .then(function (accountSnapshots) {
+        var snapshots = accountSnapshots.reduce(function (
+          acc,
+          accountSnapshot
+        ) {
+          if (!acc[accountSnapshot.date_time]) {
+            acc[accountSnapshot.date_time] = [];
+          }
+          acc[accountSnapshot.date_time].push(accountSnapshot);
+          return acc;
+        },
+        {});
+        return Object.entries(snapshots).map(function (snap) {
+          var overview = calculateFinanceOverview(snap[1]);
+          overview.date_time = snap[0];
+          return overview;
+        });
+      })
+      .then((snapshots) => {
+        console.log(snapshots[0]);
+        setAllSnapshots(snapshots);
+      });
   }, []);
 
   useFocusEffect(fetchData);
-
+  var graphInsets = {
+    left: 30,
+    right: 30,
+  };
   return (
     <Screen>
       <ScrollView contentContainerStyle={{ marginHorizontal: 5 }}>
-        <OverviewCard
-          overview={overview}
-          navigation={props.navigation}
-          latestSnapshot={latestSnapshot}
-          liquidityRate={liquidityRate}
-          networthRate={networthRate}
-        />
+        <ScrollView style={{ marginBottom: 20 }} horizontal>
+          <OverviewCard
+            overview={overview}
+            navigation={props.navigation}
+            latestSnapshot={latestSnapshot}
+            liquidityRate={liquidityRate}
+            networthRate={networthRate}
+            style={{ width: windowWidth }}
+          />
+          <TouchableOpacity
+            style={{ marginTop: 10, height: 230, width: windowWidth }}
+            onPress={() => props.navigation.navigate('SnapshotList')}
+          >
+            <View
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: 240,
+                flexDirection: 'row',
+              }}
+            >
+              <BarChart
+                style={{ height: 230, width: '100%', position: 'absolute' }}
+                data={allSnapshots}
+                yAccessor={({ item }) => item.liquidity}
+                contentInset={graphInsets}
+                svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
+              ></BarChart>
+              <YAxis
+                data={allSnapshots}
+                yAccessor={({ item }) => item.liquidity}
+                svg={{
+                  fill: theme.colors.darkerGray,
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                }}
+                numberOfTicks={10}
+                formatLabel={(value) => `$${value / 1000}k`}
+              />
+            </View>
+            <View
+              style={{
+                height: 230,
+                flexDirection: 'row',
+                paddingLeft: 10,
+                justifyContent: 'flex-end',
+              }}
+            >
+              <LineChart
+                style={{ height: 230, width: '100%', position: 'absolute' }}
+                data={allSnapshots}
+                yAccessor={({ item }) => item.networth}
+                svg={{ stroke: theme.colors.green, strokeWidth: 3 }}
+                contentInset={graphInsets}
+              ></LineChart>
+              <YAxis
+                data={allSnapshots}
+                yAccessor={({ item }) => item.networth}
+                svg={{
+                  fill: theme.colors.darkerGray,
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                }}
+                numberOfTicks={10}
+                formatLabel={(value) => `$${value / 1000}k`}
+              />
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+
         <Category
           accounts={state.retirements}
           name="Retirements"
@@ -202,17 +300,17 @@ export default function FinanceOverview(props) {
             Alert.alert('Confirm', 'Do you want to create a new snapshot?', [
               {
                 text: 'Cancel',
-                onPress: function() {},
+                onPress: function () {},
                 style: 'cancel',
               },
               {
                 text: 'Yes',
-                onPress: function() {
+                onPress: function () {
                   buildAccountSnapshot()
-                    .then(function() {
+                    .then(function () {
                       success('Snapshot created');
                     })
-                    .catch(function(e) {
+                    .catch(function (e) {
                       error('Error creating snapshot', e.message);
                     })
                     .finally(fetchData);

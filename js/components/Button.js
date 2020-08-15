@@ -29,8 +29,7 @@ export function Button({
         {
           backgroundColor,
           borderRadius: 5,
-          paddingVertical: 10,
-          paddingHorizontal: 12,
+          padding: 12,
           borderColor,
           borderWidth: 1,
           justifyContent: 'center'

@@ -11,7 +11,7 @@ export default function MonthTransactions(props) {
   const [date] = useState((props.route.params || {}).date || new Date());
   var category = (props.route.params || {}).category;
   var fetchData = useCallback(
-    function(params = { useLoadingIndicator: true }) {
+    function (params = { useLoadingIndicator: true }) {
       params.useLoadingIndicator && setRefreshing(true);
       var [start, end] = getMonthStartEndFor(date);
       getTransactionsBetweenTimestampsForCategory(
@@ -31,11 +31,7 @@ export default function MonthTransactions(props) {
 
   return (
     <Screen>
-      <TransactionList
-        data={data}
-        onTransactionDeleted={fetchData}
-        isRefreshing={refreshing}
-      />
+      <TransactionList data={data} isRefreshing={refreshing} />
     </Screen>
   );
 }

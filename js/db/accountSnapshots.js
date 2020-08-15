@@ -1,8 +1,8 @@
-import { db, queryResultToArray, getAllFromTable } from './shared';
+import { db, queryResultToArray } from './shared';
 import { getActiveAccounts } from './accounts';
 import uuid from 'uuid/v1';
 
-export function getAccountSnapshots() {
+export function getAccountSnapshots(orderBy = 'DESC') {
   return db
     .executeSql(
       `
@@ -16,7 +16,7 @@ export function getAccountSnapshots() {
     FROM
       account_snapshots s
       LEFT JOIN accounts a ON s.account_id = a.id
-    ORDER BY s.date_time DESC;
+    ORDER BY s.date_time ${orderBy};
     `
     )
     .then(queryResultToArray);
@@ -94,7 +94,7 @@ export function getLatestSnapshot() {
 export async function buildAccountSnapshot() {
   var activeAccounts = await getActiveAccounts();
   var timeOfSnapshot = Date.now();
-  var scripts = activeAccounts.map(function(a) {
+  var scripts = activeAccounts.map(function (a) {
     return `INSERT INTO account_snapshots VALUES ('${uuid()}', ${a.balance}, ${timeOfSnapshot}, '${a.id}')`;
   });
   return db.sqlBatch(scripts);

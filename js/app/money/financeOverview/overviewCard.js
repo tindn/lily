@@ -1,23 +1,23 @@
 import { Text } from 'components';
 import React from 'react';
 import { View } from 'react-native';
-import Card from '../../../components/card';
 import MoneyDisplay from '../../../components/MoneyDisplay';
 
 export default function OverviewCard({
   overview,
-  navigation,
   latestSnapshot,
   liquidityRate,
   networthRate,
+  style,
 }) {
   return (
-    <Card
-      style={{
-        marginVertical: 7,
-        marginHorizontal: 0,
-      }}
-      onPress={() => navigation.navigate('SnapshotList')}
+    <View
+      style={[
+        {
+          justifyContent: 'center',
+        },
+        style,
+      ]}
     >
       <View
         style={{
@@ -109,7 +109,7 @@ export default function OverviewCard({
         style={{
           flexDirection: 'row',
           justifyContent: 'space-around',
-          marginTop: 10,
+          marginTop: 40,
         }}
       >
         <View>
@@ -167,6 +167,6 @@ export default function OverviewCard({
           />
         </View>
       </View>
-    </Card>
+    </View>
   );
 }

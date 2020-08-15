@@ -8,7 +8,7 @@ import BottomSheet from './bottomSheet';
 
 function mapStateToProps(state) {
   return {
-    categories: state.categories.filter(c => !c.is_archived),
+    categories: state.categories.filter((c) => !c.is_archived),
   };
 }
 
@@ -17,7 +17,7 @@ function CategoryInput(props) {
   return (
     <>
       <TouchableOpacity
-        onPress={function() {
+        onPress={function () {
           setShowModal(true);
         }}
         style={[{ flex: 1 }, props.displayStyle]}
@@ -37,21 +37,19 @@ function CategoryInput(props) {
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             paddingTop: 20,
+            paddingBottom: 40
           }}
         >
-          {props.categories.map(function(item) {
+          {props.categories.map(function (item) {
             let selected = item.name == props.current;
             return (
               <Button
                 key={item.name}
-                label={item.name}
-                appearance="outline"
-                size="small"
-                status={selected ? 'success' : 'basic'}
-                onPress={function() {
+                color={selected ? theme.colors.primary : theme.colors.darkGray}
+                onPress={function () {
                   props.onPress(item.name);
                   // eslint-disable-next-line no-undef
-                  setTimeout(function() {
+                  setTimeout(function () {
                     setShowModal(false);
                   }, 150);
                 }}
@@ -62,19 +60,6 @@ function CategoryInput(props) {
             );
           })}
         </View>
-        <Button
-          appearance="outline"
-          status="basic"
-          onPress={() => setShowModal(false)}
-          style={{
-            alignSelf: 'flex-end',
-            marginTop: 20,
-            marginRight: 20,
-            marginBottom: 20,
-          }}
-        >
-          Cancel
-        </Button>
       </BottomSheet>
     </>
   );
