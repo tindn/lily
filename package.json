@@ -51,7 +51,7 @@
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-native": "^3.6.0",
     "jest": "25.1.0",
-    "madge": "^3.4.4",
+    "madge": "^4.0.1",
     "metro-react-native-babel-preset": "0.59.0"
   },
   "jest": {
