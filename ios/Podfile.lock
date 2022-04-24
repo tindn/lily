@@ -262,8 +262,8 @@ PODS:
     - glog
   - react-native-geolocation (2.0.2):
     - React
-  - react-native-maps (0.27.1):
-    - React
+  - react-native-maps (0.30.1):
+    - React-Core
   - react-native-safe-area-context (0.7.3):
     - React
   - react-native-sqlite-storage (5.0.0):
@@ -337,7 +337,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
-  - RNDateTimePicker (3.5.2):
+  - RNDateTimePicker (6.1.2):
     - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
@@ -524,7 +524,7 @@ SPEC CHECKSUMS:
   React-jsinspector: f4775ea9118cbe1f72b834f0f842baa7a99508d8
   React-logger: a1f028f6d8639a3f364ef80419e5e862e1115250
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
-  react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
+  react-native-maps: d752b0dd0e1951d815b1336332835aab6b4a836f
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   react-native-sqlite-storage: 418ef4afc5e6df6ce3574c4617e5f0b65cffde55
   React-perflogger: 0afaf2f01a47fd0fc368a93bfbb5bd3b26db6e7f
@@ -541,7 +541,7 @@ SPEC CHECKSUMS:
   ReactCommon: 07d0c460b9ba9af3eaf1b8f5abe7daaad28c9c4e
   rn-fetch-blob: f525a73a78df9ed5d35e67ea65e79d53c15255bc
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
-  RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
+  RNDateTimePicker: 6f1f0b4cf7c71b6e2aea7a3aa62969111084bbd1
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: c1b56d030d1616239861534d9adb531f8cffab68
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d

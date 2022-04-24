@@ -46,13 +46,13 @@ function Home(props) {
     getAllFromTable(
       'monthly_analytics',
       ` WHERE end_date <= ${end.getTime()} ORDER BY start_date DESC LIMIT 1`
-    ).then((res) => {
+    ).then(res => {
       if (res && res.length) {
         setCurrentMonth(res[0]);
       }
     });
 
-    getLatestTransactions(5).then(setLatestTransactions);
+    getLatestTransactions(100).then(setLatestTransactions);
   }, []);
 
   // Will focus is not called on first load
@@ -66,8 +66,8 @@ function Home(props) {
   return (
     <Screen>
       <ScrollView
-        keyboardDismissMode="on-drag"
-        keyboardShuldPersistTaps="always"
+        keyboardDismissMode='on-drag'
+        keyboardShuldPersistTaps='always'
         ref={scrollViewRef}
       >
         {currentMonth ? (
@@ -91,7 +91,7 @@ function Home(props) {
                 fontWeight: '500',
                 fontSize: 16,
               }}
-              type="credit"
+              type='credit'
             />
             <MoneyDisplay
               amount={currentMonth.spent}
@@ -100,7 +100,7 @@ function Home(props) {
                 color: theme.colors.red,
                 fontSize: 16,
               }}
-              type="debit"
+              type='debit'
             />
             <MoneyDisplay
               amount={currentMonth.earned - currentMonth.spent}
@@ -138,7 +138,7 @@ function Home(props) {
             paddingHorizontal: 10,
           }}
         />
-        <View
+        <ScrollView
           style={{
             marginHorizontal: 10,
             marginTop: 30,
@@ -146,7 +146,7 @@ function Home(props) {
             height: 350,
           }}
         >
-          {latestTransactions.map((item) => (
+          {latestTransactions.map(item => (
             <TransactionListItem
               key={item.id}
               item={item}
@@ -158,7 +158,7 @@ function Home(props) {
               }}
             />
           ))}
-        </View>
+        </ScrollView>
         <View
           style={{
             flexDirection: 'row',

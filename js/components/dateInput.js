@@ -12,7 +12,10 @@ function DateInput(props) {
         props.onChange(date);
       }}
       style={StyleSheet.flatten([
-        { height: 40, flex: 1, color: 'red' },
+        {
+          height: 40,
+          width: 130,
+        },
         props.style,
       ])}
       display='compact'
