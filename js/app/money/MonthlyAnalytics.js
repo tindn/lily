@@ -12,7 +12,10 @@ import {
 import MoneyDisplay from '../../components/MoneyDisplay';
 import Screen from '../../components/screen';
 import { getTransactionSummaryByCategory } from '../../db/categories';
-import { calculateAnalyticsForMonth } from '../../db/monthlyAnalytics';
+import {
+  calculateAnalyticsForMonth,
+  calculateSummaryForCurrentYear,
+} from '../../db/monthlyAnalytics';
 import { getAllFromTable } from '../../db/shared';
 import useToggle from '../../hooks/useToggle';
 import sharedStyles from '../../sharedStyles';
@@ -20,6 +23,7 @@ import theme from '../../theme';
 
 export default function MonthlyAnalytics(props) {
   const [data, setData] = useState([]);
+  const [annualSummary, setAnnualSummary] = useState();
   var [refreshing, setRefreshing] = useState(false);
 
   var fetchData = useCallback(function (
@@ -31,6 +35,7 @@ export default function MonthlyAnalytics(props) {
       .finally(() => {
         params.useLoadingIndicator && setRefreshing(false);
       });
+    calculateSummaryForCurrentYear().then(setAnnualSummary);
   },
   []);
 
@@ -38,9 +43,22 @@ export default function MonthlyAnalytics(props) {
 
   return (
     <Screen>
+      {annualSummary ? (
+        <View style={styles.annualSummary}>
+          <Text category='h4' style={styles.annualSummaryHeading}>
+            Saved this year
+          </Text>
+          <View style={styles.annualSummaryDetails}>
+            <MoneyDisplay amount={annualSummary.totalSaved} />
+            <Text>
+              <MoneyDisplay amount={annualSummary.averageSaved} /> / month
+            </Text>
+          </View>
+        </View>
+      ) : null}
       <FlatList
         data={data}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
         }
@@ -64,6 +82,15 @@ export default function MonthlyAnalytics(props) {
 }
 
 const styles = StyleSheet.create({
+  annualSummary: {
+    padding: 10,
+    marginBottom: 10,
+  },
+  annualSummaryHeading: { marginBottom: 10 },
+  annualSummaryDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   emptyComponent: {
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -115,10 +142,10 @@ function Month({ month, navigation, fetchData }) {
           }}
         >
           <View style={{ flex: 1 }}>
-            <MoneyDisplay amount={month.earned} type="credit" />
+            <MoneyDisplay amount={month.earned} type='credit' />
           </View>
           <View style={{ flex: 1 }}>
-            <MoneyDisplay amount={month.spent} type="debit" />
+            <MoneyDisplay amount={month.spent} type='debit' />
           </View>
           <View style={{ flex: 1 }}>
             <MoneyDisplay amount={diff} />

@@ -16,6 +16,18 @@ export function Text({ children, style, category, status, ...otherProps }) {
     fontSize = 24;
     fontWeight = '700';
   }
+  if (category === 'h2') {
+    fontSize = 22;
+    fontWeight = '700';
+  }
+  if (category === 'h3') {
+    fontSize = 20;
+    fontWeight = '700';
+  }
+  if (category === 'h4') {
+    fontSize = 18;
+    fontWeight = '700';
+  }
   if (category === 'h5') {
     fontWeight = '700';
   }

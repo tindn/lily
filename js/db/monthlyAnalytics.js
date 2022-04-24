@@ -1,4 +1,5 @@
-import { db } from './shared';
+import { endOfYear, startOfYear } from 'date-fns';
+import { db, queryResultToArray } from './shared';
 import { getTransactionsBetweenTimestamps } from './transactions';
 
 export async function calculateAnalyticsForMonth(monthlyAnalytics) {
@@ -22,4 +23,39 @@ export async function calculateAnalyticsForMonth(monthlyAnalytics) {
   return db.sqlBatch([
     `UPDATE monthly_analytics SET earned = ${earned}, spent = ${spent} WHERE id = '${monthlyAnalytics.id}';`,
   ]);
+}
+
+export async function calculateSummaryForCurrentYear() {
+  const yearStart = startOfYear(new Date()).getTime();
+  const yearEnd = endOfYear(new Date()).getTime();
+  const analyticsForYear = await db
+    .executeSql(
+      `
+  SELECT * FROM monthly_analytics
+  WHERE
+    start_date >= ${yearStart} AND end_date <= ${yearEnd}
+  ORDER BY
+    end_date ASC;
+`
+    )
+    .then(queryResultToArray);
+  const totals = analyticsForYear.reduce(
+    (summary, monthly) => {
+      summary.totalSpent += monthly.spent;
+      summary.totalEarned += monthly.earned;
+      summary.totalSaved += monthly.earned - monthly.spent;
+      return summary;
+    },
+    {
+      totalSpent: 0,
+      totalEarned: 0,
+      totalSaved: 0,
+    }
+  );
+  return {
+    ...totals,
+    averageSpent: totals.totalSpent / analyticsForYear.length,
+    averageEarned: totals.totalEarned / analyticsForYear.length,
+    averageSaved: totals.totalSaved / analyticsForYear.length,
+  };
 }
