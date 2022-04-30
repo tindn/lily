@@ -98,7 +98,7 @@ function Home(props) {
         </>
       ) : null}
       <Button
-        size="large"
+        size='large'
         style={{ marginVertical: 20 }}
         onPress={() => props.navigation.navigate('LargeDisplay')}
       >
@@ -106,15 +106,26 @@ function Home(props) {
       </Button>
       <Button
         style={{ marginVertical: 10 }}
-        size="large"
+        size='large'
         onPress={toggleContact}
       >
         Contact
       </Button>
-
       <Button
         style={{ marginVertical: 10 }}
-        size="large"
+        onPress={() => props.navigation.navigate('Vendors')}
+      >
+        Vendors
+      </Button>
+      <Button
+        style={{ marginVertical: 10 }}
+        onPress={() => props.navigation.navigate('Categories')}
+      >
+        Categories
+      </Button>
+      <Button
+        style={{ marginVertical: 10 }}
+        size='large'
         onPress={() => {
           firebase.auth().signOut();
         }}

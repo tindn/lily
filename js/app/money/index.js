@@ -1,10 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { Plus } from 'components/Icons';
 import { format } from 'date-fns';
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
 import theme from '../../theme';
-import Categories from './categories';
 import FinanceOverview from './financeOverview';
 import AccountDetails from './financeOverview/accountDetails';
 import SnapshotList from './financeOverview/snapshotList';
@@ -12,8 +9,6 @@ import Home from './home';
 import MonthlyAnalytics from './MonthlyAnalytics';
 import MonthTransactions from './MonthTransactions';
 import TransactionDetails from './TransactionDetails';
-import Vendors from './vendors';
-import VendorDetails from './vendors/VendorDetails';
 
 const Stack = createStackNavigator();
 
@@ -30,7 +25,7 @@ function MoneyStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home"
+        name='Home'
         component={Home}
         options={{
           title: currentMonth,
@@ -38,7 +33,7 @@ function MoneyStack() {
         }}
       />
       <Stack.Screen
-        name="TransactionDetails"
+        name='TransactionDetails'
         component={TransactionDetails}
         options={{
           title: 'Details',
@@ -46,7 +41,7 @@ function MoneyStack() {
         }}
       />
       <Stack.Screen
-        name="MonthTransactions"
+        name='MonthTransactions'
         component={MonthTransactions}
         options={({ route }) => {
           var title = '';
@@ -60,12 +55,12 @@ function MoneyStack() {
         }}
       />
       <Stack.Screen
-        name="MonthlyAnalytics"
+        name='MonthlyAnalytics'
         component={MonthlyAnalytics}
         options={{ title: 'Monthly Analytics', ...headerStyles }}
       />
       <Stack.Screen
-        name="AccountDetails"
+        name='AccountDetails'
         component={AccountDetails}
         options={({ route }) => ({
           title: route.params.accountName || 'Account Details',
@@ -73,42 +68,14 @@ function MoneyStack() {
         })}
       />
       <Stack.Screen
-        name="Vendors"
-        component={Vendors}
-        options={({ navigation }) => ({
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('VendorDetails', {})}
-              style={{ marginRight: 10 }}
-            >
-              <Plus width={25} height={25} color="#3366FF" />
-            </TouchableOpacity>
-          ),
-          ...headerStyles,
-        })}
-      />
-      <Stack.Screen
-        name="VendorDetails"
-        component={VendorDetails}
-        options={({ route }) => ({
-          title: ((route.params || {}).vendor || { name: 'New Vendor' }).name,
-          ...headerStyles,
-        })}
-      />
-      <Stack.Screen
-        name="SnapshotList"
+        name='SnapshotList'
         component={SnapshotList}
         options={{ title: 'Snapshots', ...headerStyles }}
       />
       <Stack.Screen
-        name="FinanceOverview"
+        name='FinanceOverview'
         component={FinanceOverview}
         options={{ title: 'Overview', ...headerStyles }}
-      />
-      <Stack.Screen
-        name="Categories"
-        component={Categories}
-        options={headerStyles}
       />
     </Stack.Navigator>
   );

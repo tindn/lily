@@ -13,7 +13,7 @@ import {
 import sharedStyles from '../../../sharedStyles';
 import theme from '../../../theme';
 import { cleanCoordinate } from '../../../utils/location';
-import MapLocationInput from '../mapLocationInput';
+import MapLocationInput from './mapLocationInput';
 
 var mapDispatchToProps = {
   addVendorToDb,

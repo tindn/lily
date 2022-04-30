@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Screen from '../../../components/screen';
 import { getVendorsArray } from '../../../redux/selectors/vendors';
 import sharedStyles from '../../../sharedStyles';
+
 function mapStateToProps(state) {
   return {
     vendors: getVendorsArray(state),

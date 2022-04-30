@@ -143,7 +143,7 @@ function Home(props) {
             marginHorizontal: 10,
             marginTop: 30,
             marginBottom: 10,
-            height: 350,
+            height: 400,
           }}
         >
           {latestTransactions.map(item => (
@@ -177,26 +177,6 @@ function Home(props) {
             onPress={() => props.navigation.navigate('FinanceOverview')}
           >
             Overview
-          </Button>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginVertical: 10,
-            marginHorizontal: 20,
-          }}
-        >
-          <Button
-            style={{ flex: 1, marginRight: 10 }}
-            onPress={() => props.navigation.navigate('Vendors')}
-          >
-            Vendors
-          </Button>
-          <Button
-            style={{ flex: 1, marginLeft: 10 }}
-            onPress={() => props.navigation.navigate('Categories')}
-          >
-            Categories
           </Button>
         </View>
       </ScrollView>
