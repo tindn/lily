@@ -172,12 +172,6 @@ function Home(props) {
           >
             Past Months
           </Button>
-          <Button
-            style={{ flex: 1, marginLeft: 10 }}
-            onPress={() => props.navigation.navigate('FinanceOverview')}
-          >
-            Overview
-          </Button>
         </View>
       </ScrollView>
     </Screen>

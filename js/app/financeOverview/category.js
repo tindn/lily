@@ -1,8 +1,8 @@
 import React from 'react';
 import { LayoutAnimation, View } from 'react-native';
-import { useToggle } from '../../../hooks';
-import sharedStyles from '../../../sharedStyles';
-import { by } from '../../../utils/sort';
+import { useToggle } from '../../hooks';
+import sharedStyles from '../../sharedStyles';
+import { by } from '../../utils/sort';
 import LineItem from './lineItem';
 
 function Category(props) {

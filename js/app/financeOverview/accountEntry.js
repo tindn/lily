@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import DateInput from '../../../components/dateInput';
-import MoneyInput from '../../../components/moneyInput';
-import { useToggle } from '../../../hooks';
+import DateInput from '../../components/dateInput';
+import MoneyInput from '../../components/moneyInput';
+import { useToggle } from '../../hooks';
 import AccountEntryForm from './accountEntryForm';
-import { toSimpleDateString } from '../../../utils/date';
+import { toSimpleDateString } from '../../utils/date';
 
 function AccountEntry(props) {
   const [expanded, toggleExpanded] = useToggle();

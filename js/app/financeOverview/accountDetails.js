@@ -7,14 +7,14 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import MoneyDisplay from '../../../components/MoneyDisplay';
-import Screen from '../../../components/screen';
-import { getAccountEntriesForAccount } from '../../../db/accountEntries';
+import MoneyDisplay from '../../components/MoneyDisplay';
+import Screen from '../../components/screen';
+import { getAccountEntriesForAccount } from '../../db/accountEntries';
 import {
   archiveAccount,
   getAccountById,
   updateBalanceForAccount,
-} from '../../../db/accounts';
+} from '../../db/accounts';
 import AccountEntry from './accountEntry';
 import AccountEntryForm from './accountEntryForm';
 

@@ -1,6 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { Settings as SettingsIcon, ShoppingCart } from 'components/Icons';
+import {
+  Settings as SettingsIcon,
+  ShoppingCart,
+  FinanceOverview as FinanceOverviewIcon,
+} from 'components/Icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { View, SafeAreaView, TouchableOpacity } from 'react-native';
 import {
@@ -11,6 +15,7 @@ import {
 import theme from '../theme';
 import CurrentUserContext from './currentUserContext';
 import Money from './money';
+import FinanceOverview from './financeOverview';
 import Settings from './settings';
 
 function UiKittenBottomTabBar(props) {
@@ -49,11 +54,27 @@ function UiKittenBottomTabBar(props) {
             props.navigation.navigate(props.state.routeNames[1]);
           }}
         >
-          <SettingsIcon
+          <FinanceOverviewIcon
             width={30}
             height={30}
             color={
               props.state.index === 1
+                ? theme.colors.primary
+                : theme.colors.darkerGray
+            }
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ paddingTop: 20 }}
+          onPress={() => {
+            props.navigation.navigate(props.state.routeNames[2]);
+          }}
+        >
+          <SettingsIcon
+            width={30}
+            height={30}
+            color={
+              props.state.index === 2
                 ? theme.colors.primary
                 : theme.colors.darkerGray
             }
@@ -82,9 +103,10 @@ export default function UserApp() {
 
   return isDbReady ? (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Money" tabBar={UiKittenBottomTabBar}>
-        <Tab.Screen name="Money" component={Money} />
-        <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Navigator initialRouteName='Money' tabBar={UiKittenBottomTabBar}>
+        <Tab.Screen name='Money' component={Money} />
+        <Tab.Screen name='FinanceOverview' component={FinanceOverview} />
+        <Tab.Screen name='Settings' component={Settings} />
       </Tab.Navigator>
     </NavigationContainer>
   ) : null;

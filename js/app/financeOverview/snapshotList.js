@@ -8,17 +8,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import MoneyDisplay from '../../../components/MoneyDisplay';
-import Screen from '../../../components/screen';
-import SwipeToDeleteContent from '../../../components/Swipeable/SwipeToDeleteContent';
+import MoneyDisplay from '../../components/MoneyDisplay';
+import Screen from '../../components/screen';
+import SwipeToDeleteContent from '../../components/Swipeable/SwipeToDeleteContent';
 import {
   deleteAccountSnapshot,
   getAccountSnapshots,
-} from '../../../db/accountSnapshots';
-import { error, success } from '../../../log';
-import sharedStyles from '../../../sharedStyles';
-import { toWeekDayDateStringFromTimestamp } from '../../../utils/date';
-import { calculateFinanceOverview } from '../../../utils/money';
+} from '../../db/accountSnapshots';
+import { error, success } from '../../log';
+import sharedStyles from '../../sharedStyles';
+import { toWeekDayDateStringFromTimestamp } from '../../utils/date';
+import { calculateFinanceOverview } from '../../utils/money';
 
 export default function SnapshotList() {
   var [list, setList] = useState([]);

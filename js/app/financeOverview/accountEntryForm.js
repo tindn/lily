@@ -1,17 +1,17 @@
 import { Button, Text, Input } from 'components';
 import React, { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
-import DateInput from '../../../components/dateInput';
-import EntryTypeInput from '../../../components/EntryTypeInput';
-import MoneyInput from '../../../components/moneyInput';
+import DateInput from '../../components/dateInput';
+import EntryTypeInput from '../../components/EntryTypeInput';
+import MoneyInput from '../../components/moneyInput';
 import {
   addAccountEntry,
   removeAccountEntry,
   updateAccountEntry,
-} from '../../../db/accountEntries';
-import { useToggle } from '../../../hooks';
-import sharedStyles from '../../../sharedStyles';
-import theme from '../../../theme';
+} from '../../db/accountEntries';
+import { useToggle } from '../../hooks';
+import sharedStyles from '../../sharedStyles';
+import theme from '../../theme';
 
 function AccountEntryForm(props) {
   var [id, setId] = useState('');

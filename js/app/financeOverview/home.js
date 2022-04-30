@@ -7,31 +7,28 @@ import {
   LayoutAnimation,
   ScrollView,
   StyleSheet,
-  View,
   useWindowDimensions,
+  View,
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BarChart, LineChart, YAxis } from 'react-native-svg-charts';
-import Screen from '../../../components/screen';
-import { getActiveAccounts } from '../../../db/accounts';
+import Screen from '../../components/screen';
+import { getActiveAccounts } from '../../db/accounts';
 import {
   buildAccountSnapshot,
   getAccountSnapshots,
   getEarliestSnapshot,
   getLatestSnapshot,
-} from '../../../db/accountSnapshots';
-import { useToggle } from '../../../hooks';
-import { error, success } from '../../../log';
-import theme from '../../../theme';
-import {
-  calculateFinanceOverview,
-  formatAmountToDisplay,
-} from '../../../utils/money';
+} from '../../db/accountSnapshots';
+import { useToggle } from '../../hooks';
+import { error, success } from '../../log';
+import theme from '../../theme';
+import { calculateFinanceOverview } from '../../utils/money';
 import Category from './category';
 import LineItem from './lineItem';
 import OverviewCard from './overviewCard';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function FinanceOverview(props) {
+export default function Home(props) {
   var [overview, setOverview] = useState({});
   var [earliestSnapshot, setEarliestSnapshot] = useState({});
   var [latestSnapshot, setLatestSnapshot] = useState({});
@@ -144,7 +141,7 @@ export default function FinanceOverview(props) {
           return overview;
         });
       })
-      .then((snapshots) => {
+      .then(snapshots => {
         console.log(snapshots[0]);
         setAllSnapshots(snapshots);
       });
@@ -195,7 +192,7 @@ export default function FinanceOverview(props) {
                   fontWeight: 'bold',
                 }}
                 numberOfTicks={10}
-                formatLabel={(value) => `$${value / 1000}k`}
+                formatLabel={value => `$${value / 1000}k`}
               />
             </View>
             <View
@@ -222,7 +219,7 @@ export default function FinanceOverview(props) {
                   fontWeight: 'bold',
                 }}
                 numberOfTicks={10}
-                formatLabel={(value) => `$${value / 1000}k`}
+                formatLabel={value => `$${value / 1000}k`}
               />
             </View>
           </TouchableOpacity>
@@ -230,8 +227,8 @@ export default function FinanceOverview(props) {
 
         <Category
           accounts={state.retirements}
-          name="Retirements"
-          key="retirements"
+          name='Retirements'
+          key='retirements'
           navigation={props.navigation}
         />
         <LineItem
@@ -243,27 +240,27 @@ export default function FinanceOverview(props) {
             marginTop: 20,
             marginBottom: 5,
           }}
-          text="Total Assets"
+          text='Total Assets'
           amount={state.totalAssetsBalance}
           textStyle={styles.total}
         />
         {showAssets && [
           <Category
             accounts={state.liquidAssets}
-            name="Liquid"
-            key="liquid"
+            name='Liquid'
+            key='liquid'
             navigation={props.navigation}
           />,
           <Category
             accounts={state.investments}
-            name="Investments"
-            key="investments"
+            name='Investments'
+            key='investments'
             navigation={props.navigation}
           />,
           <Category
             accounts={state.fixedAssets}
-            name="Fixed"
-            key="fixed"
+            name='Fixed'
+            key='fixed'
             navigation={props.navigation}
           />,
         ]}
@@ -273,7 +270,7 @@ export default function FinanceOverview(props) {
             LayoutAnimation.easeInEaseOut();
           }}
           style={{ marginTop: 20, marginBottom: 5 }}
-          text="Total Liabilities"
+          text='Total Liabilities'
           amount={state.totalLiabilitiesBalance}
           textStyle={styles.total}
           negative
@@ -281,15 +278,15 @@ export default function FinanceOverview(props) {
         {showLiabilities && [
           <Category
             accounts={state.shortTermLiabilities}
-            name="Short Term"
-            key="short"
+            name='Short Term'
+            key='short'
             negative
             navigation={props.navigation}
           />,
           <Category
             accounts={state.longTermLiabilities}
-            name="Long Term"
-            key="long"
+            name='Long Term'
+            key='long'
             negative
             navigation={props.navigation}
           />,
