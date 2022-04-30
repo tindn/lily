@@ -126,7 +126,8 @@ export function addTransaction(transaction) {
     transaction.coords
   )}', '${escape(transaction.memo)}',${vendor}, '${escape(
     transaction.category
-  )}');`;
+  )}', 'confirmed');`;
+
   return getAllFromTable(
     'monthly_analytics',
     `WHERE name = '${monthName}'`

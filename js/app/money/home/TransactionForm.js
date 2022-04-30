@@ -1,6 +1,6 @@
 import geolocation from '@react-native-community/geolocation';
 import { Button, Input } from 'components';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, FlatList, LayoutAnimation, View } from 'react-native';
 import { connect } from 'react-redux';
 import CategoryInput from '../../../components/categoryInput';
@@ -28,6 +28,7 @@ function mapStateToProps(state) {
 }
 
 function TransactionForm(props) {
+  var vendorInputRef = useRef();
   var [isExpanded, setIsExpanded] = useState(!!props.isExpanded);
   var [date_time, setDateTime] = useState(
     props.date_time ? new Date(props.date_time) : new Date()
@@ -102,7 +103,7 @@ function TransactionForm(props) {
       if (vendor_id && vendorDisplay === props.vendors[vendor_id].name) {
         return;
       }
-      const filteredVendors = props.vendorArray.filter((v) =>
+      const filteredVendors = props.vendorArray.filter(v =>
         v.name.toLowerCase().startsWith(vendorDisplay.toLowerCase())
       );
       setFilteredVendors(filteredVendors);
@@ -125,15 +126,13 @@ function TransactionForm(props) {
           sharedStyles.formFirstRow,
         ]}
       >
-        <DateInput
-          onFocus={() => {
-            LayoutAnimation.easeInEaseOut();
-            setIsExpanded(true);
-          }}
-          onChange={setDateTime}
-          date={date_time}
-          mode="date"
+        <EntryTypeInput
+          type={entryType}
+          setType={setEntryType}
+          creditText='Income'
+          debitText='Expense'
         />
+
         <MoneyInput
           onChange={setAmount}
           style={{ flex: 1 }}
@@ -151,34 +150,55 @@ function TransactionForm(props) {
       {isExpanded ? (
         <>
           <View style={[{ padding: 10 }, sharedStyles.borderBottom]}>
-            <Input
-              value={vendorDisplay}
-              placeholder="Vendor"
-              style={[
-                sharedStyles.formTextInput,
-                {
-                  textAlign: 'right',
-                  paddingRight: 0,
-                },
-              ]}
-              onChangeText={setVendorDisplay}
-              selectTextOnFocus
-              autoCorrect={false}
-            />
+            <View style={{ flexDirection: 'row' }}>
+              <CategoryInput
+                displayTextStyle={{
+                  paddingVertical: 10,
+                }}
+                current={category}
+                onPress={function (name) {
+                  if (category == name) {
+                    setCategory('');
+                  } else {
+                    setCategory(name);
+                  }
+                }}
+              />
+
+              <Input
+                ref={vendorInputRef}
+                value={vendorDisplay}
+                placeholder='Vendor'
+                style={[
+                  sharedStyles.formTextInput,
+                  {
+                    textAlign: 'right',
+                    paddingRight: 0,
+                  },
+                ]}
+                onChangeText={setVendorDisplay}
+                selectTextOnFocus
+                autoCorrect={false}
+              />
+            </View>
             <FlatList
               data={filteredVendors.length ? filteredVendors : nearbyVendors}
+              keyboardShouldPersistTaps="handled"
               horizontal
               renderItem={function ({ item, index }) {
                 let selected = item.id == vendor_id;
                 return (
                   <Button
                     key={index.toString()}
-                    size="small"
-                    isOutline
-                    status={selected ? 'success' : 'basic'}
+                    size='small'
+                    isOutline={!selected}
                     onPress={function () {
                       if (vendor_id == item.id) {
                         setVendorId('');
+                        if (vendorInputRef.current) {
+                          vendorInputRef.current.blur();
+                          vendorInputRef.current.focus();
+                        }
                       } else {
                         setVendorId(item.id);
                         setVendorDisplay(item.name);
@@ -198,6 +218,15 @@ function TransactionForm(props) {
             />
           </View>
           <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
+            <DateInput
+              onFocus={() => {
+                LayoutAnimation.easeInEaseOut();
+                setIsExpanded(true);
+              }}
+              onChange={setDateTime}
+              date={date_time}
+              mode='date'
+            />
             <Input
               style={[
                 sharedStyles.formTextInput,
@@ -207,31 +236,9 @@ function TransactionForm(props) {
                 },
               ]}
               value={memo}
-              placeholder="Memo"
+              placeholder='Memo'
               onChangeText={setMemo}
               placeholderTextColor={theme.colors.lightGray}
-            />
-          </View>
-          <View style={[sharedStyles.formRow, sharedStyles.borderBottom]}>
-            <EntryTypeInput
-              type={entryType}
-              setType={setEntryType}
-              creditText="Income"
-              debitText="Expense"
-            />
-            <CategoryInput
-              displayTextStyle={{
-                textAlign: 'right',
-                paddingVertical: 10,
-              }}
-              current={category}
-              onPress={function (name) {
-                if (category == name) {
-                  setCategory('');
-                } else {
-                  setCategory(name);
-                }
-              }}
             />
           </View>
           <View style={[sharedStyles.formButtons, { marginTop: 10 }]}>

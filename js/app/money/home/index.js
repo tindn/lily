@@ -67,7 +67,7 @@ function Home(props) {
     <Screen>
       <ScrollView
         keyboardDismissMode='on-drag'
-        keyboardShuldPersistTaps='always'
+        keyboardShouldPersistTaps='handled'
         ref={scrollViewRef}
       >
         {currentMonth ? (

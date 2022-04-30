@@ -8,7 +8,7 @@ import BottomSheet from './bottomSheet';
 
 function mapStateToProps(state) {
   return {
-    categories: state.categories.filter((c) => !c.is_archived),
+    categories: state.categories.filter(c => !c.is_archived),
   };
 }
 
@@ -26,7 +26,14 @@ function CategoryInput(props) {
           {props.current ? (
             props.current
           ) : (
-            <Text style={{ color: theme.colors.lightGray }}>Category</Text>
+            <Text
+              style={[
+                sharedStyles.formTextInput,
+                { color: theme.colors.lightGray },
+              ]}
+            >
+              Category
+            </Text>
           )}
         </Text>
       </TouchableOpacity>
@@ -37,7 +44,7 @@ function CategoryInput(props) {
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             paddingTop: 20,
-            paddingBottom: 40
+            paddingBottom: 40,
           }}
         >
           {props.categories.map(function (item) {
@@ -45,7 +52,7 @@ function CategoryInput(props) {
             return (
               <Button
                 key={item.name}
-                color={selected ? theme.colors.primary : theme.colors.darkGray}
+                isOutline={!selected}
                 onPress={function () {
                   props.onPress(item.name);
                   // eslint-disable-next-line no-undef

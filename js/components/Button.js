@@ -13,15 +13,19 @@ export function Button({
   let buttonColor = color || theme.colors.primary;
   let backgroundColor = buttonColor;
   let borderColor = 'transparent';
-  if (otherProps.disabled) {
-    backgroundColor = theme.colors.darkGray;
-  }
+  let textColor = theme.colors.white;
+  
   if (isOutline) {
     backgroundColor = 'transparent';
     borderColor = buttonColor;
+    textColor = buttonColor;
     if (otherProps.disabled) {
       borderColor = theme.colors.darkGray;
     }
+  }
+  if (otherProps.disabled) {
+    backgroundColor = theme.colors.darkGray;
+    textColor = theme.colors.lightGray;
   }
   return (
     <TouchableOpacity
@@ -29,10 +33,10 @@ export function Button({
         {
           backgroundColor,
           borderRadius: 5,
-          padding: 12,
+          padding: 10,
           borderColor,
           borderWidth: 1,
-          justifyContent: 'center'
+          justifyContent: 'center',
         },
         style,
       ])}
@@ -41,9 +45,7 @@ export function Button({
       <Text
         style={StyleSheet.flatten([
           {
-            color: otherProps.disabled
-              ? theme.colors.lightGray
-              : theme.colors.white,
+            color: textColor,
             textAlign: 'center',
           },
           textStyle,
